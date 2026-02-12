@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { assets } from '../../assets/assets'
+
 import FrontButton from '../../Effects/frontButton'
 
 const Header = () => {
