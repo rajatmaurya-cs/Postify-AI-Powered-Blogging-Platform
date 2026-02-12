@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 
 import FrontButton from '../../Effects/frontButton'
+import Gpt from '../../Effects/Gpt'
 
 const Header = () => {
 
@@ -13,7 +14,7 @@ const Header = () => {
 
                 <div className='inline-flex items-center justify-center gap-4 px-6 py-1.5 mb-4'>
                    
-                    <div><FrontButton /></div>
+                    <div><Gpt /></div>
 
                 </div>
                 

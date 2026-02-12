@@ -17,7 +17,7 @@ const Navbar = () => {
       <img
         src={assets.Postify2}
         alt="logo"
-        className="object-contain cursor-pointer w-50 h-40"
+        className="object-contain cursor-pointer w-50"
         onClick={() => navigate("/")}
       />
 
