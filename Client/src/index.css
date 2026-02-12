@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+/* *{
+   font-family: "Outfit", sans-serif;
+} */
+
+@theme{
+  --color-primary: #181818
+}
+
+
+
+
+.rich-text {
+  width: 80%;
+  margin: 60px auto;
+  padding: 0 20px;
+
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 19px;
+  line-height: 1.85;
+  color: #1c1c1c;
+}
+
+
+
+
+
+
+.rich-text p {
+  margin: 26px 0;
+  color: #2a2a2a;
+}
+
+
+.rich-text h1 {
+  display: inline-block;   /* ⭐ MAGIC LINE */
+
+  font-size: 45px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 40px;
+  margin-top: 15px;
+  font-weight: 800;
+
+  /* background: linear-gradient(135deg, #5044E5, #5ad0ff); */
+  background-color: gray;
+  color: rgb(13, 12, 12);
+  padding: 14px 28px;
+  border-radius: 18px;
+}
+
+
+.rich-text h2 {
+  font-size: 32px;
+  margin-top: 64px;
+  margin-bottom: 18px;
+  font-weight: 750;
+}
+
+.rich-text h3 {
+  font-size: 24px;
+  margin-top: 42px;
+  margin-bottom: 12px;
+  font-weight: 650;
+}
+
+
+.rich-text strong {
+  color: #000;
+  font-weight: 700;
+}
+
+
+.rich-text a {
+  color: #2563eb;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(37, 99, 235, 0.25);
+  transition: all .2s ease;
+}
+
+.rich-text a:hover {
+  color: #1e40af;
+  border-bottom-color: #1e40af;
+}
+
+
+
+.rich-text ul,
+.rich-text ol {
+  padding-left: 26px;
+  margin: 28px 0;
+}
+
+.rich-text li {
+  margin: 12px 0;
+}
+
+
+
+.rich-text blockquote {
+  margin: 50px 0;
+  padding: 26px 32px;
+  border-left: 5px solid #2563eb;
+
+  font-size: 22px;
+  line-height: 1.6;
+  font-weight: 500;
+
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+
+
+.rich-text img {
+  width: 100%;
+  margin: 56px 0;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.12);
+}
+
+
+
+.rich-text pre {
+  margin: 40px 0;
+  padding: 24px;
+  background: #0f172a;
+  color: #e5e7eb;
+  border-radius: 14px;
+  overflow-x: auto;
+}
+
+.rich-text code {
+  background: #eef2ff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+
+
+.rich-text hr {
+  margin: 70px 0;
+  border: none;
+  border-top: 1px solid #e6e6e6;
+}
+
+
+
+.rich-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 45px 0;
+  font-size: 17px;
+}
+
+.rich-text th {
+  text-align: left;
+  padding: 14px;
+  background: #f3f4f6;
+}
+
+.rich-text td {
+  padding: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+
+
+@media (max-width: 768px) {
+
+  .rich-text {
+    margin: 40px auto;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .rich-text h1 {
+    font-size: 36px;
+  }
+
+  .rich-text h2 {
+    font-size: 26px;
+    margin-top: 44px;
+  }
+
+  .rich-text h3 {
+    font-size: 21px;
+  }
+  .rich-text p{
+    font-size: 10px;
+  }
+} 
