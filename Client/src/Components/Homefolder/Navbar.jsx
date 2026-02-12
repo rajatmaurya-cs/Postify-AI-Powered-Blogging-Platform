@@ -15,9 +15,9 @@ const Navbar = () => {
     <div className="flex justify-between items-center py-5 mx-8 sm:mx-20 xl:mx-32">
 
       <img
-        src={assets.logo}
+        src={assets.Postify2}
         alt="logo"
-        className="object-contain cursor-pointer"
+        className="object-contain cursor-pointer w-50 h-40"
         onClick={() => navigate("/")}
       />
 

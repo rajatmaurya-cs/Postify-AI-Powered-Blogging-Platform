@@ -1,5 +1,3 @@
-// 
-
 import Config from "../Models/Config.js";
 import AIUsage from "../Models/AIUsage.js";
 import AILog from "../Models/AIlog.js";
@@ -105,11 +103,6 @@ const checkAiLimit = async (req, res, next) => {
     });
   }
 };
-
-
-
-
-
 
 
 export default checkAiLimit;

@@ -69,7 +69,7 @@ font-weight:800;
 color:#2563eb;
 letter-spacing:0.5px;
 ">
-✍️ Pen & Pixel
+Postify
 </div>
 
 <!-- Title -->

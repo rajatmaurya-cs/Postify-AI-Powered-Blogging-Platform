@@ -52,6 +52,9 @@ import back15 from './back-15.avif'
 import back16 from './back-16.avif'
 import AI from './Ai.png'
 import setting from './setting.png'
+import Postify from './Postify.JPG'
+import Postify2 from './Hello.png'
+import Postify3 from './circle.png'
 
 
 export const assets = {
@@ -99,6 +102,9 @@ export const assets = {
     back16,
     AI,
     setting,
+    Postify,
+    Postify2,
+    Postify3
 
 
 

@@ -20,7 +20,7 @@ const configSchema = new mongoose.Schema({
 
     aiModel:{
         type:String,
-        default:"gpt-4o-mini"
+        default:"llama-3.1-8b-instant"
     },
     
 
