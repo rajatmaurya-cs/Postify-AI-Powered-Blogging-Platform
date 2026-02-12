@@ -21,17 +21,7 @@ export const contentGenerationService = async ({ user, prompt }) => {
     throw { status:403, message:"AI feature disabled" };
   }
 
-  // rate limit
-  const key = `AIAttempts:${user.id}`;
-  const attempts = await redisClient.incr(key);
-
-  if (attempts === 1) {
-    await redisClient.expire(key, 60);
-  }
-
-  if (attempts > 1) {
-    throw { status:429, message:"Rate limit exceeded" };
-  }
+ 
 
 
   const completion = await groq.chat.completions.create({
@@ -63,7 +53,7 @@ export const articleSummariser = async ({ user, prompt }) => {
     throw { status:400, message:"Prompt is required" };
   }
 
-  console.log("Entered in articleSummariser aiservice")
+ 
 
   const config = await Config.findOne();
 
@@ -72,16 +62,7 @@ export const articleSummariser = async ({ user, prompt }) => {
   }
 
   
-  const key = `AIAttempts:${user.id}`;
-  const attempts = await redisClient.incr(key);
-
-  if (attempts === 1) {
-    await redisClient.expire(key, 60);
-  }
-
-  if (attempts > 1) {
-    throw { status:429, message:"Rate limit exceeded wait a moment" };
-  }
+ 
 
 
   const completion = await groq.chat.completions.create({
@@ -97,6 +78,6 @@ export const articleSummariser = async ({ user, prompt }) => {
     role: user.role,
     action: "AI Summariser",
   });
-
+  console.log(completion.choices[0].message.content)
   return completion.choices[0].message.content;
 };

@@ -70,9 +70,6 @@ const WholeBlog = () => {
         setContent(res.data.content)
 
         setaicontent(true)
-      } else {
-        toast.error(res.data.message)
-        console.log(res.data.message)
       }
 
     } catch (error) {
@@ -135,6 +132,16 @@ const WholeBlog = () => {
 
 
 
+  useEffect(() => {
+    if (ailoading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => (document.body.style.overflow = "");
+  }, [ailoading]);
+
+
   return (
     <>
 
@@ -166,7 +173,7 @@ const WholeBlog = () => {
                   })}
                 </p>
 
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-700 mb-4">
                   {blog.title}
                 </h1>
 
@@ -195,16 +202,27 @@ const WholeBlog = () => {
               </div>
 
 
-              <div className="relative max-w-ful">
-                {ailoading && (
-                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-[1px] rounded-xl">
+
+
+        
+              {ailoading && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                  <div className="rounded-2xl bg-white/80 border border-white/40 shadow-2xl px-6 py-5">
                     <Loader />
+                    <p className="mt-3 text-sm text-gray-700 text-center font-medium">
+                      Summarising...
+                    </p>
                   </div>
-                )}
+                </div>
+              )}
 
-                <div className="rich-text max-w-4/5 mx-auto" dangerouslySetInnerHTML={{ __html: content }} />
-
+              <div className="relative max-w-full">
+                <div
+                  className="rich-text max-w-4/5 mx-auto"
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
               </div>
+
 
               <div>
               </div>
@@ -212,8 +230,8 @@ const WholeBlog = () => {
 
             </div>
             {isLoggedIn && !aicontent &&
-              <div className={ ailoading ?"rounded-xl  text-white font-mediumtransition":"ml-30"}
-                onClick={() => AiSummarise()}
+              <div className={ailoading ? "rounded-xl  text-white font-mediumtransition" : "ml-30"}
+                onClick={() => !ailoading && AiSummarise()}
               >{ailoading ? "Summarising..." : <Button />}</div>}
 
 
@@ -228,7 +246,7 @@ const WholeBlog = () => {
               <button className="px-6 py-3 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition">
                 🔐 ✨ AI Summariser</button>}
 
-           
+
 
 
 

@@ -3,12 +3,14 @@
 import Config from "../Models/Config.js";
 import AIUsage from "../Models/AIUsage.js";
 import AILog from "../Models/AIlog.js";
+import { redisClient } from "../Config/redis.js";
 
 const checkAiLimit = async (req, res, next) => {
   try {
-      console.log(req.user.role)
-      if(req.user.role === 'ADMIN') return next();
-      console.log("Entered in checkAiLimit")
+   
+     
+     
+      
 
    
     const config = await Config.findOne();
@@ -22,7 +24,23 @@ const checkAiLimit = async (req, res, next) => {
     }
 
     const userId = req.user.id;
-    const role = req.user.role;
+    const role = req.user.role
+
+     if(role === 'ADMIN') return next();
+    
+
+
+     // rate limit
+  const key = `AIAttempts:${userId}`;
+  const attempts = await redisClient.incr(key);
+
+  if (attempts === 1) {
+    await redisClient.expire(key, 60);
+  }
+
+  if (attempts > 1) {
+    throw { status:429, message:"Rate limit exceeded wait a Moment 🙏🏼" };
+  }
 
    
     const startOfDay = new Date();
@@ -75,7 +93,7 @@ const checkAiLimit = async (req, res, next) => {
         message: "Your daily AI limit has been reached.",
       });
     }
-    console.log("Getout from checkAiLimit")
+  
     next();
 
   } catch (error) {
@@ -83,7 +101,7 @@ const checkAiLimit = async (req, res, next) => {
 
     return res.status(500).json({
       success: false,
-      message: "AI limit check failed",
+      message: error.message || "AI limit check failed",
     });
   }
 };

@@ -28,7 +28,7 @@ export const authMiddleware =  async (req, res, next) => {
       req.user = decoded; 
 
 
-      
+      console.log("The role of User is : ", req.user.role)
       next();
 
     } catch (error) {

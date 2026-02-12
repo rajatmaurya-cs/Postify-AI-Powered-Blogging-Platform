@@ -49,7 +49,7 @@ export const generateContent = async (req, res) => {
 
 export const summariseArticle = async (req, res) => {
   try {
-      console.log("summariseArticle 1 backend")
+     
     if (!req.user) {
       return res.status(401).json({ success:false, message:"Login required" });
     }

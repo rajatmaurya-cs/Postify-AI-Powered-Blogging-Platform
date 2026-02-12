@@ -4,7 +4,7 @@ import {generateContent , summariseArticle} from '../controller/Aicontroller.js'
 import {Aidashboard} from '../controller/Dashboard.js'
 
 import checkAiLimit  from '../Middleware/aiLimitMiddleware.js'
-
+import authMiddleware from '../Middleware/authMiddleware.js'
 
 const AiRouter = express.Router();
 
@@ -13,7 +13,7 @@ AiRouter.post('/Generatecontent',checkAiLimit , generateContent)
 
 
 /* ================= Ai Summariser For Users ================= */
-AiRouter.post('/summarise',checkAiLimit ,summariseArticle)
+AiRouter.post('/summarise', checkAiLimit ,summariseArticle)
 
 
 /* ================= NoOfTodayreq , Totalreq , NoOfUniqueUsers ================= */
