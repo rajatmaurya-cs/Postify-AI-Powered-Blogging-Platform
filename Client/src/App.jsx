@@ -76,7 +76,7 @@ const AIconfig = lazy(() => import("./Components/AdminFolder/AISettings"));
 function App() {
   const { loading } = useContext(AuthContext);
 
-  if (loading) return <div>Checking authentication...</div>;
+  if(loading) return <div>Checking authentication...</div>;
 
   return (
     <Suspense fallback={<div style={{ padding: 20 }}>Loading...</div>}>
