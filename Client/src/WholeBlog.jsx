@@ -230,27 +230,27 @@ const WholeBlog = () => {
 
             </div>
             <div className="flex justify-center items-center mt-8 mb-8">
-              {isLoggedIn && !aicontent && (
-                <button
-                  onClick={() => !ailoading && AiSummarise()}
-                  disabled={ailoading}
-                  className={`px-6 py-3 rounded-xl font-medium transition ${ailoading
-                      ? "bg-gray-400 text-white cursor-not-allowed"
-                      : "bg-gray-900 text-white hover:bg-gray-800"
-                    }`}
-                >
-                  {ailoading ? "Summarising..." : "✨ AI Summarise"}
-                </button>
-              )}
+
+
+
+              {isLoggedIn && !aicontent &&
+                <div className="px-6  rounded-xl  text-white font-mediumtransition"
+                  onClick={() => AiSummarise()}
+                >{ailoading ? "Summarising..." : <Button />}</div>}
+
+
+
 
               {isLoggedIn && aicontent && (
                 <button
                   className="px-6 py-3 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition"
-                  onClick={handleGoback}
+                  onClick={() => handleGoback()}
                 >
                   🔙 Go Back
                 </button>
               )}
+
+
 
               {!isLoggedIn && (
                 <button
@@ -260,6 +260,8 @@ const WholeBlog = () => {
                 </button>
               )}
             </div>
+
+
 
 
 
