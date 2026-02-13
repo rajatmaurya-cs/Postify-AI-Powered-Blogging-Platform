@@ -204,7 +204,7 @@ const WholeBlog = () => {
 
 
 
-        
+
               {ailoading && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm">
                   <div className="rounded-2xl bg-white/80 border border-white/40 shadow-2xl px-6 py-5">
@@ -229,22 +229,38 @@ const WholeBlog = () => {
 
 
             </div>
-            {isLoggedIn && !aicontent &&
-              <div className={ailoading ? "rounded-xl  text-white font-mediumtransition" : "ml-30"}
-                onClick={() => !ailoading && AiSummarise()}
-              >{ailoading ? "Summarising..." : <Button />}</div>}
+            <div className="flex justify-center items-center mt-8 mb-8">
+              {isLoggedIn && !aicontent && (
+                <button
+                  onClick={() => !ailoading && AiSummarise()}
+                  disabled={ailoading}
+                  className={`px-6 py-3 rounded-xl font-medium transition ${ailoading
+                      ? "bg-gray-400 text-white cursor-not-allowed"
+                      : "bg-gray-900 text-white hover:bg-gray-800"
+                    }`}
+                >
+                  {ailoading ? "Summarising..." : "✨ AI Summarise"}
+                </button>
+              )}
 
+              {isLoggedIn && aicontent && (
+                <button
+                  className="px-6 py-3 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition"
+                  onClick={handleGoback}
+                >
+                  🔙 Go Back
+                </button>
+              )}
 
+              {!isLoggedIn && (
+                <button
+                  className="px-6 py-3 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition"
+                >
+                  🔐 ✨ AI Summariser
+                </button>
+              )}
+            </div>
 
-            {isLoggedIn && aicontent &&
-              <button className="px-6 py-3 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition"
-                onClick={() => handleGoback()}
-              >🔙 Go Back</button>}
-
-
-            {!isLoggedIn &&
-              <button className="px-6 py-3 rounded-xl bg-gray-900 text-white font-medium hover:bg-gray-800 transition">
-                🔐 ✨ AI Summariser</button>}
 
 
 
