@@ -2,87 +2,80 @@ import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Context/Authcontext";
-import ProfileModal from "../../Pop-Up/ProfileModal"
+import ProfileModal from "../../Pop-Up/ProfileModal";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
 
-
-
   return (
-    <div className="flex justify-between items-center py-5 mx-8 sm:mx-20 xl:mx-32">
-
+    <div className="flex flex-wrap justify-between items-center py-3 px-4 sm:py-5 sm:px-10 xl:px-32 gap-3">
+      {/* Logo */}
       <img
         src={assets.Postify2}
         alt="logo"
-        className="object-contain cursor-pointer w-50"
+        className="object-contain cursor-pointer w-32 sm:w-40 md:w-48"
         onClick={() => navigate("/")}
       />
 
-      <div>
+      {/* Right Side */}
+      <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
         {!user && (
-          <div className="space-x-2">
-
+          <>
             <button
-              onClick={() => navigate('/login')}
-              className="group p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 
-               shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-               active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-               active:scale-[0.995]"
+              onClick={() => navigate("/login")}
+              className="group p-[3px] sm:p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 
+              shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
+              active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
+              active:scale-[0.995]"
             >
-              <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-4 py-2">
-                <span className="font-semibold">Login</span>
+              <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-3 py-1.5 sm:px-4 sm:py-2">
+                <span className="font-semibold text-sm sm:text-base">Login</span>
               </div>
             </button>
 
             <button
-              onClick={() => navigate('/SignUp')}
-              className="group p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 
-               shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-               active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-               active:scale-[0.995]"
+              onClick={() => navigate("/SignUp")}
+              className="group p-[3px] sm:p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 
+              shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
+              active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
+              active:scale-[0.995]"
             >
-
-              <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-4 py-2">
-                <span className="font-semibold">SignUp</span>
+              <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-3 py-1.5 sm:px-4 sm:py-2">
+                <span className="font-semibold text-sm sm:text-base">Sign Up</span>
               </div>
             </button>
-          </div>
+          </>
         )}
 
         {user?.role === "ADMIN" && (
           <button
             onClick={() => navigate("/admin")}
-             className="group p-[10px] rounded-[20px] bg-gradient-to-b from-white to-stone-200/40 
-               shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-               active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-               active:scale-[0.995] font-bold"
-            >
+            className="group p-2 sm:p-3 rounded-[16px] sm:rounded-[20px] bg-gradient-to-b from-white to-stone-200/40 
+            shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
+            active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
+            active:scale-[0.995] font-bold text-sm sm:text-base"
+          >
             Dashboard
           </button>
         )}
 
         {user && user.role !== "ADMIN" && (
           <button
-            onClick={() => setShowProfile(true)}   
-            className="group p-5 rounded-4xl bg-gradient-to-b from-white to-stone-200/40 
-               shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-               active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-               active:scale-[0.995]"
+            onClick={() => setShowProfile(true)}
+            className="group p-2 sm:p-4 rounded-full bg-gradient-to-b from-white to-stone-200/40 
+            shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
+            active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
+            active:scale-[0.995] text-sm sm:text-base"
           >
             Profile
           </button>
         )}
+
         {showProfile && (
-          <ProfileModal
-            // user={user}
-            onClose={() => setShowProfile(false)}
-          />
+          <ProfileModal onClose={() => setShowProfile(false)} />
         )}
-
-
       </div>
     </div>
   );
