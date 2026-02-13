@@ -112,7 +112,7 @@ export const login = async (req, res) => {
     }
 
 
-    const isPasswordMatch =  bcrypt.compare(
+    const isPasswordMatch = bcrypt.compare(
       password,
       user.password
     );
@@ -129,7 +129,7 @@ export const login = async (req, res) => {
     const refreshToken = createRefreshToken(user);
 
 
-   
+
     await RefreshToken.deleteMany({ userId: user._id });
     await RefreshToken.create({
       userId: user._id,
@@ -138,15 +138,17 @@ export const login = async (req, res) => {
 
 
 
-   
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "none",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    
+
+
     return res.status(200).json({
       success: true,
       accessToken,
@@ -200,7 +202,7 @@ export const googleLogin = async (req, res) => {
 
 
     const {
-      id: googleId,   
+      id: googleId,
 
       email,
       name: fullName,
@@ -246,10 +248,10 @@ export const googleLogin = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 15 * 60 * 1000, 
+      maxAge: 15 * 60 * 1000,
     });
 
-    
+
     return res.json({
       success: true,
       user: {
@@ -286,7 +288,7 @@ export const logout = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     const accessToken = req.headers.authorization?.split(" ")[1];
 
-    
+
     if (refreshToken) {
       const hashedToken = hashToken(refreshToken);
 
@@ -295,7 +297,7 @@ export const logout = async (req, res) => {
       });
     }
 
-    
+
     if (accessToken) {
       const decoded = jwt.decode(accessToken);
 
@@ -311,7 +313,7 @@ export const logout = async (req, res) => {
       }
     }
 
-   
+
     res.clearCookie("refreshToken");
 
     return res.status(200).json({
@@ -338,7 +340,7 @@ export const refreshAccessToken = async (req, res) => {
       return res.status(401).json({ message: "No refresh token" });
     }
 
-  
+
     const hashedToken = hashToken(refreshToken);
 
     const storedToken = await RefreshToken.findOne({
@@ -606,7 +608,7 @@ export const checkmailforreset = async (req, res) => {
 
     console.log("OTP ERROR:", error.message);
 
-    return res.status(429).json({   
+    return res.status(429).json({
       success: false,
       message: error.message,
     })
