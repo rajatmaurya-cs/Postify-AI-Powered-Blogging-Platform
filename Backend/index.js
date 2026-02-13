@@ -41,12 +41,14 @@ async function init() {
 init();
 
 /* ================= MIDDLEWARE ================= */
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: "https://postifyfronted.vercel.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
+app.options("*", cors());
 
 app.use(express.json());
 app.use(cookieParser());
