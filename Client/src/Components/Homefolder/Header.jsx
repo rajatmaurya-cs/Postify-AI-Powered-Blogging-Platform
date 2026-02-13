@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
 
-import FrontButton from '../../Effects/frontButton'
+
+import FrontButton from '../../Effects/FrontButton'
 import Gpt from '../../Effects/Gpt'
 
 const Header = () => {

@@ -9,6 +9,7 @@ import API from './Api/api';
 import Loader from './Effects/Summarising';
 import toast from 'react-hot-toast'
 import Button from './Effects/Button';
+
 const WholeBlog = () => {
   const { blogId } = useParams();
   const [content, setContent] = useState('')
