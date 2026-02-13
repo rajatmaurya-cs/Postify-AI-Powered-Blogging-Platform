@@ -18,6 +18,16 @@ import adminMiddleware from "./Middleware/adminMiddleware.js";
 
 const app = express();
 
+
+
+/* ================= Backend Checking Route ================= */
+app.get("/api/health", (req, res) => res.json({ ok: true }));
+
+
+
+
+
+
 /* ================= INIT (DB/Redis) ================= */
 let isDbConnected = false;
 
