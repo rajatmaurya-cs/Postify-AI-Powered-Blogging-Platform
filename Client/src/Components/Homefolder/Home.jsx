@@ -1,16 +1,20 @@
-import React from 'react'
-import Navbar from './Navbar'
-import Header from './Header'
-import BlogList from './BlogList'
+import React, { Suspense, lazy } from "react";
+import Navbar from "./Navbar";
+import Header from "./Header";
+
+const BlogList = lazy(() => import("./BlogList"));
+
 const Home = () => {
   return (
     <div>
-      <Navbar/>
-      <Header/>
-      <BlogList/>
+      <Navbar />
+      <Header />
 
+      <Suspense fallback={<div style={{ padding: 20 }}>Loading...</div>}>
+        <BlogList />
+      </Suspense>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
