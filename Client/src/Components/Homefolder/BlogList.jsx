@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import { useBlogs } from "../../hooks/useBlogs"; // ✅ adjust path if needed
+import { useBlogs } from "../../hooks/useBlogs"; 
 
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
-  // ✅ blogs come from React Query cache
+ 
   const {
     data: blogs = [],
     isLoading,

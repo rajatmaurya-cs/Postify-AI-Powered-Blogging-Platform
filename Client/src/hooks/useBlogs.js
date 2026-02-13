@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import API from "../Api/api";
+import API from "../Api/api"
 
 const fetchBlogs = async () => {
   const res = await API.get("/blog/allblog");
