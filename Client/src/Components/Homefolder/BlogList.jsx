@@ -1,71 +1,50 @@
-import React, { useState, useEffect } from 'react'
-import { blogCategories } from '../../assets/assets'
+import React, { useMemo, useState } from "react";
+import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import API from '../../Api/api.js'
+import { useBlogs } from "../../hooks/useBlogs"; // ✅ adjust path if needed
+
 const BlogList = () => {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(false);
 
+  // ✅ blogs come from React Query cache
+  const {
+    data: blogs = [],
+    isLoading,
+    isError,
+    error,
+    isFetching,
+  } = useBlogs();
 
-  const fetchBlogs = async () => {
-    try {
-        console.log("Enterd in fetchBlogs fronted")
-      setLoading(true);
-      const res = await API.get("/blog/allblog");
-      setBlogs(res.data.blogs || []);
-
-    } catch (error) {
-      console.error("Error fetching blogs:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
-
-
-
-  const filteredBlogs = blogs?.filter((blog) => {
-    const matchesCategory =
-      activeCategory === "All" || blog.category === activeCategory;
-
+  const { filteredBlogs, publishedBlogs } = useMemo(() => {
     const searchText = search.toLowerCase().trim();
 
-    const matchesSearch =
-      blog.title?.toLowerCase().includes(searchText) ||
-      blog.description?.toLowerCase().includes(searchText);
+    const filtered = (blogs || []).filter((blog) => {
+      const matchesCategory =
+        activeCategory === "All" || blog.category === activeCategory;
 
-    return matchesCategory && matchesSearch;
-  });
+      const matchesSearch =
+        blog.title?.toLowerCase().includes(searchText) ||
+        blog.description?.toLowerCase().includes(searchText);
 
+      return matchesCategory && matchesSearch;
+    });
 
-  const publishedBlogs = filteredBlogs.filter(
-    (blog) => blog.isPublished === true
-  );
+    const published = filtered.filter((blog) => blog.isPublished === true);
 
-
+    return { filteredBlogs: filtered, publishedBlogs: published };
+  }, [blogs, search, activeCategory]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-14">
-
       <div className="flex justify-center mb-10">
-
-
-
         <input
           type="text"
           placeholder="Search articles..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-1/2  bg-gradient-to-b from-white to-stone-200/40   p-3 rounded-4xl text-gray-800 placeholder-gray-500 mr-3"
+          className="w-1/2 bg-gradient-to-b from-white to-stone-200/40 p-3 rounded-4xl text-gray-800 placeholder-gray-500 mr-3"
         />
-
-
 
         <button
           onClick={() => setSearch("")}
@@ -80,39 +59,50 @@ const BlogList = () => {
         </button>
       </div>
 
-
       <div className="flex flex-wrap gap-3 justify-center mb-14">
         {blogCategories.map((cat) => (
-
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
             className={`relative px-6 py-2.5 rounded-full text-sm font-semibold
-  transition-all duration-300 ease-out
-  ${activeCategory === cat
-                ? "bg-gradient-to-r from-gray-900 to-black text-white shadow-lg shadow-black/30 scale-105"
-                : "bg-white/70 backdrop-blur text-gray-700 hover:text-black hover:bg-white hover:shadow-md hover:scale-105"
+              transition-all duration-300 ease-out
+              ${
+                activeCategory === cat
+                  ? "bg-gradient-to-r from-gray-900 to-black text-white shadow-lg shadow-black/30 scale-105"
+                  : "bg-white/70 backdrop-blur text-gray-700 hover:text-black hover:bg-white hover:shadow-md hover:scale-105"
               }`}
           >
             {cat}
           </button>
-
         ))}
       </div>
 
+      {filteredBlogs.length > 0 ? (
+        <h1 className="text-3xl font-bold text-gray-50 mb-10 text-center">
+          Latest Blogs
+        </h1>
+      ) : (
+        ""
+      )}
 
-
-      {filteredBlogs.length > 0 ? (<h1 className="text-3xl font-bold text-gray-50 mb-10 text-center">
-        Latest Blogs
-      </h1>) : ""}
-
-
-      {loading && (
+      {/* ✅ loading state from React Query */}
+      {isLoading && (
         <p className="text-center text-gray-500">Loading blogs...</p>
       )}
 
+      {/* ✅ error state from React Query */}
+      {isError && (
+        <p className="text-center text-red-400">
+          Error fetching blogs: {error?.message}
+        </p>
+      )}
 
-      {!loading && publishedBlogs.length > 0 ? (
+      {/* ✅ background refetch indicator (optional) */}
+      {!isLoading && !isError && isFetching && (
+        <p className="text-center text-gray-500 mb-4">Updating...</p>
+      )}
+
+      {!isLoading && !isError && publishedBlogs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {publishedBlogs.map((blog) => (
             <Link
@@ -121,16 +111,15 @@ const BlogList = () => {
               className="group bg-gray-300 rounded-2xl overflow-hidden 
                        border hover:shadow-xl transition-all duration-300"
             >
-
               <div className="relative h-52 overflow-hidden">
                 <img
                   src={blog.image}
                   alt={blog.title}
+                  loading="lazy"
                   className="w-full h-full object-cover 
                            group-hover:scale-105 transition duration-300"
                 />
               </div>
-
 
               <div className="p-5">
                 <span className="inline-block text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full mb-3">
@@ -145,13 +134,13 @@ const BlogList = () => {
           ))}
         </div>
       ) : (
-        !loading && (
+        !isLoading &&
+        !isError && (
           <p className="text-center text-gray-500">No blogs found</p>
         )
       )}
     </div>
   );
-}
+};
 
-
-export default BlogList
+export default BlogList;
