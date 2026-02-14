@@ -27,8 +27,6 @@ app.get("/api/health", (req, res) => res.json({ ok: true }));
 
 
 
-
-
 /* ================= INIT (DB/Redis) ================= */
 let isDbConnected = false;
 
@@ -81,7 +79,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-/* ===== Local dev only (Vercel ignores listen) ===== */
+/* ===== Local dev  ===== */
 // if (process.env.NODE_ENV !== "production") {
 //   const PORT = process.env.PORT || 3000;
 //   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

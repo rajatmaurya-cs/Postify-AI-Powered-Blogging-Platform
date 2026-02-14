@@ -47,13 +47,6 @@ const Signup = () => {
         }
     };
 
-
-
-
-
-
-
-
     useEffect(() => {
         if (otp.length === 6) {
             console.log("Entered in otp length hook")
