@@ -109,37 +109,7 @@ export const addBlog = async (req, res) => {
 
 
 
-// export const getallblog = async (req, res) => {
-//   try {
-    
-   
-    
-//     const blogs = await Blog.find({})
-//       .populate("createdBy", "fullName email")
-//       .populate("moderatedBy", "fullName")
-//       .sort({ createdAt: -1 })
-    
 
-//     if (blogs.length === 0) {
-//       return res.json({ sucess: false, message: "No blog exits" })
-//     }
-   
-//     res.json({
-//       success: true,
-//       blogs,
-//     });
-
-
-//   } catch (error) {
-
-//   console.error("GET ALL BLOG ERROR 👉", error);
-
-//   return res.status(500).json({
-//     success: false,
-//     message: error.message
-//   });
-// }
-// }
 
 export const getallblog = async (req, res) => {
   try {
