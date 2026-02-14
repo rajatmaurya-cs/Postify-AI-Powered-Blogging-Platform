@@ -57,7 +57,7 @@ const latestBlogs = [...blogs]
 
 
 const handlePublish = async (blogId) => {
-  const toastId = toast.loading("Updating blog status...");
+  const toastId = toast.loading("Updating blog status... ");
 
   try {
     const res = await API.post("/blog/toggle-blog", { blogId });

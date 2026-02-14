@@ -144,7 +144,7 @@ export const addBlog = async (req, res) => {
 export const getallblog = async (req, res) => {
   try {
     const blogs = await Blog.find({})
-      .select("title category image isPublished")
+      .select("-content -aiAnalysis -subTitle")
       .sort({ createdAt: -1 });
 
     if (blogs.length === 0) {
@@ -155,6 +155,7 @@ export const getallblog = async (req, res) => {
       success: true,
       blogs,
     });
+
   } catch (error) {
     console.error("GET ALL BLOG ERROR ", error);
     return res.status(500).json({
