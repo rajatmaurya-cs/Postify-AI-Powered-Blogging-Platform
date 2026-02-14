@@ -1,6 +1,6 @@
 import { redisClient } from '../Config/redis.js'
 import bcrypt from "bcrypt";
-import transporter from '../utils/mailer.js';
+// import transporter from '../utils/mailer.js';
 import { sendOtpEmail } from "../utils/mailer.js";
 export const sendOtpService = async (email) => {
 
