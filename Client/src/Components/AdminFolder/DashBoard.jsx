@@ -1,36 +1,30 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { assets } from "../../assets/assets";
 import API from "../../Api/api";
 import toast from "react-hot-toast";
 import { useBlogs } from "../../hooks/useBlogs";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const DashBoard = () => {
-  const [NoOfBlogs, setNoOfblogs] = useState(null);
-  const [NoOfComments, setNoofComments] = useState(null);
-  const [NoOfDrafts, setNoOfDrafts] = useState(null);
-
   const queryClient = useQueryClient();
 
-  const DashboardData = async () => {
-    try {
+  
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    isError: statsError,
+  } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
       const res = await API.get("/blog/BlogDashBoard");
-      if (res.data?.success) {
-        const { totalBlogs, totalComments, draftBlogs } = res.data.stats || {};
-        setNoOfblogs(totalBlogs ?? 0);
-        setNoofComments(totalComments ?? 0);
-        setNoOfDrafts(draftBlogs ?? 0);
-      } else {
-        toast.error(res.data?.message || "Failed to load dashboard stats");
+      if (!res.data?.success) {
+        throw new Error(res.data?.message || "Failed to load dashboard stats");
       }
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Dashboard stats error");
-    }
-  };
-
-  useEffect(() => {
-    DashboardData();
-  }, []);
+      const { totalBlogs = 0, totalComments = 0, draftBlogs = 0 } = res.data.stats || {};
+      return { totalBlogs, totalComments, draftBlogs };
+    },
+    staleTime: 30_000, 
+  });
 
   const { data: blogs = [], isLoading, isError, error, isFetching } = useBlogs();
 
@@ -43,42 +37,38 @@ const DashBoard = () => {
   const toggleMutation = useMutation({
     mutationFn: async (blogId) => {
       const res = await API.post("/blog/toggle-blog", { blogId });
-      if (!res.data?.success) {
-        throw new Error(res.data?.message || "Failed to update blog");
-      }
+      if (!res.data?.success) throw new Error(res.data?.message || "Failed to update blog");
       return res.data;
     },
     onMutate: () => toast.loading("Updating blog status...", { id: "toggle" }),
     onSuccess: (data) => {
       toast.success(data.message || "Updated!", { id: "toggle" });
       queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
-      DashboardData(); 
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); // ✅ stats refresh
     },
-    onError: (err) => {
-      toast.error(err?.message || "Failed to update blog status", { id: "toggle" });
-    },
+    onError: (err) => toast.error(err?.message || "Failed to update blog status", { id: "toggle" }),
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (blogId) => {
       const res = await API.post("/blog/delete-blog", { blogId });
-      if (!res.data?.success) {
-        throw new Error(res.data?.message || "Failed to delete blog");
-      }
+      if (!res.data?.success) throw new Error(res.data?.message || "Failed to delete blog");
       return res.data;
     },
     onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
     onSuccess: (data) => {
       toast.success(data.message || "Deleted!", { id: "delete" });
       queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
-      DashboardData(); 
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); // ✅ stats refresh
     },
-    onError: (err) => {
-      toast.error(err?.message || "Failed to delete blog", { id: "delete" });
-    },
+    onError: (err) => toast.error(err?.message || "Failed to delete blog", { id: "delete" }),
   });
 
   const disableAll = toggleMutation.isPending || deleteMutation.isPending;
+
+  const totalBlogs = stats?.totalBlogs ?? (statsLoading ? "..." : "-");
+  const totalComments = stats?.totalComments ?? (statsLoading ? "..." : "-");
+  const draftBlogs = stats?.draftBlogs ?? (statsLoading ? "..." : "-");
 
   return (
     <div className="flex flex-col gap-2">
@@ -87,7 +77,7 @@ const DashBoard = () => {
           <div className="flex items-center gap-4 bg-white p-4 min-w-58 rounded shadow cursor-pointer hover:scale-105 transition-all mr-7">
             <img src={assets.dashboard_icon_1} alt="" />
             <div>
-              <p>{NoOfBlogs ?? "-"}</p>
+              <p>{totalBlogs}</p>
               <p>Blogs</p>
             </div>
           </div>
@@ -95,7 +85,7 @@ const DashBoard = () => {
           <div className="flex items-center gap-4 bg-white p-4 min-w-58 rounded shadow cursor-pointer hover:scale-105 transition-all mr-7">
             <img src={assets.dashboard_icon_2} alt="" />
             <div>
-              <p>{NoOfComments ?? "-"}</p>
+              <p>{totalComments}</p>
               <p>Comments</p>
             </div>
           </div>
@@ -103,23 +93,19 @@ const DashBoard = () => {
           <div className="flex items-center gap-4 bg-white p-4 min-w-58 rounded shadow cursor-pointer hover:scale-105 transition-all">
             <img src={assets.dashboard_icon_3} alt="" />
             <div>
-              <p>{NoOfDrafts ?? "-"}</p>
+              <p>{draftBlogs}</p>
               <p>Drafts</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex mt-8 mb-5 ml-10">
-        <img src={assets.dashboard_icon_4} alt="" />
-        <div className="ml-3 font-medium">Latest Blogs</div>
-      </div>
+      {statsError && <p className="ml-10 text-red-500">Dashboard stats failed to load</p>}
 
+      {/* blogs section same as your code... */}
       {isLoading && <p className="ml-10 text-gray-500">Loading blogs...</p>}
       {isError && <p className="ml-10 text-red-500">Error: {error?.message}</p>}
-      {!isLoading && !isError && isFetching && (
-        <p className="ml-10 text-gray-500">Updating...</p>
-      )}
+      {!isLoading && !isError && isFetching && <p className="ml-10 text-gray-500">Updating...</p>}
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-4xl ml-10">
         <table className="w-full text-left">
@@ -143,15 +129,9 @@ const DashBoard = () => {
                 <td className="p-4">
                   {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : "—"}
                 </td>
-
-                <td
-                  className={`p-4 font-medium ${
-                    blog.isPublished ? "text-green-600" : "text-yellow-600"
-                  }`}
-                >
+                <td className={`p-4 font-medium ${blog.isPublished ? "text-green-600" : "text-yellow-600"}`}>
                   {blog.isPublished ? "Published" : "Not Published"}
                 </td>
-
                 <td className="p-4">
                   <button
                     onClick={() => toggleMutation.mutate(blog._id)}
@@ -161,7 +141,6 @@ const DashBoard = () => {
                     {toggleMutation.isPending ? "Updating..." : blog.isPublished ? "Unpublish" : "Publish"}
                   </button>
                 </td>
-
                 <td className="p-4">
                   <button
                     onClick={() => deleteMutation.mutate(blog._id)}
@@ -172,7 +151,6 @@ const DashBoard = () => {
                     {deleteMutation.isPending ? "..." : "❌"}
                   </button>
                 </td>
-
                 <td className="p-4 font-medium">{blog.moderatedBy?.fullName || "NONE"}</td>
               </tr>
             ))}
