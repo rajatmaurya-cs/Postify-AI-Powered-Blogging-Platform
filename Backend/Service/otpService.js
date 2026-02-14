@@ -27,7 +27,7 @@ export const sendOtpService = async (email) => {
     });
 
     await transporter.sendMail({
-        from: process.env.EMAIL,
+        from: process.env.EMAIL_USER,
         to: email,
         subject: "OTP Verification",
         html : `<!DOCTYPE html>
