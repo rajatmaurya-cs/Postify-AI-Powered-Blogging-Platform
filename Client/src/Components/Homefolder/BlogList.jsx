@@ -25,7 +25,7 @@ const BlogList = () => {
 
       const matchesSearch =
         blog.title?.toLowerCase().includes(searchText) ||
-        blog.description?.toLowerCase().includes(searchText);
+        blog.content?.toLowerCase().includes(searchText);
 
       return matchesCategory && matchesSearch;
     });

@@ -109,37 +109,60 @@ export const addBlog = async (req, res) => {
 
 
 
-export const getallblog = async (req, res) => {
-  try {
+// export const getallblog = async (req, res) => {
+//   try {
     
    
     
-    const blogs = await Blog.find({})
-      .populate("createdBy", "fullName email")
-      .populate("moderatedBy", "fullName")
-      .sort({ createdAt: -1 })
+//     const blogs = await Blog.find({})
+//       .populate("createdBy", "fullName email")
+//       .populate("moderatedBy", "fullName")
+//       .sort({ createdAt: -1 })
     
 
-    if (blogs.length === 0) {
-      return res.json({ sucess: false, message: "No blog exits" })
-    }
+//     if (blogs.length === 0) {
+//       return res.json({ sucess: false, message: "No blog exits" })
+//     }
    
-    res.json({
+//     res.json({
+//       success: true,
+//       blogs,
+//     });
+
+
+//   } catch (error) {
+
+//   console.error("GET ALL BLOG ERROR 👉", error);
+
+//   return res.status(500).json({
+//     success: false,
+//     message: error.message
+//   });
+// }
+// }
+
+export const getallblog = async (req, res) => {
+  try {
+    const blogs = await Blog.find({})
+      .select("title category image isPublished")
+      .sort({ createdAt: -1 });
+
+    if (blogs.length === 0) {
+      return res.json({ success: false, message: "No blog exists" });
+    }
+
+    return res.json({
       success: true,
       blogs,
     });
-
-
   } catch (error) {
-
-  console.error("GET ALL BLOG ERROR 👉", error);
-
-  return res.status(500).json({
-    success: false,
-    message: error.message
-  });
-}
-}
+    console.error("GET ALL BLOG ERROR ", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 
 
