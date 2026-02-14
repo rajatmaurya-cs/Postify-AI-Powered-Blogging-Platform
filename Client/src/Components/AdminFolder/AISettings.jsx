@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../../Api/api";
 import toast from "react-hot-toast";
@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 const AIConfigDashboard = () => {
   const queryClient = useQueryClient();
 
-  // Local state ONLY for edits (not for server data)
+  // Local state ONLY for edits
   const [editedConfig, setEditedConfig] = useState(null);
 
   // 1) Fetch current config
@@ -25,6 +25,7 @@ const AIConfigDashboard = () => {
       return cfg;
     },
     staleTime: 60_000,
+    retry: 1,
   });
 
   // 2) Fetch config history
@@ -44,25 +45,17 @@ const AIConfigDashboard = () => {
       return res.data.history || [];
     },
     staleTime: 30_000,
+    retry: 1,
   });
 
-  
+  // Initialize edited config when server config arrives/changes
   useEffect(() => {
     if (currentConfig) setEditedConfig({ ...currentConfig });
   }, [currentConfig]);
 
-  // 4) Save mutation
+  // 3) Update mutation
   const updateMutation = useMutation({
-    mutationFn: async () => {
-      if (!editedConfig) throw new Error("No edited config to save");
-
-      const payload = {
-        aiEnabled: editedConfig.aiEnabled,
-        aiModel: editedConfig.aiModel,
-        dailyAiLimit: editedConfig.dailyAiLimit,
-        dailyappLimit: editedConfig.dailyappLimit,
-      };
-
+    mutationFn: async (payload) => {
       const res = await API.put("/ai/config/updateConfig", payload);
       if (!res.data?.success) {
         throw new Error(res.data?.message || "Update failed");
@@ -72,8 +65,6 @@ const AIConfigDashboard = () => {
     onMutate: () => toast.loading("Saving config...", { id: "save-config" }),
     onSuccess: () => {
       toast.success("Configuration updated", { id: "save-config" });
-
-      // ✅ refetch both
       queryClient.invalidateQueries({ queryKey: ["ai-config"] });
       queryClient.invalidateQueries({ queryKey: ["ai-config-history"] });
     },
@@ -84,7 +75,7 @@ const AIConfigDashboard = () => {
 
   const saving = updateMutation.isPending;
 
-  // Loading screen (config is required to render form)
+  // Loading + Error UI (NO hooks after this return => avoids React #310)
   if (configLoading || !currentConfig || !editedConfig) {
     return (
       <div className="h-screen flex justify-center items-center text-xl font-semibold">
@@ -101,11 +92,24 @@ const AIConfigDashboard = () => {
     );
   }
 
-  const isUnchanged = useMemo(() => {
-    return JSON.stringify(editedConfig) === JSON.stringify(currentConfig);
-  }, [editedConfig, currentConfig]);
+  // ✅ IMPORTANT: not a hook (no useMemo), so safe here
+  const isUnchanged =
+    JSON.stringify(editedConfig) === JSON.stringify(currentConfig);
 
   const disableAll = saving || configFetching || historyFetching;
+
+  const handleSave = () => {
+    if (!editedConfig) return;
+
+    const payload = {
+      aiEnabled: editedConfig.aiEnabled,
+      aiModel: editedConfig.aiModel,
+      dailyAiLimit: editedConfig.dailyAiLimit,
+      dailyappLimit: editedConfig.dailyappLimit,
+    };
+
+    updateMutation.mutate(payload);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
@@ -225,11 +229,19 @@ const AIConfigDashboard = () => {
             }
             className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
           >
-            <option value="openai/gpt-oss-120b">GPT-OSS 120B (Highest Intelligence)</option>
-            <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B Versatile (Recommended)</option>
+            <option value="openai/gpt-oss-120b">
+              GPT-OSS 120B (Highest Intelligence)
+            </option>
+            <option value="llama-3.3-70b-versatile">
+              LLaMA 3.3 70B Versatile (Recommended)
+            </option>
             <option value="groq/compound">Groq Compound (Balanced)</option>
-            <option value="groq/compound-mini">Groq Compound Mini (Fast & Cheap)</option>
-            <option value="llama-3.1-8b-instant">LLaMA 3.1 8B Instant (Ultra Fast)</option>
+            <option value="groq/compound-mini">
+              Groq Compound Mini (Fast & Cheap)
+            </option>
+            <option value="llama-3.1-8b-instant">
+              LLaMA 3.1 8B Instant (Ultra Fast)
+            </option>
           </select>
         </div>
       </div>
@@ -237,7 +249,7 @@ const AIConfigDashboard = () => {
       {/* Save */}
       <div className="max-w-5xl mt-10">
         <button
-          onClick={() => updateMutation.mutate()}
+          onClick={handleSave}
           disabled={isUnchanged || disableAll}
           className={`w-full py-3 rounded-2xl text-lg font-semibold transition ${
             isUnchanged || disableAll
@@ -255,7 +267,9 @@ const AIConfigDashboard = () => {
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
           {historyLoading && (
-            <div className="p-6 text-center text-gray-500">Loading history...</div>
+            <div className="p-6 text-center text-gray-500">
+              Loading history...
+            </div>
           )}
 
           {historyError && (
@@ -265,7 +279,9 @@ const AIConfigDashboard = () => {
           )}
 
           {!historyLoading && !historyError && configHistory.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">No config history found.</div>
+            <div className="p-6 text-center text-gray-500">
+              No config history found.
+            </div>
           ) : (
             !historyLoading &&
             !historyError && (
@@ -300,10 +316,15 @@ const AIConfigDashboard = () => {
 
                 <tbody>
                   {configHistory.map((item) => (
-                    <tr key={item._id} className="border-t hover:bg-gray-50 transition">
+                    <tr
+                      key={item._id}
+                      className="border-t hover:bg-gray-50 transition"
+                    >
                       <td className="px-6 py-4 font-medium">
                         {item.changedBy?.fullName || "Unknown"}
-                        <p className="text-sm text-gray-500">{item.changedBy?.email}</p>
+                        <p className="text-sm text-gray-500">
+                          {item.changedBy?.email}
+                        </p>
                       </td>
 
                       <td className="px-6 py-4">
@@ -314,14 +335,24 @@ const AIConfigDashboard = () => {
                               : "bg-red-100 text-red-700"
                           }`}
                         >
-                          {item.configSnapshot?.aiEnabled ? "Enabled" : "Disabled"}
+                          {item.configSnapshot?.aiEnabled
+                            ? "Enabled"
+                            : "Disabled"}
                         </span>
                       </td>
 
-                      <td className="px-6 py-4">{item.configSnapshot?.aiModel}</td>
-                      <td className="px-6 py-4">{item.configSnapshot?.dailyAiLimit}</td>
-                      <td className="px-6 py-4">{item.configSnapshot?.dailyappLimit}</td>
-                      <td className="px-6 py-4 text-gray-600">{item.changeReason || "—"}</td>
+                      <td className="px-6 py-4">
+                        {item.configSnapshot?.aiModel}
+                      </td>
+                      <td className="px-6 py-4">
+                        {item.configSnapshot?.dailyAiLimit}
+                      </td>
+                      <td className="px-6 py-4">
+                        {item.configSnapshot?.dailyappLimit}
+                      </td>
+                      <td className="px-6 py-4 text-gray-600">
+                        {item.changeReason || "—"}
+                      </td>
 
                       <td className="px-6 py-4 text-gray-500">
                         {new Date(item.createdAt).toLocaleString("en-IN", {
