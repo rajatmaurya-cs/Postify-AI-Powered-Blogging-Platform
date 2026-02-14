@@ -107,7 +107,6 @@ export const addBlog = async (req, res) => {
 };
 
 
-
 export const getallblog = async (req, res) => {
   try {
     const blogs = await Blog.find({})

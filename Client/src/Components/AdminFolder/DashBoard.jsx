@@ -3,7 +3,7 @@ import { assets } from "../../assets/assets";
 import API from "../../Api/api";
 import toast from "react-hot-toast";
 import { useBlogs } from "../../hooks/useBlogs";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const DashBoard = () => {
   const [NoOfBlogs, setNoOfblogs] = useState(null);
@@ -15,16 +15,16 @@ const DashBoard = () => {
   const DashboardData = async () => {
     try {
       const res = await API.get("/blog/BlogDashBoard");
-      if (res.data.success) {
-        const { totalBlogs, totalComments, draftBlogs } = res.data.stats;
-        setNoOfblogs(totalBlogs);
-        setNoofComments(totalComments);
-        setNoOfDrafts(draftBlogs);
+      if (res.data?.success) {
+        const { totalBlogs, totalComments, draftBlogs } = res.data.stats || {};
+        setNoOfblogs(totalBlogs ?? 0);
+        setNoofComments(totalComments ?? 0);
+        setNoOfDrafts(draftBlogs ?? 0);
       } else {
-        toast.error(res.data.message || "Failed to load dashboard stats");
+        toast.error(res.data?.message || "Failed to load dashboard stats");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Dashboard stats error");
+      toast.error(err?.response?.data?.message || "Dashboard stats error");
     }
   };
 
@@ -32,66 +32,53 @@ const DashBoard = () => {
     DashboardData();
   }, []);
 
-  const {
-    data: blogs = [],
-    isLoading,
-    isError,
-    error,
-    isFetching,
-  } = useBlogs();
+  const { data: blogs = [], isLoading, isError, error, isFetching } = useBlogs();
 
-  
   const latestBlogs = useMemo(() => {
     return [...blogs]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 4);
   }, [blogs]);
 
-  const handlePublish = async (blogId) => {
-    const toastId = toast.loading("Updating blog status...");
-
-    try {
+  const toggleMutation = useMutation({
+    mutationFn: async (blogId) => {
       const res = await API.post("/blog/toggle-blog", { blogId });
-
-      if (!res.data.success) {
-        toast.error(res.data.message, { id: toastId });
-        return;
+      if (!res.data?.success) {
+        throw new Error(res.data?.message || "Failed to update blog");
       }
+      return res.data;
+    },
+    onMutate: () => toast.loading("Updating blog status...", { id: "toggle" }),
+    onSuccess: (data) => {
+      toast.success(data.message || "Updated!", { id: "toggle" });
+      queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
+      DashboardData(); 
+    },
+    onError: (err) => {
+      toast.error(err?.message || "Failed to update blog status", { id: "toggle" });
+    },
+  });
 
-      toast.success(res.data.message, { id: toastId });
-
-      
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
-
-
-      DashboardData();
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update blog status", {
-        id: toastId,
-      });
-    }
-  };
-
-  const handleRemove = async (blogId) => {
-    const toastId = toast.loading("Deleting blog...");
-
-    try {
+  const deleteMutation = useMutation({
+    mutationFn: async (blogId) => {
       const res = await API.post("/blog/delete-blog", { blogId });
-
-      if (!res.data.success) {
-        toast.error(res.data.message || "Delete failed", { id: toastId });
-        return;
+      if (!res.data?.success) {
+        throw new Error(res.data?.message || "Failed to delete blog");
       }
+      return res.data;
+    },
+    onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
+    onSuccess: (data) => {
+      toast.success(data.message || "Deleted!", { id: "delete" });
+      queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
+      DashboardData(); 
+    },
+    onError: (err) => {
+      toast.error(err?.message || "Failed to delete blog", { id: "delete" });
+    },
+  });
 
-      toast.success("Blog deleted", { id: toastId });
-
-      
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
-      DashboardData();
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Delete failed", { id: toastId });
-    }
-  };
+  const disableAll = toggleMutation.isPending || deleteMutation.isPending;
 
   return (
     <div className="flex flex-col gap-2">
@@ -129,9 +116,7 @@ const DashBoard = () => {
       </div>
 
       {isLoading && <p className="ml-10 text-gray-500">Loading blogs...</p>}
-      {isError && (
-        <p className="ml-10 text-red-500">Error: {error?.message}</p>
-      )}
+      {isError && <p className="ml-10 text-red-500">Error: {error?.message}</p>}
       {!isLoading && !isError && isFetching && (
         <p className="ml-10 text-gray-500">Updating...</p>
       )}
@@ -156,7 +141,7 @@ const DashBoard = () => {
                 <td className="p-4">{index + 1}</td>
                 <td className="p-4">{blog.title}</td>
                 <td className="p-4">
-                  {new Date(blog.createdAt).toLocaleDateString()}
+                  {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : "—"}
                 </td>
 
                 <td
@@ -169,27 +154,36 @@ const DashBoard = () => {
 
                 <td className="p-4">
                   <button
-                    onClick={() => handlePublish(blog._id)}
-                    className="bg-gray-300 hover:bg-gray-700 hover:text-white px-4 py-1 rounded-2xl"
+                    onClick={() => toggleMutation.mutate(blog._id)}
+                    disabled={disableAll}
+                    className="bg-gray-300 hover:bg-gray-700 hover:text-white px-4 py-1 rounded-2xl disabled:opacity-60"
                   >
-                    {blog.isPublished ? "Unpublish" : "Publish"}
+                    {toggleMutation.isPending ? "Updating..." : blog.isPublished ? "Unpublish" : "Publish"}
                   </button>
                 </td>
 
                 <td className="p-4">
                   <button
-                    onClick={() => handleRemove(blog._id)}
-                    className="bg-gray-300 hover:bg-gray-700 px-4 py-1 w-25 rounded-2xl"
+                    onClick={() => deleteMutation.mutate(blog._id)}
+                    disabled={disableAll}
+                    className="bg-gray-300 hover:bg-gray-700 px-4 py-1 w-25 rounded-2xl disabled:opacity-60"
+                    title="Delete blog"
                   >
-                    ❌
+                    {deleteMutation.isPending ? "..." : "❌"}
                   </button>
                 </td>
 
-                <td className="p-4 font-medium">
-                  {blog.moderatedBy?.fullName || "NONE"}
-                </td>
+                <td className="p-4 font-medium">{blog.moderatedBy?.fullName || "NONE"}</td>
               </tr>
             ))}
+
+            {latestBlogs.length === 0 && (
+              <tr>
+                <td className="p-6 text-center text-gray-500" colSpan={7}>
+                  No blogs found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
