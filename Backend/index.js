@@ -21,6 +21,34 @@ const app = express();
 
 
 /* ================= Backend Checking Route ================= */
+import transporter from "./utils/mailer.js"; // adjust
+
+app.get("/debug/smtp", async (req, res) => {
+  try {
+    const user = process.env.EMAIL_USER;
+    const pass = process.env.EMAIL_PASS;
+
+    // Verify SMTP login
+    await transporter.verify();
+
+    res.json({
+      ok: true,
+      EMAIL_USER: user ? "present" : "missing",
+      EMAIL_PASS_length: pass ? pass.length : null,
+      smtp: "verified",
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      EMAIL_USER: process.env.EMAIL_USER ? "present" : "missing",
+      EMAIL_PASS_length: process.env.EMAIL_PASS?.length ?? null,
+      code: err?.code,
+      response: err?.response,
+      message: err?.message,
+    });
+  }
+});
+
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 
 
