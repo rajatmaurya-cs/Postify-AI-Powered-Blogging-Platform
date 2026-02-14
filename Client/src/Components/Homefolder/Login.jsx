@@ -5,7 +5,6 @@ import { AuthContext } from '../../Context/Authcontext'
 import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast'
 import { assets } from "../../assets/assets";
-
 import useGoogleAuth from "../../hooks/useGoogleAuth";
 
 
@@ -16,20 +15,25 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [Loading, setLoading] = useState(false);
 
   const handlelogin = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
+    const toastId = toast.loading("Logging you in...");
     try {
+      setLoading(true)
+
       const res = await API.post("/auth/login", {
         email,
         password,
       });
 
       if (res.data.success) {
-        console.log(res.data.accessToken)
-        login(res.data.user , res.data.accessToken);
 
-        toast.success("Login successful");
+        console.log(res.data.accessToken)
+        login(res.data.user, res.data.accessToken);
+
+        toast.success("Login successful", { id: toastId });
 
         const role = res.data.user.role;
 
@@ -38,12 +42,15 @@ const Login = () => {
         else if (role === 'ADMIN') Navigate('/admin')
       }
       else {
-        toast.error(res.data.message);
+        toast.error(res.data.message || "Login failed", { id: toastId });
         return;
       }
 
     } catch (error) {
-      console.log(error.response?.data?.message || error.message);
+      toast.error(
+        error.response?.data?.message || error.message || "Login failed",
+        { id: toastId }
+      );
     }
   };
 
@@ -102,8 +109,9 @@ const Login = () => {
                   type="submit"
                   className="w-full bg-gray-300 hover:bg-gray-800 text-black hover:text-white 
         font-semibold py-3 rounded-lg transition duration-200"
+                  disabled  = {Loading}
                 >
-                  Login
+                  {!Loading ? Login : "Logging...."}
                 </button>
               </form>
 
@@ -126,7 +134,7 @@ const Login = () => {
                   src={assets.google}
                   alt="Google"
                   className="w-5 h-5 object-contain"
-                  onClick={() => googleLogin}
+
                 />
                 <span>Sign in with Google</span>
               </button>

@@ -10,6 +10,7 @@ import useVerifyOtp from '../../hooks/useVerifyOtp';
 
 
 const Signup = () => {
+    
     const [fullName, setFullname] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -39,7 +40,8 @@ const Signup = () => {
                 toast.success(res.data.message)
                 Navigate('/login')
             } else {
-                toast.success(res.data.message)
+                toast.error(res.data.message || "Signup failed")
+
             }
 
         } catch (error) {
@@ -230,7 +232,7 @@ const Signup = () => {
                                     src={assets.google}
                                     alt="Google"
                                     className="w-5 h-5 object-contain"
-                                    onClick={() => googleLogin}
+                                  
                                 />
                                 <span>Signup with Google</span>
                             </button>
