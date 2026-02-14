@@ -113,7 +113,7 @@ export const getallblog = async (req, res) => {
     const blogs = await Blog.find({})
       .select("-content -aiAnalysis -subTitle")
       .sort({ createdAt: -1 })
-      .populate("moderatedBy","FullName");
+      .populate("moderatedBy","fullName");
 
     if (blogs.length === 0) {
       return res.json({ success: false, message: "No blog exists" });
