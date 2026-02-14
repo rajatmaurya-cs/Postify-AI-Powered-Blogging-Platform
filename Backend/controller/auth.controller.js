@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 import axios from "axios";
 
-import { sendOtpService } from '../Service/otpService.js';
+import { sendOtpService} from "../Service/otpService.js" ;
 
 import bcrypt from "bcrypt"
 
@@ -400,25 +400,51 @@ export const refreshAccessToken = async (req, res) => {
 /*------------------------------------------ OTP-----------------------------------------*/
 
 
+// export const sendOtp = async (req, res) => {
+//   try {
+
+//     const { email } = req.body;
+
+//     await sendOtpService(email);
+
+//     return res.json({
+//       success: true,
+//       message: "OTP sent successfully"
+//     })
+
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message
+//     })
+//   }
+// }
+
+
 export const sendOtp = async (req, res) => {
   try {
-
     const { email } = req.body;
 
     await sendOtpService(email);
 
     return res.json({
       success: true,
-      message: "OTP sent successfully"
-    })
-
+      message: "OTP sent successfully",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
+
+
+
+
+
+
+
 
 
 export const verifyOtp = async (req, res) => {
