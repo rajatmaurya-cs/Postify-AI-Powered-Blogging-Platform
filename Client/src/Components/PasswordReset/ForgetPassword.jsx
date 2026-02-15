@@ -88,13 +88,13 @@ const ForgetPassword = () => {
 
 
   const handleResetPassword = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    resetPasswordMutation.mutate({
-      email,
-      newPassword,
-    });
-  };
+  resetPasswordMutation.mutate({
+    email,
+    newpassword: newPassword,  // ✅ FIX: match backend key
+  });
+};
 
 
 

@@ -579,7 +579,7 @@ export const resetpassword = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Server error",
+      message: "Error : Password Not Reset ",
     });
   }
 };
