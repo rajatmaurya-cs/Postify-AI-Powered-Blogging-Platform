@@ -1,5 +1,4 @@
 
-
 import FrontButton from '../../Effects/FrontButton'
 import Gpt from '../../Effects/Gpt'
 

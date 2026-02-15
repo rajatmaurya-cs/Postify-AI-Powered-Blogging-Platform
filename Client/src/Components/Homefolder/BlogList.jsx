@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs"; 
-
+import AppLoader from '../../Effects/Apploader'
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -85,22 +85,24 @@ const BlogList = () => {
         ""
       )}
 
-      {/* ✅ loading state from React Query */}
+   
       {isLoading && (
-        <p className="text-center text-gray-500">Loading blogs...</p>
+        <p className="text-center text-gray-500">    <AppLoader/>   </p>
       )}
 
-      {/* ✅ error state from React Query */}
+
       {isError && (
         <p className="text-center text-red-400">
           Error fetching blogs: {error?.message}
         </p>
       )}
 
-      {/* ✅ background refetch indicator (optional) */}
+      
       {!isLoading && !isError && isFetching && (
-        <p className="text-center text-gray-500 mb-4">Updating...</p>
+        <p className="text-center text-gray-500 mb-4">  <AppLoader/>  </p>
       )}
+
+
 
       {!isLoading && !isError && publishedBlogs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
