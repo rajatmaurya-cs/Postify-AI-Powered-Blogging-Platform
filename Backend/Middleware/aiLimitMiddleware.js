@@ -5,16 +5,11 @@ import { redisClient } from "../Config/redis.js";
 
 const checkAiLimit = async (req, res, next) => {
   try {
-   
-     
-     
-      
 
-   
     const config = await Config.findOne();
 
     if (!config?.aiEnabled) {
-        console.log("Ai currently disabled")
+      console.log("Ai currently disabled")
       return res.status(403).json({
         success: false,
         message: "AI is currently disabled",
@@ -24,23 +19,23 @@ const checkAiLimit = async (req, res, next) => {
     const userId = req.user.id;
     const role = req.user.role
 
-     if(role === 'ADMIN') return next();
-    
+    if (role === 'ADMIN') return next();
 
 
-     // rate limit
-  const key = `AIAttempts:${userId}`;
-  const attempts = await redisClient.incr(key);
 
-  if (attempts === 1) {
-    await redisClient.expire(key, 60);
-  }
+    // rate limit
+    const key = `AIAttempts:${userId}`;
+    const attempts = await redisClient.incr(key);
 
-  if (attempts > 1) {
-    throw { status:429, message:"Rate limit exceeded wait a Moment 🙏🏼" };
-  }
+    if (attempts === 1) {
+      await redisClient.expire(key, 60);
+    }
 
-   
+    if (attempts > 1) {
+      throw { status: 429, message: "Rate limit exceeded wait a Moment 🙏🏼" };
+    }
+
+
     const startOfDay = new Date();
     startOfDay.setUTCHours(0, 0, 0, 0);
 
@@ -58,40 +53,35 @@ const checkAiLimit = async (req, res, next) => {
       });
     }
 
-    
-
-
-    const userLimit =  config.dailyAiLimit;
+    const userLimit = config.dailyAiLimit;
 
     const today = new Date().toISOString().slice(0, 10);
 
-    
 
 
-    const Userusage = await AIUsage.findOneAndUpdate(
-      {
+
+
+    let usage = await AIUsage.findOne({ userId, date: today });
+
+    if (!usage) {
+      usage = await AIUsage.create({
         userId,
+        role: req.user.role,
         date: today,
-        count: { $lt: userLimit },
-      },
-      {
-        $setOnInsert: { role },
-        $inc: { count: 1 },
-      },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
-
-    
-    if (!Userusage) {
-      return res.status(429).json({
-        success: false,
-        message: "Your daily AI limit has been reached.",
+        count: 0
       });
     }
-  
+
+    if (usage.count >= userLimit) {
+      return res.json({
+        success: false,
+        message: "Daily AI limit reached"
+      });
+    }
+
+    usage.count++;
+    await usage.save();
+
     next();
 
   } catch (error) {
