@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
-import AppLoader from '../../Effects/Apploader'
+import InlineLoader from '../../Effects/InlineLoader'
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -86,7 +86,7 @@ const BlogList = () => {
 
 
       {isLoading && (
-        <div className="text-center text-gray-500">    <AppLoader />   </div>
+        <div className="flex justify-center py-6">    <InlineLoader/>   </div>
       )}
 
 
@@ -99,7 +99,7 @@ const BlogList = () => {
 
       {!isLoading && !isError && isFetching && (
         <div className="flex justify-center py-6">
-          <AppLoader />
+          <InlineLoader/>
         </div>
       )}
 
@@ -144,7 +144,7 @@ const BlogList = () => {
         )
       )}
 
-      <div className="mt-20"><AppLoader/></div>
+      <div className="flex justify-center py-6"><AppLoader/></div>
     </div>
   );
 };

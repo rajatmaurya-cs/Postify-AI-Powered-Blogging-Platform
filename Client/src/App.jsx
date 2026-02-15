@@ -16,15 +16,15 @@ const AddBlog = lazy(() => import("./Components/AdminFolder/AddBlog"));
 const AI = lazy(() => import("./Components/AdminFolder/AI"));
 const AIconfig = lazy(() => import("./Components/AdminFolder/AISettings"));
 
-import AppLoader from "./Effects/Apploader";
+import FullScreenLoader from "./Effects/FullscreenLoader";
 
 function App() {
   const { loading } = useContext(AuthContext);
 
-  if(loading) return <div><AppLoader/></div>;
+  if(loading) return <div>  <FullScreenLoader/> </div>;
 
   return (
-    <Suspense fallback={<div> <AppLoader/> </div>}>
+    <Suspense fallback={<div> <FullScreenLoader/> </div>}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog/:blogId" element={<WholeBlog />} />
