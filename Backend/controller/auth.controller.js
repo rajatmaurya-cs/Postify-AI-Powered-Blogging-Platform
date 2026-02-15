@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 import axios from "axios";
 
-import { sendOtpService} from "../Service/otpService.js" ;
+import { sendOtpService } from "../Service/otpService.js";
 
 import bcrypt from "bcrypt"
 
@@ -423,9 +423,11 @@ export const refreshAccessToken = async (req, res) => {
 
 export const sendOtp = async (req, res) => {
   try {
-    const { email , purpose } = req.body;
+    const { email, purpose } = req.body;
+    email = email.toLowerCase().trim();
+    purpose = purpose.toUpperCase().trim();
 
-    await sendOtpService(email , purpose);
+    await sendOtpService(email, purpose);
 
     return res.json({
       success: true,
