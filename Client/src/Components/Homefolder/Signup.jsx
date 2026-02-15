@@ -277,7 +277,10 @@ const Signup = () => {
 
   // ✅ OTP hooks with purpose = "signup"
   const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("signup");
+  
   const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("signup");
+
+
 
   const handleSignup = async (e) => {
     e.preventDefault();
