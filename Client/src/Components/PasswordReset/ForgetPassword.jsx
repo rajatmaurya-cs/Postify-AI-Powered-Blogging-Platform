@@ -1,7 +1,5 @@
-// 
 
-
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import OtpInput from "react-otp-input";
 import { useNavigate } from "react-router-dom";
@@ -27,32 +25,30 @@ const ForgetPassword = () => {
       const res = await API.post("/auth/checkemailforreset", { email });
       return res.data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data?.success) {
-        toast.success(data.message || "OTP sent");
-        setOtpSent(true);
-        // ✅ now send actual otp (if your backend checkEmail doesn't send otp)
-        // If /checkemailforreset ALREADY sends OTP, then don't call sendOtp here.
-        // Otherwise:
-        // sendOtp(email);
+        toast.success("Email found. Sending OTP...");
+        await sendOtp(email);    // ✅ IMPORTANT
+        setOtpSent(true);        // show OTP box
       } else {
         toast.error(data?.message || "User does not exist");
       }
     },
+
     onError: (err) => {
       toast.error(err?.response?.data?.message || err.message || "Something went wrong");
     },
   });
 
   // ✅ 2) Auto verify (run once per OTP)
-   useEffect(() => {
-   
+  useEffect(() => {
+
     if (otp.length === 6 && !isVerifying && !isVerified) {
       console.log("Verifying OTP...");
       verifyOtp(email, otp);
     }
   }, [otp, isVerifying, isVerified, email, verifyOtp]);
-    
+
 
 
   // ✅ Hide OTP UI after verified + clear otp
