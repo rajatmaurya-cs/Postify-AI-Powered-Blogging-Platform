@@ -120,7 +120,11 @@ const ForgetPassword = () => {
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:bg-gray-100"
                 value={email}
                 disabled={isVerified}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setEmail(value);
+                  sessionStorage.setItem("signupEmail", value);
+                }}
                 required
               />
 
