@@ -143,6 +143,8 @@ const BlogList = () => {
           <p className="text-center text-gray-500">No blogs found</p>
         )
       )}
+
+      <div className="mt-20"><AppLoader/></div>
     </div>
   );
 };
