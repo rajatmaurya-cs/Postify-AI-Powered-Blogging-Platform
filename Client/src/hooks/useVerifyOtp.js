@@ -80,6 +80,7 @@ export default function useVerifyOtp(purpose) {
       });
       return res.data;
     },
+    
     onSuccess: (data) => {
       if (data?.success) {
         setIsVerified(true);

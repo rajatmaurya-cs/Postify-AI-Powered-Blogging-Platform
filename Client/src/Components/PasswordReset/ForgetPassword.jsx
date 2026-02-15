@@ -8,47 +8,46 @@ import useSendOtp from "../../hooks/useSendOtp";
 import useVerifyOtp from "../../hooks/useVerifyOtp";
 
 const ForgetPassword = () => {
-  const Navigate = useNavigate();
-
   const [email, setEmail] = useState("");
-  const [newpassword, setNewpassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [otp, setOtp] = useState("");
 
-  // ✅ OTP hooks with purpose = "RESET_PASSWORD"
-  const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("RESET_PASSWORD");
-  const { verifyOtp, isVerifying, isVerified, setIsVerified } =
-    useVerifyOtp("RESET_PASSWORD");
+  const navigate = useNavigate();
 
-  // ✅ Send OTP ONLY after checking email exists
-  const onSendOtp = async () => {
-    const cleaned = email.trim().toLowerCase();
-    if (!cleaned) return toast.error("Enter your email");
+  // ✅ Use "forgetPassword" to match your Redis key logic
+  const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("forgetPassword");
+  const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("forgetPassword");
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
 
     try {
-      const check = await API.post("/auth/checkemailforreset", { email: cleaned });
+      // ✅ Sending 'purpose' here as well because your backend requires it
+      const res = await API.post("/auth/reset-password", {
+        email,
+        newPassword,
+        purpose: "forgetPassword", 
+      });
 
-      if (!check.data?.success) {
-        return toast.error(check.data?.message || "User does not exist");
+      if (res.data.success) {
+        toast.success(res.data.message || "Password reset successful");
+        navigate("/login");
+      } else {
+        toast.error(res.data.message || "Reset failed");
       }
-
-      setEmail(cleaned);              // keep input normalized
-      sessionStorage.setItem("resetEmail", cleaned);
-
-      // ✅ EXACTLY like signup: call sendOtp with cleaned email directly
-      sendOtp(cleaned);
-    } catch (err) {
-      toast.error(err?.response?.data?.message || err.message || "Failed to check email");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || "Reset failed");
     }
   };
 
-  // ✅ Auto verify OTP (same pattern as signup)
+  // 🔁 Auto verify OTP
   useEffect(() => {
     if (otp.length === 6 && !isVerifying && !isVerified) {
-      verifyOtp(email.trim().toLowerCase(), otp);
+      verifyOtp(email, otp);
     }
   }, [otp, isVerifying, isVerified, email, verifyOtp]);
 
-  // ✅ After verified, hide OTP UI + clear OTP (same as signup)
+  // ❌ Reset OTP UI once verified
   useEffect(() => {
     if (isVerified) {
       setOtp("");
@@ -56,44 +55,17 @@ const ForgetPassword = () => {
     }
   }, [isVerified, setOtpSent]);
 
-  // ✅ Reset password (only after verified)
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-
-    const cleaned = email.trim().toLowerCase();
-    if (!cleaned) return toast.error("Enter your email");
-    if (!isVerified) return toast.error("Verify OTP first");
-    if (!newpassword.trim()) return toast.error("Enter new password");
-
-    try {
-      const res = await API.post("/auth/reset-password", {
-        email: cleaned,
-        newpassword,
-      });
-
-      if (res.data?.success) {
-        toast.success(res.data.message || "Password reset successful");
-        Navigate("/login");
-      } else {
-        toast.error(res.data?.message || "Reset failed");
-      }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || error.message || "Reset failed");
-    }
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
       <div className="w-full max-w-md bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8">
         <div className="w-full flex flex-col gap-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800">Reset Password 🔑</h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Verify email with OTP, then set a new password.
-            </p>
+            <p className="text-sm text-gray-500 mt-1">Verify your email to set a new password</p>
           </div>
 
           <form onSubmit={handleResetPassword} className="flex flex-col gap-4">
+            {/* Email Input */}
             <div className="flex gap-3">
               <input
                 type="email"
@@ -110,51 +82,44 @@ const ForgetPassword = () => {
                   className="px-4 py-3 bg-gray-900 hover:bg-black text-white rounded-lg whitespace-nowrap transition disabled:opacity-60"
                   type="button"
                   disabled={sending}
-                  onClick={onSendOtp}
+                  onClick={() => sendOtp(email)}
                 >
                   {sending ? "Sending..." : "Send OTP"}
                 </button>
               )}
             </div>
 
+            {/* Password Input - Only shown after OTP is verified */}
             {isVerified && (
               <>
                 <input
                   type="password"
-                  placeholder="🔒 Set new password"
+                  placeholder="🔒 Enter new password"
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                  value={newpassword}
-                  onChange={(e) => setNewpassword(e.target.value)}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   required
                 />
-
                 <button
                   type="submit"
                   className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200"
                 >
-                  Reset Password
+                  Update Password
                 </button>
               </>
             )}
           </form>
 
+          {/* OTP Input Box */}
           {otpSent && (
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 flex flex-col items-center gap-3">
-              <p className="text-sm font-medium text-gray-700">
-                Enter the 6-digit OTP sent to your email
-              </p>
-
+              <p className="text-sm font-medium text-gray-700">Enter 6-digit OTP</p>
               <OtpInput
                 value={otp}
                 onChange={setOtp}
                 numInputs={6}
                 disabled={isVerifying}
-                containerStyle={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "10px",
-                  width: "100%",
-                }}
+                containerStyle={{ display: "flex", justifyContent: "center", gap: "10px" }}
                 inputStyle={{
                   width: "44px",
                   height: "46px",
@@ -163,26 +128,23 @@ const ForgetPassword = () => {
                   fontSize: "18px",
                   fontWeight: "600",
                   textAlign: "center",
-                  background: "white",
                 }}
                 renderInput={(props) => <input {...props} />}
               />
-
               <p className="text-xs text-gray-500">
-                {isVerifying ? "Verifying OTP..." : "Tip: Check spam if you don’t see it."}
+                {isVerifying ? "Verifying..." : "Didn't get it? Check your spam folder."}
               </p>
             </div>
           )}
 
-          <p className="text-sm text-center text-gray-600">
-            Back to{" "}
-            <span
-              onClick={() => Navigate("/login")}
-              className="text-amber-500 font-semibold hover:underline cursor-pointer"
-            >
-              Login
+          <div className="text-center">
+             <span 
+              onClick={() => navigate("/login")}
+              className="text-amber-500 font-semibold hover:underline cursor-pointer text-sm"
+             >
+              Back to Login
             </span>
-          </p>
+          </div>
         </div>
       </div>
     </div>
