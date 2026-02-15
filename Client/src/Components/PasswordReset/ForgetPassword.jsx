@@ -19,37 +19,11 @@ const ForgetPassword = () => {
   const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("forgetPassword");
 
 
-
-
-  // const handleResetPassword = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     // ✅ Sending 'purpose' here as well because your backend requires it
-  //     const res = await API.post("/auth/reset-password", {
-  //       email,
-  //       newPassword,
-
-  //     });
-
-  //     if (res.data.success) {
-  //       toast.success(res.data.message || "Password reset successful");
-  //       navigate("/login");
-  //     } else {
-  //       toast.error(res.data.message || "Reset failed");
-  //     }
-  //   } catch (error) {
-  //     toast.error(error?.response?.data?.message || error.message || "Reset failed");
-  //   }
-  // };
-
-
-
   const resetPasswordMutation = useMutation({
-    mutationFn: async ({ email, newpassword  }) => {
+    mutationFn: async ({ email, newpassword }) => {
       const res = await API.post("/auth/reset-password", {
         email,
-       newpassword ,  // Backend needs newPassword in loweser case 
+        newpassword,
       });
       return res.data;
     },
@@ -88,25 +62,43 @@ const ForgetPassword = () => {
 
 
   const handleResetPassword = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  resetPasswordMutation.mutate({
-    email,
-    newpassword: newPassword,  // ✅ FIX: match backend key
-  });
-};
-
-
+    resetPasswordMutation.mutate({
+      email,
+      newpassword: newPassword,
+    });
+  };
 
 
 
 
+  useEffect(() => {
 
+    const checkEmailVerification = async () => {
 
+      try {
 
+        const savedEmail = sessionStorage.getItem("signupEmail");
 
+        if (!savedEmail) return;
 
+        const res = await API.post('/auth/verifyemail', { email: savedEmail })
 
+        if (res.data.success) {
+          setEmail(savedEmail);
+          setIsVerified(true);
+          toast.success("Email verified Again")
+        }
+
+      } catch (error) {
+        toast.error(error)
+      }
+    };
+
+    checkEmailVerification();
+
+  }, []);
 
 
 
@@ -144,7 +136,7 @@ const ForgetPassword = () => {
               )}
             </div>
 
-            {/* Password Input - Only shown after OTP is verified */}
+
             {isVerified && (
               <>
                 <input
@@ -166,7 +158,7 @@ const ForgetPassword = () => {
             )}
           </form>
 
-          {/* OTP Input Box */}
+
           {otpSent && (
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 flex flex-col items-center gap-3">
               <p className="text-sm font-medium text-gray-700">Enter 6-digit OTP</p>

@@ -18,7 +18,8 @@ const Header = () => {
                 </div>
 
                 <h1 className="text-3xl sm:text-6xl font-semibold sm:leading-tight text-gray-700">
-                    Too long? Click <span className="text-primary">AI Summariser</span> <br />
+                    Too long? Click <span className="text-[#1C1AEF]">AI Summariser</span>
+                    <br />
                     Get the idea. Move on.
                 </h1>
 

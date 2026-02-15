@@ -19,9 +19,9 @@ const Signup = () => {
   const Navigate = useNavigate();
   const googleLogin = useGoogleAuth();
 
-  // ✅ OTP hooks with purpose = "signup"
+
   const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("signup");
-  
+
   const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("signup");
 
 
@@ -48,22 +48,52 @@ const Signup = () => {
   };
 
 
- useEffect(() => {
- 
-  if (otp.length === 6 && !isVerifying && !isVerified) {
-    console.log("Verifying OTP...");
-    verifyOtp(email, otp);
-  }
-}, [otp, isVerifying, isVerified, email, verifyOtp]);
-  
+  useEffect(() => {
+
+    if (otp.length === 6 && !isVerifying && !isVerified) {
+      console.log("Verifying OTP...");
+      verifyOtp(email, otp);
+    }
+  }, [otp, isVerifying, isVerified, email, verifyOtp]);
+
 
 
   useEffect(() => {
-  if (isVerified) {
-    setOtp("");       
-    setOtpSent(false); 
-  }
-}, [isVerified, setOtpSent]);
+    if (isVerified) {
+      setOtp("");
+      setOtpSent(false);
+    }
+  }, [isVerified, setOtpSent]);
+
+
+
+
+  useEffect(() => {
+
+    const checkEmailVerification = async () => {
+
+      try {
+
+        const savedEmail = sessionStorage.getItem("signupEmail");
+
+        if (!savedEmail) return;
+
+        const res = await API.post('/auth/verifyemail', { email: savedEmail })
+
+        if (res.data.success) {
+          setEmail(savedEmail);
+          setIsVerified(true);
+          toast.success("Email verified Again")
+        }
+
+      } catch (error) {
+        toast.error(error)
+      }
+    };
+
+    checkEmailVerification();
+
+  }, []);
 
 
   return (

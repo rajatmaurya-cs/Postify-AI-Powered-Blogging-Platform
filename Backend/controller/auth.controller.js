@@ -534,7 +534,7 @@ export const verifyEmails = async (req, res) => {
       message: "Server error",
     });
   }
-} // VerifyEmails
+} // VerifyEmails for refresh
 
 
 
