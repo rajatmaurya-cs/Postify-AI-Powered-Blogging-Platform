@@ -77,7 +77,7 @@ const BlogList = () => {
       </div>
 
       {filteredBlogs.length > 0 ? (
-        <h1 className="text-3xl font-bold text-gray-50 mb-10 text-center">
+        <h1 className="text-3xl font-bold text-gray-700 mb-10 text-center">
           Latest Blogs
         </h1>
       ) : (
