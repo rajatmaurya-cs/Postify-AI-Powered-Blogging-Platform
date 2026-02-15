@@ -328,8 +328,6 @@ export const logout = async (req, res) => {
 };
 
 
-
-
 export const refreshAccessToken = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -400,27 +398,6 @@ export const refreshAccessToken = async (req, res) => {
 /*------------------------------------------ OTP-----------------------------------------*/
 
 
-// export const sendOtp = async (req, res) => {
-//   try {
-
-//     const { email } = req.body;
-
-//     await sendOtpService(email);
-
-//     return res.json({
-//       success: true,
-//       message: "OTP sent successfully"
-//     })
-
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message
-//     })
-//   }
-// }
-
-
 export const sendOtp = async (req, res) => {
   try {
     let { email, purpose } = req.body;
@@ -440,85 +417,6 @@ export const sendOtp = async (req, res) => {
     });
   }
 };
-
-
-
-
-
-
-
-
-
-// export const verifyOtp = async (req, res) => {
-//   try {
-
-//     let { email, otp } = req.body;
-//     email = email.toLowerCase().trim();
-
-
-//     const storedOtp = await redisClient.get(`otp:${email}`);
-
-//     if (!storedOtp) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "OTP expired or not found",
-//       });
-//     }
-
-
-//     const attempts = await redisClient.incr(`otpAttempts:${email}`);
-
-//     if (attempts === 1) {
-//       await redisClient.expire(`otpAttempts:${email}`, 300);
-
-//     }
-
-//     if (attempts > 5) {
-//       return res.status(429).json({
-//         success: false,
-//         message: "Too many wrong attempts. Try again later.",
-//       });
-//     }
-
-
-//     const isMatch = await bcrypt.compare(
-//       otp.toString(),
-//       storedOtp
-//     );
-
-//     if (!isMatch) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Invalid OTP",
-//       });
-//     }
-
-
-//     await redisClient.del(`otp:${email}`);
-//     await redisClient.del(`otpAttempts:${email}`);
-
-
-//     await VerifiedEmail.updateOne(
-//       { email },
-//       { $set: { email } },
-//       { upsert: true }
-//     );
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Email verified successfully",
-//     });
-
-//   } catch (error) {
-
-//     console.log("verifyOtp error:", error);
-
-//     return res.status(500).json({
-//       success: false,
-//       message: "OTP verification failed",
-//     });
-//   }
-// };
 
 
 export const verifyOtp = async (req, res) => {
@@ -603,7 +501,6 @@ export const verifyOtp = async (req, res) => {
 };
 
 
-
 /*---------------------------------------verifyemails------------------------------------- */
 export const verifyEmails = async (req, res) => {
   try {
@@ -638,8 +535,6 @@ export const verifyEmails = async (req, res) => {
     });
   }
 } // VerifyEmails
-
-
 
 
 
