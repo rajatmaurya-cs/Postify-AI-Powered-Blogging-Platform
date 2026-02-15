@@ -50,7 +50,7 @@ const WholeBlog = () => {
   useEffect(() => {
     if (blog) {
       setOriginalContent(blog.content)
-      setContent(blog.content);
+       setContent(blog.content);
     }
   }, [blog]);
 

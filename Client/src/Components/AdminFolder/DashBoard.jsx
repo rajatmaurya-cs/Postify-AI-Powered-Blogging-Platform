@@ -44,7 +44,7 @@ const DashBoard = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Updated!", { id: "toggle" });
       queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); // ✅ stats refresh
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); 
     },
     onError: (err) => toast.error(err?.message || "Failed to update blog status", { id: "toggle" }),
   });
@@ -59,7 +59,7 @@ const DashBoard = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Deleted!", { id: "delete" });
       queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); // ✅ stats refresh
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); 
     },
     onError: (err) => toast.error(err?.message || "Failed to delete blog", { id: "delete" }),
   });
