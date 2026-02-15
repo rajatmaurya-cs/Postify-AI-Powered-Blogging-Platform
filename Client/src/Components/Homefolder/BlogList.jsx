@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import { useBlogs } from "../../hooks/useBlogs"; 
+import { useBlogs } from "../../hooks/useBlogs";
 import AppLoader from '../../Effects/Apploader'
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
- 
+
   const {
     data: blogs = [],
     isLoading,
@@ -66,10 +66,9 @@ const BlogList = () => {
             onClick={() => setActiveCategory(cat)}
             className={`relative px-6 py-2.5 rounded-full text-sm font-semibold
               transition-all duration-300 ease-out
-              ${
-                activeCategory === cat
-                  ? "bg-gradient-to-r from-gray-900 to-black text-white shadow-lg shadow-black/30 scale-105"
-                  : "bg-white/70 backdrop-blur text-gray-700 hover:text-black hover:bg-white hover:shadow-md hover:scale-105"
+              ${activeCategory === cat
+                ? "bg-gradient-to-r from-gray-900 to-black text-white shadow-lg shadow-black/30 scale-105"
+                : "bg-white/70 backdrop-blur text-gray-700 hover:text-black hover:bg-white hover:shadow-md hover:scale-105"
               }`}
           >
             {cat}
@@ -85,9 +84,9 @@ const BlogList = () => {
         ""
       )}
 
-   
+
       {isLoading && (
-        <p className="text-center text-gray-500">    <AppLoader/>   </p>
+        <div className="text-center text-gray-500">    <AppLoader />   </div>
       )}
 
 
@@ -97,10 +96,13 @@ const BlogList = () => {
         </p>
       )}
 
-      
+
       {!isLoading && !isError && isFetching && (
-        <p className="text-center text-gray-500 mb-4">  <AppLoader/>  </p>
+        <div className="flex justify-center py-6">
+          <AppLoader />
+        </div>
       )}
+
 
 
 
