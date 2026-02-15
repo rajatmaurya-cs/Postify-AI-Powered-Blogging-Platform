@@ -109,12 +109,22 @@ const Login = () => {
                   type="submit"
                   className="w-full bg-gray-300 hover:bg-gray-800 text-black hover:text-white 
         font-semibold py-3 rounded-lg transition duration-200"
-                  disabled  = {Loading}
+                  disabled={Loading}
                 >
                   {Loading ? "Login...." : "Login"}
                 </button>
 
               </form>
+
+              <p className="text-sm text-center text-gray-600">
+                Don’t have an account?{" "}
+                <span
+                  onClick={() => Navigate("/signup")}
+                  className="text-amber-500 font-semibold hover:underline cursor-pointer"
+                >
+                  Create one
+                </span>
+              </p>
 
 
               <div className="flex items-center gap-3">

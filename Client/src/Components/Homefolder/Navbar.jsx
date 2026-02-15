@@ -34,18 +34,6 @@ const Navbar = () => {
                 <span className="font-semibold text-sm sm:text-base">Login</span>
               </div>
             </button>
-
-            <button
-              onClick={() => navigate("/SignUp")}
-              className="group p-[3px] sm:p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 
-              shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-              active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-              active:scale-[0.995]"
-            >
-              <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="font-semibold text-sm sm:text-base">Sign Up</span>
-              </div>
-            </button>
           </>
         )}
 
