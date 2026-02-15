@@ -14,46 +14,101 @@ const ForgetPassword = () => {
 
   const navigate = useNavigate();
 
-  // ✅ Use "forgetPassword" to match your Redis key logic
+
   const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("forgetPassword");
   const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("forgetPassword");
 
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
 
-    try {
-      // ✅ Sending 'purpose' here as well because your backend requires it
+
+
+  // const handleResetPassword = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     // ✅ Sending 'purpose' here as well because your backend requires it
+  //     const res = await API.post("/auth/reset-password", {
+  //       email,
+  //       newPassword,
+
+  //     });
+
+  //     if (res.data.success) {
+  //       toast.success(res.data.message || "Password reset successful");
+  //       navigate("/login");
+  //     } else {
+  //       toast.error(res.data.message || "Reset failed");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error?.response?.data?.message || error.message || "Reset failed");
+  //   }
+  // };
+
+
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: async ({ email, newPassword }) => {
       const res = await API.post("/auth/reset-password", {
         email,
         newPassword,
-        purpose: "forgetPassword", 
       });
-
-      if (res.data.success) {
-        toast.success(res.data.message || "Password reset successful");
+      return res.data;
+    },
+    onSuccess: (data) => {
+      if (data?.success) {
+        toast.success(data.message || "Password reset successful");
         navigate("/login");
       } else {
-        toast.error(res.data.message || "Reset failed");
+        toast.error(data?.message || "Reset failed");
       }
-    } catch (error) {
+    },
+    onError: (error) => {
       toast.error(error?.response?.data?.message || error.message || "Reset failed");
-    }
-  };
+    },
+  });
 
-  // 🔁 Auto verify OTP
+
   useEffect(() => {
     if (otp.length === 6 && !isVerifying && !isVerified) {
       verifyOtp(email, otp);
     }
   }, [otp, isVerifying, isVerified, email, verifyOtp]);
 
-  // ❌ Reset OTP UI once verified
+
   useEffect(() => {
     if (isVerified) {
       setOtp("");
       setOtpSent(false);
     }
   }, [isVerified, setOtpSent]);
+
+
+
+
+
+
+
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+
+    resetPasswordMutation.mutate({
+      email,
+      newPassword,
+    });
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
@@ -103,8 +158,9 @@ const ForgetPassword = () => {
                 <button
                   type="submit"
                   className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200"
+                  disabled={resetPasswordMutation.isPending}
                 >
-                  Update Password
+                  {resetPasswordMutation.isPending ? "Updating..." : "Update Password"}
                 </button>
               </>
             )}
@@ -138,10 +194,10 @@ const ForgetPassword = () => {
           )}
 
           <div className="text-center">
-             <span 
+            <span
               onClick={() => navigate("/login")}
               className="text-amber-500 font-semibold hover:underline cursor-pointer text-sm"
-             >
+            >
               Back to Login
             </span>
           </div>
