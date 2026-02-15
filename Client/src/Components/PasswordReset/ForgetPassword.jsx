@@ -79,7 +79,7 @@ const ForgetPassword = () => {
 
       try {
 
-        const savedEmail = sessionStorage.getItem("signupEmail");
+        const savedEmail = sessionStorage.getItem("forgetEmail");
 
         if (!savedEmail) return;
 
@@ -123,7 +123,7 @@ const ForgetPassword = () => {
                 onChange={(e) => {
                   const value = e.target.value;
                   setEmail(value);
-                  sessionStorage.setItem("signupEmail", value);
+                  sessionStorage.setItem("forgetEmail", value);
                 }}
                 required
               />
