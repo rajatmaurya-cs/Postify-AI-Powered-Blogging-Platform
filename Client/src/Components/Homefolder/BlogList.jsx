@@ -87,10 +87,7 @@ const BlogList = () => {
       )}
 
 
-      {isLoading && (
-        <div className="flex justify-center py-6">    <InlineLoader/>   </div>
-      )}
-
+    
 
       {isError && (
         <p className="text-center text-red-400">
@@ -99,11 +96,14 @@ const BlogList = () => {
       )}
 
 
-      {!isLoading && !isError && isFetching && (
+      
+
+      {(isLoading || (!isError && isFetching)) && (
         <div className="flex justify-center py-6">
-          <InlineLoader/>
+          <InlineLoader />
         </div>
       )}
+
 
 
 
@@ -146,7 +146,7 @@ const BlogList = () => {
         )
       )}
 
-      <div className="flex justify-center py-6">  <InlineLoader/>   </div>
+      <div className="flex justify-center py-6">  <InlineLoader />   </div>
     </div>
   );
 };
