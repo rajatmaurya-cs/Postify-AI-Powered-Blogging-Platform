@@ -75,7 +75,7 @@ authRouter.post("/verifyemail", verifyEmails);
 
 /* --------------------------- PASSWORD RESET --------------------- */
 
-authRouter.post("/check-email-reset", checkmailforreset);
+authRouter.post("/checkemailforreset", checkmailforreset);
 authRouter.post("/reset-password", resetpassword);
 
 export default authRouter;

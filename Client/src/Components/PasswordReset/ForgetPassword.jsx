@@ -20,7 +20,7 @@ const ForgetPassword = () => {
     try {
 
       setSending(true)
-      const res = await API.post('/user/checkemailforreset', { email })
+      const res = await API.post('/auth/checkemailforreset', { email })
       if (res.data.success) {
         console.log(res.data.message); // OTP sent successfully
         toast.success(res.data.message)
@@ -78,7 +78,7 @@ const ForgetPassword = () => {
 
         if (!savedEmail) return;
 
-        const res = await API.post('/user/verifyemails', { email: savedEmail })
+        const res = await API.post('/auth/verifyemails', { email: savedEmail })
 
         if (res.data.success) {
           setEmail(savedEmail);
@@ -102,7 +102,7 @@ const ForgetPassword = () => {
     try {
 
       console.log("Entered in resetpassword fronted")
-      const res = await API.post('/user/reset-password', { email, newpassword })
+      const res = await API.post('/auth/reset-password', { email, newpassword })
       if (res.data.success) {
         console.log("success function of fronted")
         toast.success(res.data.message);
