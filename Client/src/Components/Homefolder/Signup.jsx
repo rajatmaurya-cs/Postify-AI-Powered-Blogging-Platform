@@ -1,4 +1,94 @@
-return (
+import React, { useState, useEffect } from 'react'
+import API from '../../Api/api'
+import { useNavigate } from 'react-router-dom'
+import { assets } from '../../assets/assets'
+import OtpInput from "react-otp-input";
+import useGoogleAuth from "../../hooks/useGoogleAuth";
+import toast from 'react-hot-toast'
+import useSendOtp from '../../hooks/useSendOtp';
+import useVerifyOtp from '../../hooks/useVerifyOtp';
+
+
+const Signup = () => {
+    
+    const [fullName, setFullname] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+    const [otp, setOtp] = useState("");
+
+
+    const { sendOtp, setOtpSent, sending, otpSent } = useSendOtp();
+    const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp();
+    const googleLogin = useGoogleAuth();
+
+    const Navigate = useNavigate()
+
+
+    const handleSignup = async (e) => {
+        e.preventDefault();
+
+        try {
+            console.log("Entered in handleSignup of fronted")
+            const res = await API.post('/auth/signup', {
+                fullName,
+                email,
+                password
+            });
+
+            if (res.data.success) {
+                toast.success(res.data.message)
+                Navigate('/login')
+            } else {
+                toast.error(res.data.message || "Signup failed")
+
+            }
+
+        } catch (error) {
+            console.log(error.response?.data?.message || error.message);
+        }
+    };
+
+    useEffect(() => {
+        if (otp.length === 6) {
+            console.log("Entered in otp length hook")
+            verifyOtp(email, otp, setOtpSent);
+
+
+        }
+    }, [otp]);
+
+    useEffect(() => {
+
+        const checkEmailVerification = async () => {
+
+            try {
+
+                const savedEmail = sessionStorage.getItem("signupEmail");
+
+                if (!savedEmail) return;
+
+                const res = await API.post('/auth/verifyemail', { email: savedEmail })
+
+                if (res.data.success) {
+                    setEmail(savedEmail);
+                    setIsVerified(true);
+                    toast.success("Email verified Again")
+                }
+
+            } catch (error) {
+                toast.error(error)
+            }
+        };
+
+        checkEmailVerification();
+
+    }, []); 
+
+
+
+
+ return (
   <>
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
       <div className="w-full max-w-md bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8">
@@ -13,7 +103,7 @@ return (
 
           <form onSubmit={handleSignup} className="flex flex-col gap-4">
 
-            {/* Name (only after email verified) */}
+         
             {isVerified && (
               <input
                 type="text"
@@ -25,7 +115,7 @@ return (
               />
             )}
 
-            {/* Email + Send OTP */}
+        
             <div className="flex gap-3">
               <input
                 type="email"
@@ -53,7 +143,7 @@ return (
               )}
             </div>
 
-            {/* Password (only after verified) */}
+  
             {isVerified && (
               <input
                 type="password"
@@ -65,7 +155,7 @@ return (
               />
             )}
 
-            {/* Signup button (only after verified) */}
+            
             {isVerified && (
               <button
                 type="submit"
@@ -76,7 +166,7 @@ return (
             )}
           </form>
 
-          {/* OTP Section */}
+        
           {otpSent && (
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 flex flex-col items-center gap-3">
               <p className="text-sm font-medium text-gray-700">
@@ -118,7 +208,7 @@ return (
             </div>
           )}
 
-          {/* Already have account */}
+         
           <p className="text-sm text-center text-gray-600">
             Already have an account?{" "}
             <span
@@ -129,14 +219,14 @@ return (
             </span>
           </p>
 
-          {/* Divider */}
+        
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-300" />
             <span className="text-sm text-gray-500">OR</span>
             <div className="flex-1 h-px bg-gray-300" />
           </div>
 
-          {/* Google Signup */}
+          
           <button
             type="button"
             onClick={googleLogin}
@@ -160,3 +250,7 @@ return (
     </div>
   </>
 );
+
+}
+
+export default Signup
