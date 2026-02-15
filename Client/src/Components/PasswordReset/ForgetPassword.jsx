@@ -46,10 +46,10 @@ const ForgetPassword = () => {
 
 
   const resetPasswordMutation = useMutation({
-    mutationFn: async ({ email, newPassword }) => {
+    mutationFn: async ({ email, newpassword  }) => {
       const res = await API.post("/auth/reset-password", {
         email,
-        newPassword,
+       newpassword ,  // Backend needs newPassword in loweser case 
       });
       return res.data;
     },
