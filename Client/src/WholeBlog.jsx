@@ -72,6 +72,9 @@ const WholeBlog = () => {
 
         setaicontent(true)
       }
+      else{
+        toast.error(res.data.message);
+      }
 
     } catch (error) {
 
