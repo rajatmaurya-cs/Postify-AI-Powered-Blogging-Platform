@@ -264,6 +264,12 @@ const WholeBlog = () => {
 
 
 
+            <div className="mt-5 rounded-xl border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+              <span className="font-semibold">Note:</span> This app is currently in development. You get <b>1</b> summarization attempt per day.
+            </div>
+
+
+
 
 
 

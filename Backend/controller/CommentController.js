@@ -31,7 +31,7 @@ export const addComment = async (req, res) => {
       await redisClient.expire(key, 60); // 1 minute window
     }
 
-    if (attempts > 2) {
+    if (attempts > 1) {
       return res.status(429).json({
         success: false,
         message: "Too many comments. Please wait a moment.",

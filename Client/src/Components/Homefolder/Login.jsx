@@ -111,7 +111,7 @@ const Login = () => {
         font-semibold py-3 rounded-lg transition duration-200"
                   disabled  = {Loading}
                 >
-                  {Loading ? "Logging" : "Login"}
+                  {Loading ? "Login...." : "Login"}
                 </button>
 
               </form>
