@@ -16,13 +16,15 @@ const AddBlog = lazy(() => import("./Components/AdminFolder/AddBlog"));
 const AI = lazy(() => import("./Components/AdminFolder/AI"));
 const AIconfig = lazy(() => import("./Components/AdminFolder/AISettings"));
 
+import AppLoader from "./Effects/Apploader";
+
 function App() {
   const { loading } = useContext(AuthContext);
 
-  if(loading) return <div>Checking authentication...</div>;
+  if(loading) return <div><AppLoader/></div>;
 
   return (
-    <Suspense fallback={<div style={{ padding: 20 }}>Loading...</div>}>
+    <Suspense fallback={<div> <AppLoader/> </div>}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog/:blogId" element={<WholeBlog />} />
