@@ -303,20 +303,25 @@ const Signup = () => {
     }
   };
 
-  // 🔁 Auto verify OTP when 6 digits entered
-  useEffect(() => {
-    if (otp.length === 6) {
-      verifyOtp(email, otp);
-    }
-  }, [otp]);
 
-  // ❌ Hide OTP box once verified
+ useEffect(() => {
+ 
+  if (otp.length === 6 && !isVerifying && !isVerified) {
+    console.log("Verifying OTP...");
+    verifyOtp(email, otp);
+  }
+}, [otp, isVerifying, isVerified, email, verifyOtp]);
+  
+
+
   useEffect(() => {
   if (isVerified) {
-    setOtp("");        // ✅ stops auto verify from re-firing
-    setOtpSent(false); // ✅ hides OTP UI
+    setOtp("");       
+    setOtpSent(false); 
   }
 }, [isVerified, setOtpSent]);
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
       <div className="w-full max-w-md bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8">
