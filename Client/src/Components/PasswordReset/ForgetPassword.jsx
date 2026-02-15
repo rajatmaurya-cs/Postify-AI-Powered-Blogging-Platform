@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import OtpInput from "react-otp-input";
 import toast from "react-hot-toast";
-
+import { useMutation } from "@tanstack/react-query";
 import API from "../../Api/api";
 import useSendOtp from "../../hooks/useSendOtp";
 import useVerifyOtp from "../../hooks/useVerifyOtp";
