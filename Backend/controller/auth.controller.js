@@ -423,7 +423,7 @@ export const refreshAccessToken = async (req, res) => {
 
 export const sendOtp = async (req, res) => {
   try {
-    const { email, purpose } = req.body;
+    let { email, purpose } = req.body;
     email = email.toLowerCase().trim();
     purpose = purpose.toUpperCase().trim();
 
