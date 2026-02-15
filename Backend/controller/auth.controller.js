@@ -423,9 +423,9 @@ export const refreshAccessToken = async (req, res) => {
 
 export const sendOtp = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email , purpose } = req.body;
 
-    await sendOtpService(email);
+    await sendOtpService(email , purpose);
 
     return res.json({
       success: true,
@@ -447,14 +447,97 @@ export const sendOtp = async (req, res) => {
 
 
 
+// export const verifyOtp = async (req, res) => {
+//   try {
+
+//     let { email, otp } = req.body;
+//     email = email.toLowerCase().trim();
+
+
+//     const storedOtp = await redisClient.get(`otp:${email}`);
+
+//     if (!storedOtp) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "OTP expired or not found",
+//       });
+//     }
+
+
+//     const attempts = await redisClient.incr(`otpAttempts:${email}`);
+
+//     if (attempts === 1) {
+//       await redisClient.expire(`otpAttempts:${email}`, 300);
+
+//     }
+
+//     if (attempts > 5) {
+//       return res.status(429).json({
+//         success: false,
+//         message: "Too many wrong attempts. Try again later.",
+//       });
+//     }
+
+
+//     const isMatch = await bcrypt.compare(
+//       otp.toString(),
+//       storedOtp
+//     );
+
+//     if (!isMatch) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Invalid OTP",
+//       });
+//     }
+
+
+//     await redisClient.del(`otp:${email}`);
+//     await redisClient.del(`otpAttempts:${email}`);
+
+
+//     await VerifiedEmail.updateOne(
+//       { email },
+//       { $set: { email } },
+//       { upsert: true }
+//     );
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Email verified successfully",
+//     });
+
+//   } catch (error) {
+
+//     console.log("verifyOtp error:", error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: "OTP verification failed",
+//     });
+//   }
+// };
+
+
 export const verifyOtp = async (req, res) => {
   try {
+    let { email, otp, purpose } = req.body;
 
-    let { email, otp } = req.body;
+    if (!email || !otp || !purpose) {
+      return res.status(400).json({
+        success: false,
+        message: "email, otp and purpose are required",
+      });
+    }
+
     email = email.toLowerCase().trim();
+    purpose = purpose.toUpperCase().trim(); // e.g. SIGNUP, RESET_PASSWORD
 
+    const otpKey = `otp:${purpose}:${email}`;
+    const attemptsKey = `otpAttempts:${purpose}:${email}`;
 
-    const storedOtp = await redisClient.get(`otp:${email}`);
+    // ✅ Get OTP from Redis (purpose-based)
+    const storedOtp = await redisClient.get(otpKey);
 
     if (!storedOtp) {
       return res.status(400).json({
@@ -463,12 +546,11 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
-
-    const attempts = await redisClient.incr(`otpAttempts:${email}`);
+    // ✅ Attempts limiter (purpose-based)
+    const attempts = await redisClient.incr(attemptsKey);
 
     if (attempts === 1) {
-      await redisClient.expire(`otpAttempts:${email}`, 300);
-
+      await redisClient.expire(attemptsKey, 300); // 5 minutes
     }
 
     if (attempts > 5) {
@@ -478,11 +560,8 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
-
-    const isMatch = await bcrypt.compare(
-      otp.toString(),
-      storedOtp
-    );
+    // ✅ Compare OTP
+    const isMatch = await bcrypt.compare(otp.toString(), storedOtp);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -491,14 +570,19 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
+    // ✅ Success: delete OTP + attempts
+    await redisClient.del(otpKey);
+    await redisClient.del(attemptsKey);
 
-    await redisClient.del(`otp:${email}`);
-    await redisClient.del(`otpAttempts:${email}`);
-
+    /**
+     * ✅ IMPORTANT:
+     * Store verification per purpose.
+     * Otherwise "verified" for signup can wrongly allow password reset etc.
+     */
 
     await VerifiedEmail.updateOne(
-      { email },
-      { $set: { email } },
+      { email, purpose },
+      { $set: { email, purpose, verifiedAt: new Date() } },
       { upsert: true }
     );
 
@@ -506,9 +590,7 @@ export const verifyOtp = async (req, res) => {
       success: true,
       message: "Email verified successfully",
     });
-
   } catch (error) {
-
     console.log("verifyOtp error:", error);
 
     return res.status(500).json({
@@ -517,8 +599,6 @@ export const verifyOtp = async (req, res) => {
     });
   }
 };
-
-
 
 
 

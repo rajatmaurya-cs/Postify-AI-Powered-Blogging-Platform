@@ -7,6 +7,9 @@ const verifiedEmailSchema = new mongoose.Schema({
     default: Date.now,
     expires: 600,
   },
+  purpose: { 
+    type: String,
+     required: true },
 });
 
 const VerifiedEmail = mongoose.model(
