@@ -1,61 +1,54 @@
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import OtpInput from "react-otp-input";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import OtpInput from "react-otp-input";
+import toast from "react-hot-toast";
+
 import API from "../../Api/api";
 import useSendOtp from "../../hooks/useSendOtp";
 import useVerifyOtp from "../../hooks/useVerifyOtp";
 
 const ForgetPassword = () => {
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [newpassword, setNewpassword] = useState("");
   const [otp, setOtp] = useState("");
 
-  // ✅ purpose-based OTP
+  // ✅ OTP hooks with purpose = "RESET_PASSWORD"
   const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("RESET_PASSWORD");
   const { verifyOtp, isVerifying, isVerified, setIsVerified } =
     useVerifyOtp("RESET_PASSWORD");
 
-  // ✅ 1) Check email exists mutation
-  const checkEmailMutation = useMutation({
-    mutationFn: async (checkedEmail) => {
-      const res = await API.post("/auth/checkemailforreset", {
-        email: checkedEmail,
-      });
-      return res.data;
-    },
+  // ✅ Send OTP ONLY after checking email exists
+  const onSendOtp = async () => {
+    const cleaned = email.trim().toLowerCase();
+    if (!cleaned) return toast.error("Enter your email");
 
-    // ✅ Use React Query "variables" param to avoid stale state
-    onSuccess: (data, checkedEmail) => {
-      if (data?.success) {
-        toast.success("Email found. Sending OTP...");
-        sendOtp(checkedEmail); // ✅ FIXED (no stale email)
-        // ❌ don't setOtpSent(true) here; useSendOtp already does it on success
-      } else {
-        toast.error(data?.message || "User does not exist");
+    try {
+      const check = await API.post("/auth/checkemailforreset", { email: cleaned });
+
+      if (!check.data?.success) {
+        return toast.error(check.data?.message || "User does not exist");
       }
-    },
 
-    onError: (err) => {
-      toast.error(
-        err?.response?.data?.message || err.message || "Something went wrong"
-      );
-    },
-  });
+      setEmail(cleaned);              // keep input normalized
+      sessionStorage.setItem("resetEmail", cleaned);
 
-  // ✅ 2) Auto verify when OTP length becomes 6
+      // ✅ EXACTLY like signup: call sendOtp with cleaned email directly
+      sendOtp(cleaned);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || err.message || "Failed to check email");
+    }
+  };
+
+  // ✅ Auto verify OTP (same pattern as signup)
   useEffect(() => {
     if (otp.length === 6 && !isVerifying && !isVerified) {
-      const cleaned = email.trim().toLowerCase();
-      if (!cleaned) return;
-      verifyOtp(cleaned, otp);
+      verifyOtp(email.trim().toLowerCase(), otp);
     }
   }, [otp, isVerifying, isVerified, email, verifyOtp]);
 
-  // ✅ Hide OTP UI after verified + clear otp
+  // ✅ After verified, hide OTP UI + clear OTP (same as signup)
   useEffect(() => {
     if (isVerified) {
       setOtp("");
@@ -63,50 +56,30 @@ const ForgetPassword = () => {
     }
   }, [isVerified, setOtpSent]);
 
-  // ✅ 3) Reset password mutation
-  const resetPasswordMutation = useMutation({
-    mutationFn: async ({ email: resetEmail, newpassword: newPass }) => {
-      const res = await API.post("/auth/reset-password", {
-        email: resetEmail,
-        newpassword: newPass,
-      });
-      return res.data;
-    },
-
-    onSuccess: (data) => {
-      if (data?.success) {
-        toast.success(data.message || "Password reset successful");
-        navigate("/login");
-      } else {
-        toast.error(data?.message || "Reset failed");
-      }
-    },
-
-    onError: (err) => {
-      toast.error(err?.response?.data?.message || err.message || "Reset failed");
-    },
-  });
-
-  const onSendOtp = () => {
-    const cleaned = email.trim().toLowerCase();
-    if (!cleaned) return toast.error("Enter email");
-
-    // keep UI input normalized
-    setEmail(cleaned);
-    sessionStorage.setItem("resetEmail", cleaned);
-
-    checkEmailMutation.mutate(cleaned);
-  };
-
-  const resetpassword = (e) => {
+  // ✅ Reset password (only after verified)
+  const handleResetPassword = async (e) => {
     e.preventDefault();
 
     const cleaned = email.trim().toLowerCase();
-    if (!cleaned) return toast.error("Enter email");
+    if (!cleaned) return toast.error("Enter your email");
     if (!isVerified) return toast.error("Verify OTP first");
     if (!newpassword.trim()) return toast.error("Enter new password");
 
-    resetPasswordMutation.mutate({ email: cleaned, newpassword });
+    try {
+      const res = await API.post("/auth/reset-password", {
+        email: cleaned,
+        newpassword,
+      });
+
+      if (res.data?.success) {
+        toast.success(res.data.message || "Password reset successful");
+        Navigate("/login");
+      } else {
+        toast.error(res.data?.message || "Reset failed");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || "Reset failed");
+    }
   };
 
   return (
@@ -114,15 +87,13 @@ const ForgetPassword = () => {
       <div className="w-full max-w-md bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8">
         <div className="w-full flex flex-col gap-6">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800">
-              Reset Password 🔑
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-800">Reset Password 🔑</h2>
             <p className="text-sm text-gray-500 mt-1">
               Verify email with OTP, then set a new password.
             </p>
           </div>
 
-          <form onSubmit={resetpassword} className="flex flex-col gap-4">
+          <form onSubmit={handleResetPassword} className="flex flex-col gap-4">
             <div className="flex gap-3">
               <input
                 type="email"
@@ -138,12 +109,10 @@ const ForgetPassword = () => {
                 <button
                   className="px-4 py-3 bg-gray-900 hover:bg-black text-white rounded-lg whitespace-nowrap transition disabled:opacity-60"
                   type="button"
-                  disabled={sending || checkEmailMutation.isPending}
+                  disabled={sending}
                   onClick={onSendOtp}
                 >
-                  {sending || checkEmailMutation.isPending
-                    ? "Sending..."
-                    : "Send OTP"}
+                  {sending ? "Sending..." : "Send OTP"}
                 </button>
               )}
             </div>
@@ -161,12 +130,9 @@ const ForgetPassword = () => {
 
                 <button
                   type="submit"
-                  disabled={resetPasswordMutation.isPending}
-                  className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200 disabled:opacity-60"
+                  className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200"
                 >
-                  {resetPasswordMutation.isPending
-                    ? "Resetting..."
-                    : "Reset Password"}
+                  Reset Password
                 </button>
               </>
             )}
@@ -203,12 +169,20 @@ const ForgetPassword = () => {
               />
 
               <p className="text-xs text-gray-500">
-                {isVerifying
-                  ? "Verifying OTP..."
-                  : "Check spam if you don’t see it."}
+                {isVerifying ? "Verifying OTP..." : "Tip: Check spam if you don’t see it."}
               </p>
             </div>
           )}
+
+          <p className="text-sm text-center text-gray-600">
+            Back to{" "}
+            <span
+              onClick={() => Navigate("/login")}
+              className="text-amber-500 font-semibold hover:underline cursor-pointer"
+            >
+              Login
+            </span>
+          </p>
         </div>
       </div>
     </div>
