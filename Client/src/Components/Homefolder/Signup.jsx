@@ -255,18 +255,16 @@
 
 // export default Signup
 
-
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import OtpInput from "react-otp-input";
 import toast from "react-hot-toast";
 
+import API from "../../Api/api";
 import useGoogleAuth from "../../hooks/useGoogleAuth";
 import useSendOtp from "../../hooks/useSendOtp";
 import useVerifyOtp from "../../hooks/useVerifyOtp";
-import useSignup from "../../hooks/useSignup"; // if you already created this
 
 const Signup = () => {
   const [fullName, setFullname] = useState("");
@@ -277,29 +275,32 @@ const Signup = () => {
   const Navigate = useNavigate();
   const googleLogin = useGoogleAuth();
 
-  // ✅ Use hooks with purpose = "signup"
+  // ✅ OTP hooks with purpose = "signup"
   const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("signup");
   const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("signup");
 
-  const signupMutation = useSignup();
-
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    signupMutation.mutate(
-      { fullName, email, password },
-      {
-        onSuccess: (data) => {
-          if (data?.success) {
-            toast.success(data.message || "Signup successful");
-            Navigate("/login");
-          }
-        },
+    try {
+      const res = await API.post("/auth/signup", {
+        fullName,
+        email,
+        password,
+      });
+
+      if (res.data.success) {
+        toast.success(res.data.message || "Signup successful");
+        Navigate("/login");
+      } else {
+        toast.error(res.data.message || "Signup failed");
       }
-    );
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message || "Signup failed");
+    }
   };
 
-  // 🔁 Auto verify OTP when length becomes 6
+  // 🔁 Auto verify OTP when 6 digits entered
   useEffect(() => {
     if (otp.length === 6 && email) {
       verifyOtp(email, otp);
@@ -371,10 +372,9 @@ const Signup = () => {
             {isVerified && (
               <button
                 type="submit"
-                disabled={signupMutation.isPending}
-                className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200 disabled:opacity-60"
+                className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200"
               >
-                {signupMutation.isPending ? "Creating..." : "Create Account"}
+                Create Account
               </button>
             )}
           </form>
