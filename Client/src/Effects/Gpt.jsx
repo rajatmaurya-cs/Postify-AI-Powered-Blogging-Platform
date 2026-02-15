@@ -7,7 +7,7 @@ const Gpt = () => {
       <button className="button">
         <div className="blob1" />
         <div className="blob2" />
-        <div className="inner">AI Assisted Reading</div>
+        <div className="inner">Your Ideas. Powered by AI</div>
       </button>
     </StyledWrapper>
   );
