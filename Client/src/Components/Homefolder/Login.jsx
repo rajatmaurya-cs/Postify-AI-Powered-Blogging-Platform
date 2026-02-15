@@ -67,7 +67,7 @@ const Login = () => {
             </h2>
 
             <p className="text-sm text-gray-500 text-center">
-              Login to continue to your AI Blog
+              Login to continue.
             </p>
 
             <input
@@ -139,7 +139,7 @@ const Login = () => {
           </button>
 
           <p className="text-xs text-center text-gray-500">
-            Powered by AI ✨
+            Powered by Groq ✨
           </p>
 
         </div>
