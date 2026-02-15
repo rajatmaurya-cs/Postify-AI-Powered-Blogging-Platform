@@ -2,7 +2,9 @@ import React, { useMemo, useState } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
+
 import InlineLoader from '../../Effects/InlineLoader'
+
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -144,7 +146,7 @@ const BlogList = () => {
         )
       )}
 
-      <div className="flex justify-center py-6"><AppLoader/></div>
+      <div className="flex justify-center py-6">  <InlineLoader/>   </div>
     </div>
   );
 };
