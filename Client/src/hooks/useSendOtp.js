@@ -12,6 +12,12 @@ const useSendOtp = () => {
             toast.error("Email is required");
             return;
         }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            toast.error("Please enter a valid email address");
+            return;
+        }
 
         try {
             setSending(true);
