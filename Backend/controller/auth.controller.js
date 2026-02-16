@@ -112,7 +112,7 @@ export const login = async (req, res) => {
     }
 
 
-    const isPasswordMatch = bcrypt.compare(
+    const isPasswordMatch = await bcrypt.compare(
       password,
       user.password
     );
