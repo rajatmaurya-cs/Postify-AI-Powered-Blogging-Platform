@@ -13,7 +13,7 @@ const useGoogleAuth = () => {
     try {
       if (!authResult?.code) return;
 
-      console.log("The Authorizarion code is : ".authResult.code)
+      console.log("The Authorizarion code is : ",authResult.code)
 
       const result = await API.post("/auth/google", {
         code: authResult.code,
