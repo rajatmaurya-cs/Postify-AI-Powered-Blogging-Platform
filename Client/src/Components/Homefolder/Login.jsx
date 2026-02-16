@@ -38,9 +38,13 @@ const Login = () => {
       else navigate("/"); // fallback
     },
 
-    onError: (error) => {
-      toast.error(error?.message || "Login failed");
-      console.log(error?.message);
+     onError: (err) => {
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Something went wrong";
+
+      toast.error(msg);
     },
   });
 
