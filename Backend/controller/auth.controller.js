@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken";
 
-
-
 import axios from "axios";
 
 import { sendOtpService } from "../Service/otpService.js";

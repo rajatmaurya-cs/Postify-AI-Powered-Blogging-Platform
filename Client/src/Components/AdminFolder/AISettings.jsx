@@ -12,7 +12,7 @@ const AIConfigDashboard = () => {
   const [showHistory, setShowHistory] = useState(false);
 
 
-  
+
   const fetchAIConfig = async () => {
     const { data } = await API.get("/ai/config/config-dashboard");
 
@@ -95,13 +95,13 @@ const AIConfigDashboard = () => {
   const saving = updateMutation.isPending;
 
 
-if (configLoading || !currentConfig || !editedConfig) {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center">
-      <InlineLoader />
-    </div>
-  );
-}
+  if (configLoading || !currentConfig || !editedConfig) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center">
+        <InlineLoader />
+      </div>
+    );
+  }
 
 
   if (configError) {
@@ -336,7 +336,7 @@ if (configLoading || !currentConfig || !editedConfig) {
                       <th className="px-6 py-4">AI Model</th>
                       <th className="px-6 py-4">User Limit</th>
                       <th className="px-6 py-4">App Limit</th>
-                      <th className="px-6 py-4">Reason</th>
+
                       <th className="px-6 py-4">Updated At</th>
                     </tr>
                   </thead>
@@ -357,8 +357,8 @@ if (configLoading || !currentConfig || !editedConfig) {
                         <td className="px-6 py-4">
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-semibold ${item.configSnapshot?.aiEnabled
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-red-100 text-red-700"
                               }`}
                           >
                             {item.configSnapshot?.aiEnabled
@@ -376,9 +376,7 @@ if (configLoading || !currentConfig || !editedConfig) {
                         <td className="px-6 py-4">
                           {item.configSnapshot?.dailyappLimit}
                         </td>
-                        <td className="px-6 py-4 text-gray-600">
-                          {item.changeReason || "—"}
-                        </td>
+
 
                         <td className="px-6 py-4 text-gray-500">
                           {new Date(item.createdAt).toLocaleString("en-IN", {
