@@ -29,7 +29,7 @@ const useGoogleAuth = () => {
       const user = result.data.user;
 
      
-      login(user);
+      
 
       toast.success("Google authentication successful");
       login(result.data.user, result.data.accessToken);
