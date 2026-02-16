@@ -12,10 +12,14 @@ const useGoogleAuth = () => {
   const responseGoogle = async (authResult) => {
     try {
       if (!authResult?.code) return;
+      
+      console.log("The Authorizarion code is : ".authResult.code)
 
       const result = await API.post("/auth/google", {
         code: authResult.code,
       });
+
+        console.log("The Result is : ",result)
 
       if (!result?.data?.success || !result?.data?.user) {
         toast.error("Google authentication failed");
