@@ -13,7 +13,7 @@ const useGoogleAuth = () => {
     try {
       if (!authResult?.code) return;
 
-      const result = await API.post("/user/GoogleLogin", {
+      const result = await API.post("/auth/google", {
         code: authResult.code,
       });
 
