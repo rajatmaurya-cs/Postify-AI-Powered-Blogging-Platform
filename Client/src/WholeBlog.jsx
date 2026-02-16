@@ -76,7 +76,15 @@ const WholeBlog = () => {
       setContent(newContent);
       setaicontent(true);
     },
-    onError: (err) => toast.error(err.message || "Something went wrong"),
+    onError: (err) => {
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Something went wrong";
+
+      toast.error(msg);
+    },
+
   });
 
   const ailoading = summariseMutation.isPending;
