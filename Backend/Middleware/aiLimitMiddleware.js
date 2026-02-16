@@ -73,7 +73,7 @@ const checkAiLimit = async (req, res, next) => {
     }
 
     if (usage.count >= userLimit) {
-      return res.json({
+      return res.status(429).json({
         success: false,
         message: "Daily AI limit reached"
       });
