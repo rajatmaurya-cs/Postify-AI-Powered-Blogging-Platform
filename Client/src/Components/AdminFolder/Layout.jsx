@@ -5,9 +5,16 @@ import Sidebar from './Sidebar';
 import { useContext } from "react";
 import { AuthContext } from '../../Context/Authcontext'
 
+
 const Layout = () => {
+
+
+
+
+
+
     const navigate = useNavigate();
-    const { logout } = useContext(AuthContext)
+    const { logout  , isLoggingOut} = useContext(AuthContext)
 
 
 
@@ -18,8 +25,9 @@ const Layout = () => {
                     onClick={() => navigate('/')} />
                 <button
                     onClick={()=>logout()}
-
-                    className='text-sm px-8 py-2 bg-primary text-white rounded-full cursor-pointer'>Logout</button>
+                        disabled = {isLoggingOut}
+                    className='text-sm px-8 py-2 bg-primary text-white rounded-full cursor-pointer'>
+                        {isLoggingOut ? "Loggingvout..." :" Logout"}</button>
 
             </div>
             <div className='flex h-[calc(100vh-70px)]'>

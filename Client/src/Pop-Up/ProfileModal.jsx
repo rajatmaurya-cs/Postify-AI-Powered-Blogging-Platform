@@ -4,7 +4,7 @@ import { AuthContext } from '../Context/Authcontext'
 import { assets } from "../assets/assets";
 const ProfileModal = ({  onClose }) => {
    
-    const { logout , user} = useContext(AuthContext)
+    const { logout , user , isLoggingOut} = useContext(AuthContext)
     
 
     const handlelogout = ()=>{
@@ -79,7 +79,7 @@ const ProfileModal = ({  onClose }) => {
 
                             className="flex-1 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
 
-                            Logout
+                           {isLoggingOut ? "Loggingout..." :" Logout"}
                         </button>
                     </div>
 
