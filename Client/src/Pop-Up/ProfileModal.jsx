@@ -74,13 +74,12 @@ const ProfileModal = ({  onClose }) => {
                     
                     <div className="flex gap-3 w-full">
 
-                        <button
-                            onClick={() => handlelogout()}
+                         <button
+                    onClick={()=>handlelogout()}
+                        disabled = {isLoggingOut}
+                    className='text-sm px-8 py-2 bg-primary text-white rounded-full cursor-pointer'>
+                        {isLoggingOut ? "Logging out..." :" Logout"}</button>
 
-                            className="flex-1 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition">
-
-                           {isLoggingOut ? "Loggingout..." :" Logout"}
-                        </button>
                     </div>
 
                 </div>
