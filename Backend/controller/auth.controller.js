@@ -241,14 +241,21 @@ export const googleLogin = async (req, res) => {
     }
 
 
-    const token = createTokenForUser(user);
+s
+    const accessToken = createAccessToken(user);
+    const refreshToken = createRefreshToken(user);
 
 
-    res.cookie("Token", token, {
+    await RefreshToken.deleteMany({ userId: user._id });
+    await RefreshToken.create({ userId: user._id, token: hashToken(refreshToken) });
+
+
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 15 * 60 * 1000,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
 
