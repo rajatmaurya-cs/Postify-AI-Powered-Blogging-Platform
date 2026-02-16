@@ -12,7 +12,7 @@ const useGoogleAuth = () => {
   const responseGoogle = async (authResult) => {
     try {
       if (!authResult?.code) return;
-      
+
       console.log("The Authorizarion code is : ".authResult.code)
 
       const result = await API.post("/auth/google", {
@@ -32,6 +32,7 @@ const useGoogleAuth = () => {
       login(user);
 
       toast.success("Google authentication successful");
+      login(result.data.user, result.data.accessToken);
 
       
       if (user.role === "USER") navigate("/");

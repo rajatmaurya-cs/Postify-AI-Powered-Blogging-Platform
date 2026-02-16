@@ -239,7 +239,7 @@ export const googleLogin = async (req, res) => {
     }
 
 
-s
+    s
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
 
@@ -257,8 +257,9 @@ s
     });
 
 
-    return res.json({
+    return res.status(200).json({
       success: true,
+      accessToken,
       user: {
         id: user._id,
         name: user.fullName,
@@ -268,6 +269,7 @@ s
         createdAt: user.createdAt,
       },
     });
+
 
 
   } catch (error) {
