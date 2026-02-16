@@ -24,7 +24,7 @@ export default function useSendOtp(purpose) {
       }
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || err.message || "Failed to send OTP");
+      toast.error(err?.response?.data?.message || err.message || "Failed to Send OTP");
     },
   });
 
