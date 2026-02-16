@@ -95,13 +95,14 @@ const AIConfigDashboard = () => {
   const saving = updateMutation.isPending;
 
 
-  if (configLoading || !currentConfig || !editedConfig) {
-    return (
-      <div className="flex justify-center py-6">
-              <InlineLoader />
-         </div>
-    );
-  }
+if (configLoading || !currentConfig || !editedConfig) {
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center">
+      <InlineLoader />
+    </div>
+  );
+}
+
 
   if (configError) {
     return (
