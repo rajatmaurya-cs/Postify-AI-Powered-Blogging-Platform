@@ -249,7 +249,7 @@ export const googleLogin = async (req, res) => {
     }
 
 
-    s
+    
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
 
