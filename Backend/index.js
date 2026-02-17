@@ -21,7 +21,7 @@ const app = express();
 
 
 /* ================= Backend Checking Route ================= */
-
+console.log("This is index.js")
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 
 

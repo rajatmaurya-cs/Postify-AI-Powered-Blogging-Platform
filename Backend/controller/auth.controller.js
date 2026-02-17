@@ -178,6 +178,8 @@ export const googleLogin = async (req, res) => {
 
     const { code } = req.body;
 
+    console.log("The code is : " , code)
+
     if (!code) {
       return res.json({ success: false, message: "Google auth code missing" });
     }
@@ -185,6 +187,9 @@ export const googleLogin = async (req, res) => {
 
     const { tokens } = await oauth2client.getToken(code);
     oauth2client.setCredentials(tokens);
+
+
+    console.log("The Token is : " , tokens)
 
 
 
@@ -196,6 +201,8 @@ export const googleLogin = async (req, res) => {
         },
       }
     );
+
+    console.log("userRes is : " , userRes.data)
 
 
 
@@ -273,11 +280,16 @@ export const googleLogin = async (req, res) => {
 
 
   } catch (error) {
-    return res.json({
-      success: false,
-      message: error.message,
-    });
-  }
+  console.log("GoogleLogin error:", error?.response?.data || error);
+  return res.status(500).json({
+    success: false,
+    message: error?.response?.data?.error_description
+      || error?.response?.data?.error
+      || error.message
+      || "Google login failed",
+  });
+}
+
 };
 
 
