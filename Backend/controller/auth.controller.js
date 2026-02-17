@@ -178,6 +178,9 @@ export const googleLogin = async (req, res) => {
 
     const { code } = req.body;
 
+    console.log("The CLIENT_ID:", process.env.GOOGLE_CLIENT_ID)
+    console.log("The CLIENT_SECRET" , process.env.GOOGLE_CLIENT_SECRET)
+
     console.log("The code is : " , code)
 
     if (!code) {

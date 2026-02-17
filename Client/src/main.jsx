@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId="24947228077-fb2k4t5clt6kgmtl0sk31ogi3ea0h3sr.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="399493269818-o9la117v8hjegq8l9fgtcsikgkrmre8n.apps.googleusercontent.com">
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
