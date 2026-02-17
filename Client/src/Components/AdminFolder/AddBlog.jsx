@@ -91,7 +91,7 @@ const AddBlog = () => {
       }
 
     } catch (error) {
-      toast.error(error.response?.data?.message || "Generation failed");
+      toast.error(error.response?.data?.message || "AI Generation failed");
     } finally {
       setaiLoading(false)
     }
