@@ -16,17 +16,24 @@ const AddBlog = lazy(() => import("./Components/AdminFolder/AddBlog"));
 const AI = lazy(() => import("./Components/AdminFolder/AI"));
 const AIconfig = lazy(() => import("./Components/AdminFolder/AISettings"));
 
+const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy.jsx"))
+const Terms = lazy(() => import("./Pages/Terms.jsx"))
+
+
+
 import FullScreenLoader from "./Effects/FullscreenLoader";
 
 function App() {
   const { loading } = useContext(AuthContext);
 
-  if(loading) return <div>  <FullScreenLoader/> </div>;
+  if (loading) return <div>  <FullScreenLoader /> </div>;
 
   return (
-    <Suspense fallback={<div> <FullScreenLoader/> </div>}>
+    <Suspense fallback={<div> <FullScreenLoader /> </div>}>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/blog/:blogId" element={<WholeBlog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signUp" element={<Signup />} />
@@ -41,7 +48,7 @@ function App() {
           <Route path="addblog" element={<AddBlog />} />
         </Route>
       </Routes>
-      
+
     </Suspense>
   );
 }

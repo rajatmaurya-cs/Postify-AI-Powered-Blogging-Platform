@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 
