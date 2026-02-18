@@ -35,7 +35,7 @@ const AddBlog = () => {
     try {
          e.preventDefault()
        if (!analysis) {
-    toast.error("Please generate and review blog report first");
+    toast.error("Please generate and review blog report First");
     return;
   }
    
