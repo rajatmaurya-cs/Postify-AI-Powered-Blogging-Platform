@@ -216,7 +216,7 @@ const checkAiLimit = async (req, res, next) => {
     }
 
     return next();
-    
+
   } catch (error) {
     console.error("AI Limit Middleware Error:", error);
 

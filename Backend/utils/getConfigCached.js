@@ -5,7 +5,7 @@ import { redisClient } from "../Config/redis.js";
 const KEY = "app:config:v1";
 const TTL = 300; // 5 minutes
 
-export async function getConfigCached() {
+export default  async function getConfigCached() {
 
   try {
     const cached = await redisClient.get(KEY);
