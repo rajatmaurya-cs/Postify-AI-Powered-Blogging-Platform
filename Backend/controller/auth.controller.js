@@ -140,7 +140,7 @@ export const login = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "None",   // ✅ FIX (capital N)
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -179,9 +179,9 @@ export const googleLogin = async (req, res) => {
     const { code } = req.body;
 
     console.log("The CLIENT_ID:", process.env.GOOGLE_CLIENT_ID)
-    console.log("The CLIENT_SECRET" , process.env.GOOGLE_CLIENT_SECRET)
+    console.log("The CLIENT_SECRET", process.env.GOOGLE_CLIENT_SECRET)
 
-    console.log("The code is : " , code)
+    console.log("The code is : ", code)
 
     if (!code) {
       return res.json({ success: false, message: "Google auth code missing" });
@@ -192,7 +192,7 @@ export const googleLogin = async (req, res) => {
     oauth2client.setCredentials(tokens);
 
 
-    console.log("The Token is : " , tokens)
+    console.log("The Token is : ", tokens)
 
 
 
@@ -205,7 +205,7 @@ export const googleLogin = async (req, res) => {
       }
     );
 
-    console.log("userRes is : " , userRes.data)
+    console.log("userRes is : ", userRes.data)
 
 
 
@@ -249,7 +249,7 @@ export const googleLogin = async (req, res) => {
     }
 
 
-    
+
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
 
@@ -283,17 +283,17 @@ export const googleLogin = async (req, res) => {
 
 
   } catch (error) {
-  console.log("GoogleLogin ERROR:", error?.response?.data || error);
+    console.log("GoogleLogin ERROR:", error?.response?.data || error);
 
-  return res.status(500).json({
-    success: false,
-    message:
-      error?.response?.data?.error_description ||
-      error?.response?.data?.error ||
-      error.message ||
-      "Google login failed",
-  });
-}
+    return res.status(500).json({
+      success: false,
+      message:
+        error?.response?.data?.error_description ||
+        error?.response?.data?.error ||
+        error.message ||
+        "Google login failed",
+    });
+  }
 
 };
 
@@ -350,6 +350,7 @@ export const logout = async (req, res) => {
 export const refreshAccessToken = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
+    console.log("The RefreshToken is : ", refreshToken)
 
 
 
@@ -392,10 +393,12 @@ export const refreshAccessToken = async (req, res) => {
 
     res.cookie("refreshToken", newrefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      secure: true,       
+      sameSite: "None",   
+      path: "/",          
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
 
 
 
