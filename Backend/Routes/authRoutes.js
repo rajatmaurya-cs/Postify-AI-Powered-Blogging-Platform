@@ -28,7 +28,7 @@ import {
 } from "../controller/auth.controller.js"
 
 import checkAiLimit from "../Middleware/aiLimitMiddleware.js";
-import authMiddleware from "../Middleware/authMiddleware.js";
+import {authMiddleware} from "../Middleware/authMiddleware.js";
 
 const authRouter = express.Router();
 

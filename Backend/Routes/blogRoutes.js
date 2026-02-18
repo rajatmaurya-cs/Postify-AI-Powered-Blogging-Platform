@@ -1,6 +1,6 @@
 import express from "express"
 import upload from '../Middleware/Multer.js'
-import authMiddleware from "../Middleware/authMiddleware.js"
+import {authMiddleware} from "../Middleware/authMiddleware.js"
 import adminMiddleware from "../Middleware/adminMiddleware.js"
 
 import  {addBlog , getallblog ,getblogbyid , deleteBlog , toggleblogpublish , GenerateReport} from '../controller/BlogController.js'
