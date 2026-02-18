@@ -38,6 +38,8 @@ async function init() {
     isDbConnected = true;
   }
 }
+init();
+
 
 
 
@@ -81,13 +83,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-/* ===== Local dev  ===== */
-// if (process.env.NODE_ENV !== "production") {
-//   const PORT = process.env.PORT || 3000;
-//   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// }
 
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 export default app;
