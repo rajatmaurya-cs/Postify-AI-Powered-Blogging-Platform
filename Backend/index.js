@@ -15,6 +15,7 @@ import AiRouter from "./Routes/AIRoutes.js";
 
 import configRoutes from "./Routes/configRoutes.js";
 import adminMiddleware from "./Middleware/adminMiddleware.js";
+import initConfig from "./Models/Config.js";
 
 const app = express();
 
@@ -37,7 +38,8 @@ async function init() {
     isDbConnected = true;
   }
 }
-init();
+
+initConfig();
 
 /* ================= MIDDLEWARE ================= */
 app.use(cors({
