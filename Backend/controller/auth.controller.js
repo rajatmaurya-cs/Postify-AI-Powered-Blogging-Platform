@@ -146,10 +146,17 @@ export const login = async (req, res) => {
     });
 
 
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
+      maxAge: 15 * 60 * 1000, // 15 min
+    });
 
     return res.status(200).json({
       success: true,
-      accessToken,
+
       user: {
         id: user._id,
         name: user.fullName,
@@ -267,9 +274,17 @@ export const googleLogin = async (req, res) => {
     });
 
 
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
+      maxAge: 15 * 60 * 1000, // 15 min
+    });
+
     return res.status(200).json({
       success: true,
-      accessToken,
+
       user: {
         id: user._id,
         name: user.fullName,
@@ -393,17 +408,22 @@ export const refreshAccessToken = async (req, res) => {
 
     res.cookie("refreshToken", newrefreshToken, {
       httpOnly: true,
-      secure: true,       
-      sameSite: "None",   
-      path: "/",          
+      secure: true,
+      sameSite: "None",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/",
+      maxAge: 15 * 60 * 1000, // 15 min
+    });
 
 
     return res.status(200).json({
-      accessToken: newAccessToken,
       user,
     });
 

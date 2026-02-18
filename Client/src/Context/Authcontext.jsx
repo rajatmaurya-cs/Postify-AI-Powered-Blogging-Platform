@@ -1,98 +1,5 @@
-
-// import { createContext, useEffect, useState } from "react";
-// import API from "../Api/api";
-// import { setAccessToken } from "../Api/axiosInterceptor";
-// import { useNavigate } from "react-router-dom";
-
-// export const AuthContext = createContext();
-
-// export const AuthProvider = ({ children }) => {
-
-//   const navigate = useNavigate();
-
-//   const [user, setUser] = useState(null);
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [loading, setLoading] = useState(true);
-
-
-//   const refreshAccessToken = async () => {
-//     try {
-
-      
-//       const res = await API.post("/auth/refreshtoken");
-    
-//       setAccessToken(res.data.accessToken);
-
-//       setUser(res.data.user);
-//       setIsLoggedIn(true);
-
-//     } catch (error) {
-
-//       console.log("Refresh failed:", error.response?.data);
-//       clearAuth();
-
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-
-//     const initAuth = async () => {
-//       await refreshAccessToken();
-//     };
-
-//     initAuth();
-
-    
-
-//   }, []);
-
-
-//   const login = (userData, token) => {
-
-//     setAccessToken(token);
-
-//     setUser(userData);
-//     setIsLoggedIn(true);
-//   };
-
-
-//   const logout = async () => {
-//     try {
-//       await API.post("/auth/logout");
-//     } catch (err) {
-//       console.log(err);
-//     }
-
-//     clearAuth();
-//     navigate("/login");
-//   };
-
-//   const clearAuth = () => {
-//     setUser(null);
-//     setIsLoggedIn(false);
-//     setAccessToken(null);
-//   };
-
-//   return (
-//     <AuthContext.Provider
-//       value={{
-//         user,
-//         isLoggedIn,
-//         loading,
-//         login,
-//         logout,
-//       }}
-//     >
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import API from "../Api/api";
-import { setAccessToken } from "../Api/axiosInterceptor";
 import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
@@ -105,39 +12,33 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-
   const didInit = useRef(false);
-
- 
   const refreshPromiseRef = useRef(null);
 
   const clearAuth = useCallback(() => {
     setUser(null);
     setIsLoggedIn(false);
-    setAccessToken(null);
   }, []);
 
+  // ✅ cookie-based refresh: backend sets cookies, response returns { user }
   const refreshAccessToken = useCallback(async () => {
     if (refreshPromiseRef.current) return refreshPromiseRef.current;
 
     refreshPromiseRef.current = (async () => {
       try {
         const res = await API.post("/auth/refreshtoken");
-
-        const token = res.data?.accessToken;
         const u = res.data?.user;
 
-        if (!token || !u) throw new Error("Invalid refresh response");
+        if (!u) throw new Error("Invalid refresh response: user missing");
 
-        setAccessToken(token);
         setUser(u);
         setIsLoggedIn(true);
 
-        return token;
+        return true;
       } catch (error) {
         console.log("Refresh failed:", error?.response?.data || error.message);
         clearAuth();
-        return null;
+        return false;
       } finally {
         setLoading(false);
         refreshPromiseRef.current = null;
@@ -147,30 +48,25 @@ export const AuthProvider = ({ children }) => {
     return refreshPromiseRef.current;
   }, [clearAuth]);
 
-
+  
   useEffect(() => {
     if (didInit.current) return;
     didInit.current = true;
-
     refreshAccessToken();
   }, [refreshAccessToken]);
 
-
-
-
-  const login = useCallback((userData, token) => {
-    if (!token || !userData) return;
-    setAccessToken(token);
+  // ✅ login no longer needs token param (cookies are set by backend)
+  const login = useCallback((userData) => {
+    if (!userData) return;
     setUser(userData);
     setIsLoggedIn(true);
     setLoading(false);
   }, []);
 
-
   const logout = useCallback(async () => {
     setIsLoggingOut(true);
     try {
-      await API.post("/auth/logout");
+      await API.post("/auth/logout"); // backend should clear cookies
     } catch (err) {
       console.log("Logout API failed:", err?.response?.data || err.message);
     } finally {
@@ -180,14 +76,18 @@ export const AuthProvider = ({ children }) => {
     }
   }, [clearAuth, navigate]);
 
-
-
-const value = useMemo(
-  () => ({ user, isLoggedIn, loading, login, isLoggingOut, logout, refreshAccessToken }),
-  [user, isLoggedIn, loading, isLoggingOut, login, logout, refreshAccessToken]
-);
-
-
+  const value = useMemo(
+    () => ({
+      user,
+      isLoggedIn,
+      loading,
+      login,
+      logout,
+      isLoggingOut,
+      refreshAccessToken,
+    }),
+    [user, isLoggedIn, loading, login, logout, isLoggingOut, refreshAccessToken]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

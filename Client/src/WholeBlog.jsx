@@ -12,26 +12,26 @@ import { AuthContext } from "./Context/Authcontext";
 import { useBlogById } from "./hooks/useBlogById";
 import { useCommentsByBlog } from "./hooks/useCommentsByBlog";
 
-// OPTIONAL: replace Moment with dayjs (recommended)
+
 
 const WholeBlog = () => {
   const { blogId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { isLoggedIn, user } = useContext(AuthContext);
+  const {isLoggedIn} = useContext(AuthContext);
 
-  // React Query data
+
   const { data: blog, isLoading: blogLoading, isError: blogError } = useBlogById(blogId);
   const { data: comments = [], isLoading: commentsLoading } = useCommentsByBlog(blogId);
 
-  // local UI state (only what must be local)
+
   const [comment, setComment] = useState("");
   const [content, setContent] = useState("");
   const [originalContent, setOriginalContent] = useState("");
   const [aicontent, setaicontent] = useState(false);
 
-  // Set content when blog arrives (only when blogId changes / blog fetched)
+
   useEffect(() => {
     if (blog?.content) {
       setContent(blog.content);
@@ -40,16 +40,16 @@ const WholeBlog = () => {
     }
   }, [blogId, blog?.content]);
 
-  // Memo: approved comments once
+
   const approvedComments = useMemo(
     () => comments.filter((c) => c.isApproved),
     [comments]
   );
 
-  // Memo: avoid recreating object for dangerouslySetInnerHTML
+
   const contentHtml = useMemo(() => ({ __html: content }), [content]);
 
-  // Mutation: add comment
+
   const addCommentMutation = useMutation({
     mutationFn: async () => {
       const res = await API.post("/comment/addcomment", { content: comment, blogId });
@@ -59,13 +59,13 @@ const WholeBlog = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Comment added");
       setComment("");
-      // refresh comments cache
+     
       queryClient.invalidateQueries({ queryKey: ["comments", blogId] });
     },
     onError: (err) => toast.error(err.message || "Comment failed"),
   });
 
-  // Mutation: AI summarise
+  
   const summariseMutation = useMutation({
     mutationFn: async () => {
       const res = await API.post("/ai/summarise", { content });
@@ -105,7 +105,7 @@ const WholeBlog = () => {
     setaicontent(false);
   };
 
-  // Loading / Error
+  
   if (blogLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
