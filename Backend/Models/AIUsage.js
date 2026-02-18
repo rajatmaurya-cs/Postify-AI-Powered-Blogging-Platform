@@ -21,6 +21,8 @@ const aiUsageSchema = new mongoose.Schema({
    
 })
 
+aiUsageSchema.index({ userId: 1, date: 1 }, { unique: true });
+
 const AiUsage = mongoose.model("AIUsage", aiUsageSchema);
 
 export default AiUsage;
