@@ -10,7 +10,7 @@ export const updateConfig = async (req, res) => {
         
         let currentConfig = await Config.findOne();
        
-            console.log(req.body)
+          
        
         await ConfigHistory.create({
             configSnapshot: currentConfig.toObject(),

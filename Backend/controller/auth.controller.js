@@ -300,11 +300,6 @@ export const googleLogin = async (req, res) => {
 
 
 
-
-
-
-
-
 /*--------------------------- Logout & refreshAccessToken---------------------------------- */
 
 export const logout = async (req, res) => {
@@ -421,7 +416,6 @@ export const refreshAccessToken = async (req, res) => {
 
 /*------------------------------------------ OTP-----------------------------------------*/
 
-
 export const sendOtp = async (req, res) => {
   try {
     let { email, purpose } = req.body;
@@ -430,7 +424,7 @@ export const sendOtp = async (req, res) => {
 
     await sendOtpService(email, purpose);
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       message: "OTP sent successfully",
     });

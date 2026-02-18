@@ -22,6 +22,10 @@ const configSchema = new mongoose.Schema({
         type:String,
         default:"llama-3.1-8b-instant"
     },
+
+    aiPerMinuteLimit: { 
+        type: Number,
+     default: 2 },
     
 
 },{timestamps:true});
