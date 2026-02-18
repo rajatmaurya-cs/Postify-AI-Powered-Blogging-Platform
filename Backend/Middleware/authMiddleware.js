@@ -1,5 +1,5 @@
 import { redisClient } from "../Config/redis.js";
-import { validateAccessToken } from "../Utils/token.js"; // adjust path
+import { validateAccessToken } from "../Service/Authentication.js"; 
 
 export const authMiddleware = async (req, res, next) => {
   try {
