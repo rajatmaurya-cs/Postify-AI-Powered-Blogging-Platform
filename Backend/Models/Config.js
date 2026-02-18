@@ -10,12 +10,12 @@ const configSchema = new mongoose.Schema({
 
     dailyAiLimit:{
         type:Number,
-        default:5
+        default:2
     },
 
     dailyappLimit:{
         type : Number,
-        default : 50
+        default :10
     },
 
     aiModel:{
