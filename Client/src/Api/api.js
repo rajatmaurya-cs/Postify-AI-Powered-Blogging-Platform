@@ -17,7 +17,9 @@ API.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
+        console.log("interceptor call refreshToken")
         await API.post("/auth/refreshtoken"); 
+        console.log("interceptor called again originalRequest")
         return API(originalRequest);          
       } catch (e) {
        

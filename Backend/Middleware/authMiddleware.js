@@ -5,6 +5,8 @@ import { validateAccessToken } from "../Service/Authentication.js";
   try {
     
     const token = req.cookies?.accessToken;
+    
+    console.log("AccessToken is : ",token)
 
     if (!token) {
       return res.status(401).json({ message: "No access token" });
