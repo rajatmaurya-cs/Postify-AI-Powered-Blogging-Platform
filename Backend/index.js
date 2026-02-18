@@ -44,14 +44,16 @@ init();
 
 
 /* ================= MIDDLEWARE ================= */
-app.use(cors({
+const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-}));
+};
 
-app.options(/.*/, cors()); 
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); 
+
 
 
 app.use(express.json());
