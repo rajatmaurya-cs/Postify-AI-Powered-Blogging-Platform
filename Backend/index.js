@@ -44,6 +44,8 @@ init();
 
 
 /* ================= MIDDLEWARE ================= */
+console.log("Frontend URL:", process.env.FRONTEND_URL);
+
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true,
