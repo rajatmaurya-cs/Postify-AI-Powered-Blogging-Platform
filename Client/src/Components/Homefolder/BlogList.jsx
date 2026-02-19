@@ -41,12 +41,14 @@ const BlogList = () => {
 
 
 
-  Block.init({
-    backgroundColor: "rgba(0,0,0,0)",
-    svgColor: "#1C1AEF",
-    messageColor: "#3b82f6",
-    messageFontSize: "14px",
-  });
+  useEffect(() => {
+    Block.init({
+      backgroundColor: "rgba(0,0,0,0)",
+      svgColor: "#1C1AEF",
+      messageColor: "#3b82f6",
+      messageFontSize: "14px",
+    });
+  }, []);
 
 
   useEffect(() => {
@@ -121,11 +123,9 @@ const BlogList = () => {
         </p>
       )}
 
-      return (
-      <div ref={loaderRef} className="relative min-h-[120px]">
-
-      </div>
-      );
+        {(isLoading || isFetching) && (
+        <div ref={loaderRef} className="relative min-h-[120px]" />
+      )}
 
 
 
