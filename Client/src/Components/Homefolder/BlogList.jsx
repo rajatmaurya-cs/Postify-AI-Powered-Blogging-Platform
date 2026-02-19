@@ -26,7 +26,7 @@ const BlogList = () => {
 
       const matchesSearch =
         blog.title?.toLowerCase().includes(searchText)
-   
+
 
       return matchesCategory && matchesSearch;
     });
@@ -136,11 +136,20 @@ const BlogList = () => {
               <div className="relative h-52 overflow-hidden">
                 <img
                   src={blog.image}
+                  srcSet={`
+                  ${blog.image}?w=400 400w,
+                  ${blog.image}?w=800 800w,
+                  ${blog.image}?w=1200 1200w
+                      `}
+                  sizes="(max-width: 640px) 100vw, 50vw"
                   alt={blog.title}
                   loading="lazy"
-                  className="w-full h-full object-cover 
-                           group-hover:scale-105 transition duration-300"
+                  decoding="async"
+                  width="400"
+                  height="250"
+                  className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                 />
+
               </div>
 
               <div className="p-5">

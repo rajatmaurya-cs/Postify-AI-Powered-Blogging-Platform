@@ -19,7 +19,7 @@ const WholeBlog = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const {isLoggedIn} = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
 
   const { data: blog, isLoading: blogLoading, isError: blogError } = useBlogById(blogId);
@@ -59,13 +59,13 @@ const WholeBlog = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Comment added");
       setComment("");
-     
+
       queryClient.invalidateQueries({ queryKey: ["comments", blogId] });
     },
     onError: (err) => toast.error(err.message || "Comment failed"),
   });
 
-  
+
   const summariseMutation = useMutation({
     mutationFn: async () => {
       const res = await API.post("/ai/summarise", { content });
@@ -105,7 +105,7 @@ const WholeBlog = () => {
     setaicontent(false);
   };
 
-  
+
   if (blogLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
@@ -161,13 +161,27 @@ const WholeBlog = () => {
 
       <div className="max-w-full mx-auto px-5 py-12 flex flex-col items-center">
         <div className="rounded-2xl overflow-hidden shadow-lg mb-10 max-w-5xl">
+
+
           <img
             src={blog.image}
+            srcSet={`
+                  ${blog.image}?w=400 400w,
+                  ${blog.image}?w=800 800w,
+                  ${blog.image}?w=1200 1200w
+                      `}
+            sizes="(max-width: 640px) 100vw, 50vw"
             alt={blog.title}
             loading="lazy"
             decoding="async"
-            className="w-full h-auto object-cover"
+            width="400"
+            height="250"
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
+
+
+
+
         </div>
 
         {ailoading && (
