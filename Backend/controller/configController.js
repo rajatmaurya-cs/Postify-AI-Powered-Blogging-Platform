@@ -7,19 +7,23 @@ import ConfigHistory from "../Models/configHistory.js";
 export const updateConfig = async (req, res) => {
     try {
 
-        
+
         let currentConfig = await Config.findOne();
-       
-          
-       
+
+
+        if (!currentConfig) {
+            currentConfig = await Config.create({}); 
+        }
+
+        
         await ConfigHistory.create({
             configSnapshot: currentConfig.toObject(),
             changedBy: req.user.id
         });
 
-     
 
-        
+
+
         const updatedConfig = await Config.findOneAndUpdate(
             {},
             req.body,
@@ -34,8 +38,8 @@ export const updateConfig = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({
-            success:false,
-            message:error.message
+            success: false,
+            message: error.message
         });
     }
 };
@@ -44,7 +48,7 @@ export const updateConfig = async (req, res) => {
 
 export const getConfig = async (req, res) => {
     try {
-       
+
         let config = await Config.findOne();
 
         if (!config) {
@@ -52,14 +56,14 @@ export const getConfig = async (req, res) => {
         }
 
         res.json({
-            success : true,
+            success: true,
             config,
         });
 
     } catch (error) {
         res.status(500).json({
-            success:false,
-            message:error.message
+            success: false,
+            message: error.message
         });
     }
 };
@@ -72,19 +76,19 @@ export const getConfigHistory = async (req, res) => {
 
         const history = await ConfigHistory
             .find()
-            .populate("changedBy", "fullName email") 
+            .populate("changedBy", "fullName email")
             .sort({ createdAt: -1 });
 
         return res.json({
-            success:true,
+            success: true,
             history
         });
 
-    } catch(error){
+    } catch (error) {
 
         return res.status(500).json({
-            success:false,
-            message:error.message
+            success: false,
+            message: error.message
         });
     }
 };

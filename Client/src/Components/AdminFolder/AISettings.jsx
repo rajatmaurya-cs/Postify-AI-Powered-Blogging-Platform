@@ -1,32 +1,20 @@
+
 import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../../Api/api";
 import toast from "react-hot-toast";
-
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Loading } from "notiflix/build/notiflix-loading-aio";
 
 const AIConfigDashboard = () => {
-
-  
-
-
-
-
   const queryClient = useQueryClient();
-
 
   const [editedConfig, setEditedConfig] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
 
-
-
+  // -------- Fetch current config --------
   const fetchAIConfig = async () => {
     const { data } = await API.get("/ai/config/config-dashboard");
-
-    if (!data?.config) {
-      throw new Error(data?.message || "Failed to load AI config");
-    }
-
+    if (!data?.config) throw new Error(data?.message || "Failed to load AI config");
     return data.config;
   };
 
@@ -44,16 +32,10 @@ const AIConfigDashboard = () => {
     retry: 1,
   });
 
-
-
-
+  // -------- Fetch history --------
   const fetchAIConfigHistory = async () => {
     const { data } = await API.get("/ai/config/getConfigHistory");
-
-    if (!data?.success) {
-      throw new Error(data?.message || "Failed to load config history");
-    }
-
+    if (!data?.success) throw new Error(data?.message || "Failed to load config history");
     return data.history || [];
   };
 
@@ -72,33 +54,24 @@ const AIConfigDashboard = () => {
     retry: 1,
   });
 
-useEffect(() => {
-    const shouldShow =
-      configLoading || !currentConfig || !editedConfig
-
-    if (shouldShow) {
-      Loading.dots("Loading AI config...");
-    } else {
-      Loading.remove();
-    }
-
+  // -------- Notiflix loader --------
+  useEffect(() => {
+    const shouldShow = configLoading || !currentConfig || !editedConfig;
+    if (shouldShow) Loading.dots("Loading AI config...");
+    else Loading.remove();
     return () => Loading.remove();
   }, [configLoading, currentConfig, editedConfig]);
 
-
-
-
+  // Keep same object structure as currentConfig
   useEffect(() => {
-    if (currentConfig) setEditedConfig({ ...currentConfig }); // To get the same Obj structure of currentConfig
+    if (currentConfig) setEditedConfig({ ...currentConfig });
   }, [currentConfig]);
 
-
+  // -------- Update mutation --------
   const updateMutation = useMutation({
     mutationFn: async (payload) => {
       const res = await API.put("/ai/config/updateConfig", payload);
-      if (!res.data?.success) {
-        throw new Error(res.data?.message || "Update failed");
-      }
+      if (!res.data?.success) throw new Error(res.data?.message || "Update failed");
       return res.data;
     },
     onMutate: () => toast.loading("Saving config...", { id: "save-config" }),
@@ -107,19 +80,12 @@ useEffect(() => {
       queryClient.invalidateQueries({ queryKey: ["ai-config"] });
       queryClient.invalidateQueries({ queryKey: ["ai-config-history"] });
     },
-    onError: (err) => {
-      toast.error(err?.message || "Update failed", { id: "save-config" });
-    },
+    onError: (err) => toast.error(err?.message || "Update failed", { id: "save-config" }),
   });
 
   const saving = updateMutation.isPending;
 
-
-  if (configLoading || !currentConfig || !editedConfig) {
-    return null;
-  }
-
-
+  if (configLoading || !currentConfig || !editedConfig) return null;
 
   if (configError) {
     return (
@@ -129,10 +95,7 @@ useEffect(() => {
     );
   }
 
-
-  const isUnchanged =
-    JSON.stringify(editedConfig) === JSON.stringify(currentConfig);
-
+  const isUnchanged = JSON.stringify(editedConfig) === JSON.stringify(currentConfig);
   const disableAll = saving || configFetching || historyFetching;
 
   const handleSave = () => {
@@ -143,6 +106,9 @@ useEffect(() => {
       aiModel: editedConfig.aiModel,
       dailyAiLimit: editedConfig.dailyAiLimit,
       dailyappLimit: editedConfig.dailyappLimit,
+
+      // ✅ NEW FEATURE: per-minute limit
+      aiPerMinuteLimit: editedConfig.aiPerMinuteLimit,
     };
 
     updateMutation.mutate(payload);
@@ -157,7 +123,7 @@ useEffect(() => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
-
+        {/* 1) AI Feature Toggle */}
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">AI Feature Toggle</h2>
 
@@ -176,17 +142,19 @@ useEffect(() => {
                 aiEnabled: !prev.aiEnabled,
               }))
             }
-            className={`w-16 h-8 flex items-center rounded-full p-1 transition ${editedConfig.aiEnabled ? "bg-green-500" : "bg-gray-400"
-              } ${disableAll ? "opacity-60 cursor-not-allowed" : ""}`}
+            className={`w-16 h-8 flex items-center rounded-full p-1 transition ${
+              editedConfig.aiEnabled ? "bg-green-500" : "bg-gray-400"
+            } ${disableAll ? "opacity-60 cursor-not-allowed" : ""}`}
           >
             <div
-              className={`bg-white w-6 h-6 rounded-full shadow-md transform transition ${editedConfig.aiEnabled ? "translate-x-8" : ""
-                }`}
+              className={`bg-white w-6 h-6 rounded-full shadow-md transform transition ${
+                editedConfig.aiEnabled ? "translate-x-8" : ""
+              }`}
             />
           </button>
         </div>
 
-
+        {/* 2) App Daily Limit */}
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">App Daily Limit</h2>
 
@@ -215,7 +183,7 @@ useEffect(() => {
           />
         </div>
 
-
+        {/* 3) User Daily AI Limit */}
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">User Daily AI Limit</h2>
 
@@ -244,8 +212,39 @@ useEffect(() => {
           />
         </div>
 
-
+        {/* ✅ 4) NEW: AI Per-Minute Limit */}
         <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">AI Per-Minute Limit</h2>
+
+          <p className="text-sm text-gray-500">
+            Current:
+            <span className="font-bold ml-2">
+              {currentConfig.aiPerMinuteLimit ?? "—"}
+            </span>
+          </p>
+
+          <p className="text-3xl font-bold text-emerald-600 mt-2">
+            New: {editedConfig.aiPerMinuteLimit ?? "—"}
+          </p>
+
+          <input
+            disabled={disableAll}
+            type="range"
+            min="1"
+            max="60"
+            value={editedConfig.aiPerMinuteLimit ?? 1}
+            onChange={(e) =>
+              setEditedConfig((prev) => ({
+                ...prev,
+                aiPerMinuteLimit: Number(e.target.value),
+              }))
+            }
+            className="w-full mt-4"
+          />
+        </div>
+
+        {/* 5) AI Model */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:col-span-2">
           <h2 className="text-xl font-semibold mb-4">AI Model</h2>
 
           <p className="text-sm text-gray-500 mb-2">
@@ -264,38 +263,31 @@ useEffect(() => {
             }
             className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
           >
-            <option value="openai/gpt-oss-120b">
-              GPT-OSS 120B (Highest Intelligence)
-            </option>
-            <option value="llama-3.3-70b-versatile">
-              LLaMA 3.3 70B Versatile (Recommended)
-            </option>
+            <option value="openai/gpt-oss-120b">GPT-OSS 120B (Highest Intelligence)</option>
+            <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B Versatile (Recommended)</option>
             <option value="groq/compound">Groq Compound (Balanced)</option>
-            <option value="groq/compound-mini">
-              Groq Compound Mini (Fast & Cheap)
-            </option>
-            <option value="llama-3.1-8b-instant">
-              LLaMA 3.1 8B Instant (Ultra Fast)
-            </option>
+            <option value="groq/compound-mini">Groq Compound Mini (Fast & Cheap)</option>
+            <option value="llama-3.1-8b-instant">LLaMA 3.1 8B Instant (Ultra Fast)</option>
           </select>
         </div>
       </div>
 
-
+      {/* Save */}
       <div className="max-w-5xl mt-10">
         <button
           onClick={handleSave}
           disabled={isUnchanged || disableAll}
-          className={`w-full py-3 rounded-2xl text-lg font-semibold transition ${isUnchanged || disableAll
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700 text-white"
-            }`}
+          className={`w-full py-3 rounded-2xl text-lg font-semibold transition ${
+            isUnchanged || disableAll
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700 text-white"
+          }`}
         >
           {saving ? "Saving..." : "Save All Changes"}
         </button>
       </div>
 
-
+      {/* History */}
       <div className="max-w-7xl mt-16">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">🕑 AI Config History</h2>
@@ -311,9 +303,7 @@ useEffect(() => {
         {showHistory && (
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
             {historyLoading && (
-              <div className="p-6 text-center text-gray-500">
-                Loading history...
-              </div>
+              <div className="p-6 text-center text-gray-500">Loading history...</div>
             )}
 
             {historyError && (
@@ -323,9 +313,7 @@ useEffect(() => {
             )}
 
             {!historyLoading && !historyError && configHistory.length === 0 ? (
-              <div className="p-6 text-center text-gray-500">
-                No config history found.
-              </div>
+              <div className="p-6 text-center text-gray-500">No config history found.</div>
             ) : (
               !historyLoading &&
               !historyError && (
@@ -333,7 +321,7 @@ useEffect(() => {
                   <thead className="bg-gray-100 text-gray-700 text-sm">
                     <tr>
                       <th></th>
-                      <th colSpan="4" className="py-4 text-center">
+                      <th colSpan="5" className="py-4 text-center">
                         <div className="flex flex-col items-center">
                           <span className="font-bold uppercase tracking-wide">
                             Previous Configuration
@@ -344,7 +332,6 @@ useEffect(() => {
                         </div>
                       </th>
                       <th></th>
-                      <th></th>
                     </tr>
 
                     <tr className="uppercase text-gray-600">
@@ -352,8 +339,11 @@ useEffect(() => {
                       <th className="px-6 py-4">Status</th>
                       <th className="px-6 py-4">AI Model</th>
                       <th className="px-6 py-4">User Limit</th>
-                      <th className="px-6 py-4">App Limit</th>
 
+                      {/* ✅ NEW COLUMN */}
+                      <th className="px-6 py-4">Per-Minute</th>
+
+                      <th className="px-6 py-4">App Limit</th>
                       <th className="px-6 py-4">Updated At</th>
                     </tr>
                   </thead>
@@ -373,27 +363,25 @@ useEffect(() => {
 
                         <td className="px-6 py-4">
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-semibold ${item.configSnapshot?.aiEnabled
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                              }`}
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                              item.configSnapshot?.aiEnabled
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
                           >
-                            {item.configSnapshot?.aiEnabled
-                              ? "Enabled"
-                              : "Disabled"}
+                            {item.configSnapshot?.aiEnabled ? "Enabled" : "Disabled"}
                           </span>
                         </td>
 
+                        <td className="px-6 py-4">{item.configSnapshot?.aiModel}</td>
+                        <td className="px-6 py-4">{item.configSnapshot?.dailyAiLimit}</td>
+
+                        {/* ✅ NEW VALUE */}
                         <td className="px-6 py-4">
-                          {item.configSnapshot?.aiModel}
-                        </td>
-                        <td className="px-6 py-4">
-                          {item.configSnapshot?.dailyAiLimit}
-                        </td>
-                        <td className="px-6 py-4">
-                          {item.configSnapshot?.dailyappLimit}
+                          {item.configSnapshot?.aiPerMinuteLimit ?? "—"}
                         </td>
 
+                        <td className="px-6 py-4">{item.configSnapshot?.dailyappLimit}</td>
 
                         <td className="px-6 py-4 text-gray-500">
                           {new Date(item.createdAt).toLocaleString("en-IN", {
@@ -410,7 +398,6 @@ useEffect(() => {
           </div>
         )}
       </div>
-
     </div>
   );
 };
