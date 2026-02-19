@@ -25,8 +25,8 @@ const BlogList = () => {
         activeCategory === "All" || blog.category === activeCategory;
 
       const matchesSearch =
-        blog.title?.toLowerCase().includes(searchText) ||
-        blog.content?.toLowerCase().includes(searchText);
+        blog.title?.toLowerCase().includes(searchText)
+   
 
       return matchesCategory && matchesSearch;
     });

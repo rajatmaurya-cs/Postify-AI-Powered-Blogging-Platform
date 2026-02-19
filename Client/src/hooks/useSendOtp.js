@@ -30,7 +30,7 @@ export default function useSendOtp(purpose) {
 
   return {
     sendOtp: (email) => mutation.mutate({ email }),
-    sendOtpAsync: (email) => mutation.mutateAsync({ email }),
+   
     sending: mutation.isPending,
     otpSent,
     setOtpSent,
