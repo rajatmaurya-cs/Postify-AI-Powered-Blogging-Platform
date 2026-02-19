@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { Report } from 'notiflix/build/notiflix-report-aio';
+
 import { assets } from "./assets/assets";
 import API from "./Api/api";
 import Loader from "./Effects/Summarising";
@@ -19,7 +19,7 @@ const WholeBlog = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { isLoggedIn } = useContext(AuthContext);
+  const {isLoggedIn} = useContext(AuthContext);
 
 
   const { data: blog, isLoading: blogLoading, isError: blogError } = useBlogById(blogId);
@@ -59,13 +59,13 @@ const WholeBlog = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Comment added");
       setComment("");
-
+     
       queryClient.invalidateQueries({ queryKey: ["comments", blogId] });
     },
     onError: (err) => toast.error(err.message || "Comment failed"),
   });
 
-
+  
   const summariseMutation = useMutation({
     mutationFn: async () => {
       const res = await API.post("/ai/summarise", { content });
@@ -82,24 +82,10 @@ const WholeBlog = () => {
         err?.message ||
         "Something went wrong";
 
+      toast.error(msg);
+    },
 
-      if (msg.toLowerCase().includes("limit")) {
-        Report.failure(
-          "Daily AI Limit Reached",
-          "Try again tomorrow",
-          "Okay"
-        );
-      } else {
-
-        toast.error(msg);
-      }
-
-    }
   });
-
-
-
-
 
   const ailoading = summariseMutation.isPending;
 
@@ -119,7 +105,7 @@ const WholeBlog = () => {
     setaicontent(false);
   };
 
-
+  
   if (blogLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
@@ -139,7 +125,7 @@ const WholeBlog = () => {
   return (
     <div className="relative">
       <img
-        src={assets.BackGround}
+        src={assets.back2}
         alt="background"
         loading="lazy"
         decoding="async"
@@ -174,19 +160,15 @@ const WholeBlog = () => {
       </div>
 
       <div className="max-w-full mx-auto px-5 py-12 flex flex-col items-center">
-        <div className="rounded-2xl overflow-hidden shadow-lg mb-10 w-full max-w-5xl">
-      
-         
-            <img
-              src={blog.image}
-              alt={blog.title}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-      
+        <div className="rounded-2xl overflow-hidden shadow-lg mb-10 max-w-5xl">
+          <img
+            src={blog.image}
+            alt={blog.title}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-cover"
+          />
         </div>
-
 
         {ailoading && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm">
