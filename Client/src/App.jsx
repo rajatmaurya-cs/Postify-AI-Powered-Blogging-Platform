@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy, useContext } from "react";
+import React, { Suspense, lazy, useContext ,useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AuthContext } from "./Context/Authcontext";
 const Home = lazy(() => import("./Components/Homefolder/Home"));
@@ -26,10 +26,21 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 function App() {
   const { loading } = useContext(AuthContext);
 
-  if (loading) return   Loading.dots();
+    useEffect(() => {
+    if (loading) {
+      Loading.dots("Loading...");
+    } else {
+      Loading.remove();
+    }
+
+  
+    return () => Loading.remove();
+  }, [loading]);
+
+  if (loading) return  null;
 
   return (
-    <Suspense fallback={Loading.dots()}>
+    <Suspense fallback={<div></div>}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
