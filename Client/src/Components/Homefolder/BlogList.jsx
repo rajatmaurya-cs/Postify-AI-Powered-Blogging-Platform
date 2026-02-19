@@ -7,6 +7,7 @@ import { Block } from 'notiflix/build/notiflix-block-aio';
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const loaderRef = useRef(null);
 
 
   const {
@@ -49,13 +50,18 @@ const BlogList = () => {
 
 
   useEffect(() => {
-    if (isLoading || isFetching) Block.arrows("#LoaderBlog", "");
-    else Block.remove("#LoaderBlog");
-    return () => {
-      Block.remove("#LoaderBlog");
-    };
+    const el = loaderRef.current;
+    if (!el) return;
 
+    if (isLoading || isFetching) {
+      Block.arrows(el, "");
+    } else {
+      Block.remove(el);
+    }
+
+    return () => Block.remove(el);
   }, [isLoading, isFetching]);
+
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-14">
@@ -115,9 +121,11 @@ const BlogList = () => {
         </p>
       )}
 
-      <div id="LoaderBlog">
+      return (
+      <div ref={loaderRef} className="relative min-h-[120px]">
 
       </div>
+      );
 
 
 
