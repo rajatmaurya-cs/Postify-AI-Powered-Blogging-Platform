@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-
+import { Report } from 'notiflix/build/notiflix-report-aio';
 import { assets } from "./assets/assets";
 import API from "./Api/api";
 import Loader from "./Effects/Summarising";
@@ -65,6 +65,7 @@ const WholeBlog = () => {
     onError: (err) => toast.error(err.message || "Comment failed"),
   });
 
+
   
   const summariseMutation = useMutation({
     mutationFn: async () => {
@@ -82,10 +83,21 @@ const WholeBlog = () => {
         err?.message ||
         "Something went wrong";
 
-      toast.error(msg);
-    },
 
+      if (msg.toLowerCase().includes("limit")) {
+        Report.failure(
+          "Daily AI Limit Reached",
+          "Try again tomorrow",
+          "Okay"
+        );
+      } else {
+
+        toast.error(msg);
+      }
+
+    }
   });
+ 
 
   const ailoading = summariseMutation.isPending;
 
@@ -125,7 +137,7 @@ const WholeBlog = () => {
   return (
     <div className="relative">
       <img
-        src={assets.back2}
+        src={assets.BackGround}
         alt="background"
         loading="lazy"
         decoding="async"
