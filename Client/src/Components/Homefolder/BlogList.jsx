@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
@@ -35,6 +35,19 @@ const BlogList = () => {
 
     return { filteredBlogs: filtered, publishedBlogs: published };
   }, [blogs, search, activeCategory]);
+
+
+  useEffect(() => {
+    if (!isError && isFetching) {
+      Loading.arrows();
+    } else {
+      Loading.remove();
+    }
+
+    return () => {
+      Loading.remove(); 
+    };
+  }, [isError, isFetching]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-14">
@@ -97,13 +110,6 @@ const BlogList = () => {
 
 
 
-      {!isError && isFetching && (
-       Loading.dots()
-      )}
-
-
-
-
 
 
       {!isLoading && !isError && publishedBlogs.length > 0 ? (
@@ -144,7 +150,7 @@ const BlogList = () => {
         )
       )}
 
-      
+
     </div>
   );
 };
