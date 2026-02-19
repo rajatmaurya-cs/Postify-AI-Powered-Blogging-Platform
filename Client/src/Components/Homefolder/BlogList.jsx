@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import { Block } from 'notiflix/build/notiflix-block-aio';
 
 const BlogList = () => {
   const [search, setSearch] = useState("");
@@ -38,16 +38,13 @@ const BlogList = () => {
 
 
   useEffect(() => {
-    if (!isError && isFetching) {
-      Loading.arrows();
-    } else {
-      Loading.remove();
-    }
-
+    if (isLoading || isFetching) Block.arrows("#LoaderBlog", "");
+    else Block.remove("#LoaderBlog");
     return () => {
-      Loading.remove(); 
+      Block.remove("#LoaderBlog");
     };
-  }, [isError, isFetching]);
+
+  }, [isLoading, isFetching]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-14">
@@ -106,6 +103,10 @@ const BlogList = () => {
           Error fetching blogs: {error?.message}
         </p>
       )}
+
+      <div id="LoaderBlog">
+
+      </div>
 
 
 
