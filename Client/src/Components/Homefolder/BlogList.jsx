@@ -1,13 +1,13 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
+import React, { useMemo, useState, } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
-import { Block } from 'notiflix/build/notiflix-block-aio';
+
 
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  const loaderRef = useRef(null);
+
 
 
   const {
@@ -40,29 +40,6 @@ const BlogList = () => {
 
 
 
-
-  useEffect(() => {
-    Block.init({
-      backgroundColor: "rgba(0,0,0,0)",
-      svgColor: "#1C1AEF",
-      messageColor: "#3b82f6",
-      messageFontSize: "14px",
-    });
-  }, []);
-
-
-  useEffect(() => {
-    const el = loaderRef.current;
-    if (!el) return;
-
-    if (isLoading || isFetching) {
-      Block.arrows(el, "");
-    } else {
-      Block.remove(el);
-    }
-
-    return () => Block.remove(el);
-  }, [isLoading, isFetching]);
 
 
   return (
@@ -123,8 +100,10 @@ const BlogList = () => {
         </p>
       )}
 
-        {(isLoading || isFetching) && (
-        <div ref={loaderRef} className="relative min-h-[120px]" />
+      {(isLoading || isFetching) && (
+        <div className="flex justify-center items-center py-20">
+          <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
       )}
 
 
