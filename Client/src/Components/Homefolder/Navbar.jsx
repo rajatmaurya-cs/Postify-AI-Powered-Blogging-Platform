@@ -13,7 +13,7 @@ const Navbar = () => {
     <div className="flex flex-wrap justify-between items-center py-3 px-4 sm:py-5 sm:px-10 xl:px-32 gap-3">
       {/* Logo */}
       <img
-        src={assets.Postify2}
+        src={assets.Postify}
         alt="logo"
         className="object-contain cursor-pointer w-32 sm:w-40 md:w-48"
         onClick={() => navigate("/")}
