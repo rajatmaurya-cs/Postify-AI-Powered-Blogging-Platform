@@ -11,7 +11,7 @@ const Navbar = () => {
 
   return (
     <div className="flex flex-wrap justify-between items-center py-3 px-4 sm:py-5 sm:px-10 xl:px-32 gap-3">
-      {/* Logo */}
+     
       <img
         src={assets.Postify}
         alt="logo"
@@ -19,7 +19,7 @@ const Navbar = () => {
         onClick={() => navigate("/")}
       />
 
-      {/* Right Side */}
+    
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
         {!user && (
           <>

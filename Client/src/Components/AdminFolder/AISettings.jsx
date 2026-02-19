@@ -67,7 +67,9 @@ const AIConfigDashboard = () => {
     if (currentConfig) setEditedConfig({ ...currentConfig });
   }, [currentConfig]);
 
-  // -------- Update mutation --------
+
+
+  // -------- UpDate mutation --------
   const updateMutation = useMutation({
     mutationFn: async (payload) => {
       const res = await API.put("/ai/config/updateConfig", payload);
@@ -107,7 +109,7 @@ const AIConfigDashboard = () => {
       dailyAiLimit: editedConfig.dailyAiLimit,
       dailyappLimit: editedConfig.dailyappLimit,
 
-      // ✅ NEW FEATURE: per-minute limit
+
       aiPerMinuteLimit: editedConfig.aiPerMinuteLimit,
     };
 
@@ -183,7 +185,7 @@ const AIConfigDashboard = () => {
           />
         </div>
 
-        {/* 3) User Daily AI Limit */}
+
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">User Daily AI Limit</h2>
 
@@ -212,7 +214,7 @@ const AIConfigDashboard = () => {
           />
         </div>
 
-        {/* ✅ 4) NEW: AI Per-Minute Limit */}
+ 
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">AI Per-Minute Limit</h2>
 
@@ -243,7 +245,7 @@ const AIConfigDashboard = () => {
           />
         </div>
 
-        {/* 5) AI Model */}
+        
         <div className="bg-white rounded-2xl shadow-lg p-6 md:col-span-2">
           <h2 className="text-xl font-semibold mb-4">AI Model</h2>
 
@@ -272,7 +274,7 @@ const AIConfigDashboard = () => {
         </div>
       </div>
 
-      {/* Save */}
+      
       <div className="max-w-5xl mt-10">
         <button
           onClick={handleSave}
@@ -287,7 +289,7 @@ const AIConfigDashboard = () => {
         </button>
       </div>
 
-      {/* History */}
+    
       <div className="max-w-7xl mt-16">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">🕑 AI Config History</h2>
@@ -340,7 +342,7 @@ const AIConfigDashboard = () => {
                       <th className="px-6 py-4">AI Model</th>
                       <th className="px-6 py-4">User Limit</th>
 
-                      {/* ✅ NEW COLUMN */}
+                 
                       <th className="px-6 py-4">Per-Minute</th>
 
                       <th className="px-6 py-4">App Limit</th>
@@ -376,7 +378,7 @@ const AIConfigDashboard = () => {
                         <td className="px-6 py-4">{item.configSnapshot?.aiModel}</td>
                         <td className="px-6 py-4">{item.configSnapshot?.dailyAiLimit}</td>
 
-                        {/* ✅ NEW VALUE */}
+               
                         <td className="px-6 py-4">
                           {item.configSnapshot?.aiPerMinuteLimit ?? "—"}
                         </td>

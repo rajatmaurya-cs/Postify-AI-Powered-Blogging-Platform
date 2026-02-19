@@ -1,13 +1,7 @@
-
-
-
-
 import add_icon from './add_icon.svg'
 import list_icon from './list_icon.svg'
-
 import upload_area from './upload_area.svg'
 import user_icon from './user_icon.svg'
-
 import comment_icon from './comment_icon.svg'
 import tick_icon from './tick_icon.svg'
 import star_icon from './star_icon.svg'

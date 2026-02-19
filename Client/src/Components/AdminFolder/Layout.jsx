@@ -8,11 +8,6 @@ import Swal from "sweetalert2";
 
 const Layout = () => {
 
-
-
-
-
-
     const navigate = useNavigate();
     const { logout, isLoggingOut } = useContext(AuthContext)
 
@@ -43,8 +38,12 @@ const Layout = () => {
     return (
         <>
             <div className='flex items-center justify-between py-2 h-[70px] px-4 sm:px-12 border-b border-gray-200'>
-                <img src={assets.Postify} alt="" className='w-32 sm:w-40 cursor-pointer'
-                    onClick={() => navigate('/')} />
+                <img
+                    src={assets.Postify}
+                    alt="logo"
+                    className="object-contain cursor-pointer w-32 sm:w-40 md:w-48"
+                    onClick={() => navigate("/")}
+                />
                 <button
                     onClick={() => handlelogout()}
                     disabled={isLoggingOut}
