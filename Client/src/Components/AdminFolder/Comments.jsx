@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import API from "../../Api/api";
-
+import Swal from "sweetalert2";
 const Comments = () => {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState("all"); 
@@ -72,6 +72,52 @@ const Comments = () => {
   });
 
   const disableAll = toggleMutation.isPending || removeMutation.isPending;
+
+
+
+
+  const handleRemove = async (commentId) => {
+  const result = await Swal.fire({
+    icon: "warning",
+    title: "Delete this comment?",
+    text: "This action cannot be undone.",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#d33",
+  });
+
+  if (result.isConfirmed) {
+    removeMutation.mutate(commentId);
+  }
+};
+
+const handleTogglePublish = async (commentId, isApproved) => {
+  const action = isApproved ? "Unpublish" : "Publish";
+  const actionText = isApproved
+    ? "This will hide the Comment from users."
+    : "This will make the Comment visible to users.";
+
+  const result = await Swal.fire({
+    icon: "warning",
+    title: `${action} this Comment?`,
+    text: actionText,
+    showCancelButton: true,
+    confirmButtonText: `Yes, ${action}`,
+    cancelButtonText: "Cancel",
+    confirmButtonColor: isApproved ? "#d33" : "#16a34a", 
+  });
+
+  if (result.isConfirmed) {
+    toggleMutation.mutate(commentId);
+  }
+};
+
+
+
+
+
+
 
   return (
     <div className="flex-1 pt-5 px-5 sm:pt-12 sm:pl-16 bg-blue-50/50">
@@ -176,7 +222,7 @@ const Comments = () => {
 
                   <td className="p-4 text-center">
                     <button
-                      onClick={() => toggleMutation.mutate(comment._id)}
+                      onClick={() => handleTogglePublish(comment._id,comment.isApproved)}
                       disabled={disableAll}
                       className="bg-gray-200 hover:bg-gray-800 hover:text-white transition px-4 py-1 rounded-full text-sm disabled:opacity-60"
                     >
@@ -186,7 +232,7 @@ const Comments = () => {
 
                   <td className="p-4 text-center">
                     <button
-                      onClick={() => removeMutation.mutate(comment._id)}
+                      onClick={() => handleRemove(comment._id)}
                       disabled={disableAll}
                       className="bg-red-100 hover:bg-red-600 hover:text-white transition px-3 py-1 rounded-full disabled:opacity-60"
                     >
