@@ -6,6 +6,12 @@ import toast from "react-hot-toast";
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 const AIConfigDashboard = () => {
+
+  
+
+
+
+
   const queryClient = useQueryClient();
 
 
@@ -66,6 +72,19 @@ const AIConfigDashboard = () => {
     retry: 1,
   });
 
+useEffect(() => {
+    const shouldShow =
+      configLoading || !currentConfig || !editedConfig
+
+    if (shouldShow) {
+      Loading.dots("Loading AI config...");
+    } else {
+      Loading.remove();
+    }
+
+    return () => Loading.remove();
+  }, [configLoading, currentConfig, editedConfig]);
+
 
 
 
@@ -97,10 +116,9 @@ const AIConfigDashboard = () => {
 
 
   if (configLoading || !currentConfig || !editedConfig) {
-    return (
-     Loading.dots()
-    );
+    return null;
   }
+
 
 
   if (configError) {
