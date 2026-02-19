@@ -19,17 +19,17 @@ const AIconfig = lazy(() => import("./Components/AdminFolder/AISettings"));
 const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy.jsx"))
 const Terms = lazy(() => import("./Pages/Terms.jsx"))
 
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 
-import FullScreenLoader from "./Effects/FullscreenLoader";
 
 function App() {
   const { loading } = useContext(AuthContext);
 
-  if (loading) return <div>  <FullScreenLoader /> </div>;
+  if (loading) return   Loading.dots();
 
   return (
-    <Suspense fallback={<div> <FullScreenLoader /> </div>}>
+    <Suspense fallback={Loading.dots()}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />

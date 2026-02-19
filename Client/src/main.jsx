@@ -11,6 +11,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+import { Loading } from "notiflix/build/notiflix-loading-aio";
+
+Loading.init({
+  svgColor: "#1C1AEF", 
+  messageColor: "#111827",
+  backgroundColor: "rgba(255,255,255,0.8)",
+  svgSize: "80px",
+});
+
 
 const queryClient = new QueryClient();
 

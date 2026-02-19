@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../../Api/api";
 import toast from "react-hot-toast";
-import InlineLoader from "../../Effects/InlineLoader";
+
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 const AIConfigDashboard = () => {
   const queryClient = useQueryClient();
@@ -97,9 +98,7 @@ const AIConfigDashboard = () => {
 
   if (configLoading || !currentConfig || !editedConfig) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center">
-        <InlineLoader />
-      </div>
+     Loading.dots()
     );
   }
 

@@ -2,8 +2,7 @@ import React, { useMemo, useState } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
-
-import InlineLoader from '../../Effects/InlineLoader'
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 const BlogList = () => {
   const [search, setSearch] = useState("");
@@ -99,9 +98,7 @@ const BlogList = () => {
 
 
       {!isError && isFetching && (
-        <div className="flex justify-center py-6">
-          <InlineLoader />
-        </div>
+       Loading.dots()
       )}
 
 
