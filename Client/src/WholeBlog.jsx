@@ -176,7 +176,7 @@ const WholeBlog = () => {
       <div className="max-w-full mx-auto px-5 py-12 flex flex-col items-center">
         <div className="rounded-2xl overflow-hidden shadow-lg mb-10 w-full max-w-5xl">
       
-          <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px]">
+         
             <img
               src={blog.image}
               alt={blog.title}
@@ -184,7 +184,7 @@ const WholeBlog = () => {
               decoding="async"
               className="absolute inset-0 w-full h-full object-cover"
             />
-          </div>
+      
         </div>
 
 
