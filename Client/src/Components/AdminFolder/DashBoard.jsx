@@ -4,7 +4,7 @@ import API from "../../Api/api";
 import toast from "react-hot-toast";
 import { useBlogs } from "../../hooks/useBlogs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
+import Swal from "sweetalert2";
 const DashBoard = () => {
   const queryClient = useQueryClient();
 
@@ -52,6 +52,8 @@ const DashBoard = () => {
     onError: (err) => toast.error(err?.message || "Failed to update blog status", { id: "toggle" }),
   });
 
+
+
   const deleteMutation = useMutation({
     mutationFn: async (blogId) => {
       const res = await API.post("/blog/delete-blog", { blogId });
@@ -72,6 +74,55 @@ const DashBoard = () => {
   const totalBlogs = stats?.totalBlogs ?? (statsLoading ? "..." : "-");
   const totalComments = stats?.totalComments ?? (statsLoading ? "..." : "-");
   const draftBlogs = stats?.draftBlogs ?? (statsLoading ? "..." : "-");
+
+
+
+   const handleRemove = async (blogId) => {
+      const result = await Swal.fire({
+        icon: "warning",
+        title: "Delete this Blog?",
+        text: "This action cannot be undone.",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#d33",
+      });
+    
+      if (result.isConfirmed) {
+        deleteMutation.mutate(blogId);
+      }
+    };
+  
+  
+  
+  const handleTogglePublish = async (blogId, isPublished) => {
+    const action = isPublished ? "Unpublish" : "Publish";
+    const actionText = isPublished
+      ? "This will hide the blog from users."
+      : "This will make the blog visible to users.";
+  
+    const result = await Swal.fire({
+      icon: "warning",
+      title: `${action} this blog?`,
+      text: actionText,
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${action}`,
+      cancelButtonText: "Cancel",
+      confirmButtonColor: isPublished ? "#d33" : "#16a34a", 
+    });
+  
+    if (result.isConfirmed) {
+      toggleMutation.mutate(blogId);
+    }
+  };
+  
+
+
+
+
+
+
+
 
   return (
     <div className="flex flex-col gap-2">
@@ -137,7 +188,7 @@ const DashBoard = () => {
                 </td>
                 <td className="p-4">
                   <button
-                    onClick={() => toggleMutation.mutate(blog._id)}
+                    onClick={() => handleTogglePublish(blog._id , blog.isPublished)}
                     disabled={disableAll}
                     className="bg-gray-300 hover:bg-gray-700 hover:text-white px-4 py-1 rounded-2xl disabled:opacity-60"
                   >
@@ -146,7 +197,7 @@ const DashBoard = () => {
                 </td>
                 <td className="p-4">
                   <button
-                    onClick={() => deleteMutation.mutate(blog._id)}
+                    onClick={() =>handleRemove(blog._id)}
                     disabled={disableAll}
                     className="bg-gray-300 hover:bg-gray-700 px-4 py-1 w-25 rounded-2xl disabled:opacity-60"
                     title="Delete blog"
