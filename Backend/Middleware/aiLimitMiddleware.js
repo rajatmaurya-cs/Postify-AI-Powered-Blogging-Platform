@@ -22,7 +22,7 @@ const checkAiLimit = async (req, res, next) => {
 
     if (role === "ADMIN") return next();
 
-    // -------- 1) Per-minute per-user rate limit (Redis) --------
+    // --------  Per-minute per-user rate limit (Redis) --------
     const perMinute = Number(config.aiPerMinuteLimit ?? 0);
     if (!Number.isFinite(perMinute) || perMinute <= 0) {
       return res
@@ -41,7 +41,7 @@ const checkAiLimit = async (req, res, next) => {
       });
     }
 
-    // -------- 2) App-wide daily limit (Redis) 
+    // -------- App-wide daily limit (Redis) 
 
     const dailyAppLimit = Number(config.dailyappLimit ?? 0);
     if (!Number.isFinite(dailyAppLimit) || dailyAppLimit <= 0) {
@@ -72,7 +72,7 @@ const checkAiLimit = async (req, res, next) => {
       });
     }
 
-    // -------- 3) Per-user daily limit (Mongo, atomic & safe) 
+    // --------  Per-user daily limit (Mongo, atomic & safe) 
 
     const userLimit = Number(config.dailyAiLimit ?? 0);
     if (!Number.isFinite(userLimit) || userLimit <= 0) {
