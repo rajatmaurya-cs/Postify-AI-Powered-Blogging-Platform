@@ -11,7 +11,7 @@ const Home = () => {
       <Navbar />
       <Header />
 
-      <Suspense fallback={<div style={{ padding: 20 }}>Loading...</div>}>
+      <Suspense fallback={<div></div>}>
         <BlogList />
       </Suspense>
       <Footer/>
