@@ -12,7 +12,7 @@ import dashboard_icon_1 from './dashboard_icon_1.svg'
 import dashboard_icon_2 from './dashboard_icon_2.svg'
 import dashboard_icon_3 from './dashboard_icon_3.svg'
 import dashboard_icon_4 from './dashboard_icon_4.svg'
-
+import BackGround from "./BackGround.webp"
 
 import google from './Google.png'
 
@@ -23,11 +23,11 @@ import Postify from "./Postify.png"
 
 
 export const assets = {
- 
-  
- 
+
+
+
     add_icon,
-  
+
     upload_area,
     user_icon,
 
@@ -35,22 +35,23 @@ export const assets = {
     tick_icon,
     star_icon,
     home_icon,
-   
+
     list_icon,
-  
+
     dashboard_icon_1,
     dashboard_icon_2,
     dashboard_icon_3,
     dashboard_icon_4,
 
-    
+
     google,
-   
+
     AI,
     setting,
-    
-    Postify
-   
+
+    Postify,
+    BackGround,
+
 
 
 

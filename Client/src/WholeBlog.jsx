@@ -125,7 +125,7 @@ const WholeBlog = () => {
   return (
     <div className="relative">
       <img
-        src={assets.back2}
+        src={assets.BackGround}
         alt="background"
         loading="lazy"
         decoding="async"
