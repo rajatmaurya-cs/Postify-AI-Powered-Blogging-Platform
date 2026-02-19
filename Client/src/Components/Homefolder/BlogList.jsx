@@ -37,6 +37,17 @@ const BlogList = () => {
   }, [blogs, search, activeCategory]);
 
 
+
+
+
+  Block.init({
+    backgroundColor: "rgba(0,0,0,0)",
+    svgColor: "#3b82f6",
+    messageColor: "#3b82f6",
+    messageFontSize: "14px",
+  });
+
+
   useEffect(() => {
     if (isLoading || isFetching) Block.arrows("#LoaderBlog", "");
     else Block.remove("#LoaderBlog");
