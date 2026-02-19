@@ -78,23 +78,24 @@ const WholeBlog = () => {
     },
     onError: (err) => {
       const msg =
-      err?.response?.data?.message ||
-      err?.message ||
-      "Something went wrong";
+        err?.response?.data?.message ||
+        err?.message ||
+        "Something went wrong";
 
-  
-    if (msg.toLowerCase().includes("limit")) {
-      Report.failure(
-        "Daily AI Limit Reached",
-        "Try again tomorrow",
-        "Okay"
-      );
-    } else {
-      
-      toast.error(msg);
+
+      if (msg.toLowerCase().includes("limit")) {
+        Report.failure(
+          "Daily AI Limit Reached",
+          "Try again tomorrow",
+          "Okay"
+        );
+      } else {
+
+        toast.error(msg);
+      }
+
     }
-
-  }});
+  });
 
 
 
@@ -173,29 +174,19 @@ const WholeBlog = () => {
       </div>
 
       <div className="max-w-full mx-auto px-5 py-12 flex flex-col items-center">
-        <div className="rounded-2xl overflow-hidden shadow-lg mb-10 max-w-5xl">
-
-
-          <img
-            src={blog.image}
-            srcSet={`
-                  ${blog.image}?w=400 400w,
-                  ${blog.image}?w=800 800w,
-                  ${blog.image}?w=1200 1200w
-                      `}
-            sizes="(max-width: 640px) 100vw, 50vw"
-            alt={blog.title}
-            loading="lazy"
-            decoding="async"
-            width="400"
-            height="250"
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-          />
-
-
-
-
+        <div className="rounded-2xl overflow-hidden shadow-lg mb-10 w-full max-w-5xl">
+      
+          <div className="relative w-full h-[220px] sm:h-[320px] md:h-[420px]">
+            <img
+              src={blog.image}
+              alt={blog.title}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </div>
         </div>
+
 
         {ailoading && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm">
