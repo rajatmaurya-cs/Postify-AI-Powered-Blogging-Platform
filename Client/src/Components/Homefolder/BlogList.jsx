@@ -42,7 +42,7 @@ const BlogList = () => {
 
   Block.init({
     backgroundColor: "rgba(0,0,0,0)",
-    svgColor: "#3b82f6",
+    svgColor: "#1C1AEF",
     messageColor: "#3b82f6",
     messageFontSize: "14px",
   });
