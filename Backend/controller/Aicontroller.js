@@ -23,6 +23,8 @@ export const generateContent = async (req, res) => {
     
 
     const {title , subTitle} = req.body;
+    console.log("The Titel is : " , title);
+    console.log("The subTitle is : " , subTitle);
 
     const prompt = blogPrompt(title , subTitle)
     const result = await contentGenerationService({
