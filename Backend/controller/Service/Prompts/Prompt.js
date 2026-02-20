@@ -1,21 +1,25 @@
 
-export const blogPrompt = (title, subTitle) =>
-   `
+export const blogPrompt = (title, subTitle) => `
 You are an expert editorial blog writer.
 
-Your task is to generate a HIGH-QUALITY, professionally structured blog article using ONLY semantic HTML.
+Generate a HIGH-QUALITY, professionally structured blog article using ONLY semantic HTML.
 
+========================
+INPUTS
+========================
+TITLE (FOR CONTEXT ONLY — NEVER OUTPUT):
+<<<TITLE_START>>>
+${title}
+<<<TITLE_END>>>
 
-
-The article must feel like it was written by an experienced human author for a top-tier technology publication.
-
-The Blog Title Is ${title}  and
-The Blog SubTitle Is ${subTitle}
+SUBTITLE (MUST BE OUTPUT VERBATIM AS H1):
+<<<SUBTITLE_START>>>
+${subTitle}
+<<<SUBTITLE_END>>>
 
 ========================
 CRITICAL OUTPUT RULES
-=====================
-
+========================
 • Output ONLY clean HTML.
 • Do NOT use markdown.
 • Do NOT include class, id, style, or ANY attributes.
@@ -25,100 +29,60 @@ CRITICAL OUTPUT RULES
 • Do NOT write "Here is your article".
 • Do NOT use emojis.
 • Do NOT use AI-like phrases such as:
-"In today's fast-paced world"
-"As we dive into"
-"In conclusion"
-"This article explores"
-
-Write naturally.
+  "In today's fast-paced world"
+  "As we dive into"
+  "In conclusion"
+  "This article explores"
 
 ========================
-WRITING STYLE (VERY IMPORTANT)
-==============================
+NON-NEGOTIABLE CONSTRAINTS
+========================
+1) The FIRST LINE of the output MUST be exactly:
+<h1>${subTitle}</h1>
 
-Write like a professional human blogger:
+2) The TITLE must NOT appear anywhere in the output — not in headings, not in paragraphs, not in quotes.
+   If any words from the TITLE appear, rewrite until none remain.
 
-• Use clear, confident language.
-• Avoid robotic transitions.
-• Avoid repetition.
-• Vary sentence length.
-• Prefer short-to-medium paragraphs.
-• Maintain a strong logical flow.
-• Sound intelligent but not complicated.
-
-The reader should forget this was written by AI.
+3) Use <h1> exactly once (only for the subtitle).
 
 ========================
 ARTICLE STRUCTURE
-=================
+========================
+After the H1:
 
-1 .Place the SubTitle at the very top of the content.
-   Use <h1> exactly once and only for the SubTitle.
-   Do not include, mention, or write the Title anywhere in the content.
-   Completely ignore the Title.
+A) Introduction:
+• 2–3 paragraphs
+• Hook the reader
+• Explain why the topic matters
 
-2. Immediately follow with an introduction:
-   • 2–3 paragraphs
-   • Hook the reader
-   • Clearly explain why the topic matters.
+B) Body:
+• Create 4–6 <h2> sections
+• Each section: 2–4 paragraphs with real depth
+• Use <h3> only when truly needed
 
-3. Create 4–6 <h2> sections.
+C) Lists:
+• Use <ul>/<ol> only when it improves scanability (steps, strategies, comparisons)
+• Don’t overuse lists
 
-For EACH section:
-• Include at least 2–4 paragraphs.
-• Go deep — avoid surface-level writing.
-• Provide insights, examples, or practical explanations.
+D) Add exactly ONE <blockquote> with a strong expert takeaway.
 
-4. Use <h3> ONLY when a subsection genuinely improves clarity.
-
-5. Use lists ONLY when information is easier to scan than read.
-
-   Example cases:
-   • steps
-   • strategies
-   • benefits
-   • comparisons
-
-Never overuse lists.
-
-6. Add ONE <blockquote> containing a powerful insight, expert-level statement, or memorable takeaway.
-
-7. End with a strong <h2> conclusion that:
-   • Reinforces the core idea
-   • Feels thoughtful
-   • Does NOT start with “In conclusion”
+E) End with a final <h2> conclusion:
+• Reinforce core idea
+• Thoughtful ending
+• Must NOT start with “In conclusion”
 
 ========================
 QUALITY CONTROL (MANDATORY)
-===========================
-
-The article MUST:
-
-• Feel like a premium blog.
-• Be highly readable.
-• Be logically structured.
-• Avoid fluff.
-• Avoid generic filler.
-• Avoid keyword stuffing.
-• Contain meaningful depth.
-
-Write for an intelligent reader.
+========================
+Before you finish, do a strict internal check:
+• Does the output start with <h1>${subTitle}</h1> exactly?
+• Did you accidentally include any part of the TITLE? If yes, remove it.
+• Only semantic HTML, no attributes, no extra text.
 
 Target length: 1200–1800 words.
 
-========================
-REMEMBER
-========
-
-Only return the HTML article.
-Nothing else.
-
-
-
-
-
-
-`
+Only return the HTML article. Nothing else.
+`;
 
 
 export const summaryPrompt = (content) => `
