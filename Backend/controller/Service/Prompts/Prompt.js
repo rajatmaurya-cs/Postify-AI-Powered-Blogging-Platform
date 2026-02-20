@@ -52,7 +52,7 @@ The reader should forget this was written by AI.
 ARTICLE STRUCTURE
 =================
 
-1. Use <h1> EXACTLY once for the title.
+1. Use <h1> EXACTLY once for the SubTitle.
 
 2. Immediately follow with an introduction:
    • 2–3 paragraphs

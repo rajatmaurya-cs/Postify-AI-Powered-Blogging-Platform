@@ -185,7 +185,7 @@ const WholeBlog = () => {
         <div className="rounded-2xl overflow-hidden shadow-lg mb-10 max-w-5xl">
           <img
             src={blog.image}
-            alt={blog.title}
+            alt={blog.subTitle}
             loading="lazy"
             decoding="async"
             className="w-full h-auto object-cover"
