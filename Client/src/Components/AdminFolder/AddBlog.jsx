@@ -37,9 +37,9 @@ const AddBlog = () => {
 
 
   const generateContentMutation = useMutation({
-    mutationFn: async (title ,subTitle ) => {
-      
-      const res = await API.post("/ai/Generatecontent", { title : title , subTitle : subTitle });
+    mutationFn: async ({ title, subTitle }) => {
+
+      const res = await API.post("/ai/Generatecontent", { title: title, subTitle: subTitle });
       if (!res.data?.success) throw new Error(res.data?.message || "AI generation failed");
       return String(res.data.content ?? "");
     },
@@ -105,7 +105,11 @@ const AddBlog = () => {
     if (!title.trim()) return toast.error("Please enter a title");
     if (!subTitle.trim()) return toast.error("Subtitle is required");
     if (aiLoading) return;
-    generateContentMutation.mutate(title.trim() , subTitle.trim());
+
+    generateContentMutation.mutate({
+      title: title.trim(),
+      subTitle: subTitle.trim(),
+    });
   };
 
   const handleGenerateReport = () => {
