@@ -1,15 +1,25 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+
+import React, { useContext, useEffect, useMemo, useState, Suspense, lazy } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import toast from "react-hot-toast";
+
 import { Report } from 'notiflix/build/notiflix-report-aio';
+
 import { assets } from "./assets/assets";
+
 import API from "./Api/api";
-import Loader from "./Effects/Summarising";
+
+const Loader = lazy(() => import("./Effects/Summarising"));
+
 import Button from "./Effects/Button";
+
 import { AuthContext } from "./Context/Authcontext";
 
 import { useBlogById } from "./hooks/useBlogById";
+
 import { useCommentsByBlog } from "./hooks/useCommentsByBlog";
 
 
@@ -19,7 +29,7 @@ const WholeBlog = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const {isLoggedIn} = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
 
   const { data: blog, isLoading: blogLoading, isError: blogError } = useBlogById(blogId);
@@ -59,14 +69,14 @@ const WholeBlog = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Comment added");
       setComment("");
-     
+
       queryClient.invalidateQueries({ queryKey: ["comments", blogId] });
     },
     onError: (err) => toast.error(err.message || "Comment failed"),
   });
 
 
-  
+
   const summariseMutation = useMutation({
     mutationFn: async () => {
       const res = await API.post("/ai/summarise", { content });
@@ -97,7 +107,7 @@ const WholeBlog = () => {
 
     }
   });
- 
+
 
   const ailoading = summariseMutation.isPending;
 
@@ -117,7 +127,7 @@ const WholeBlog = () => {
     setaicontent(false);
   };
 
-  
+
   if (blogLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
@@ -199,14 +209,20 @@ const WholeBlog = () => {
       </div>
 
       <div className="flex justify-center items-center mt-8 mb-8">
-        {isLoggedIn && !aicontent && (
-          <button
-            disabled={ailoading}
-            onClick={() => summariseMutation.mutate()}
-            className="px-6 rounded-xl disabled:opacity-60"
-          >
-            {ailoading ? "Summarising..." : <Button />}
-          </button>
+
+        {ailoading && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <div className="rounded-2xl bg-white/80 border border-white/40 shadow-2xl px-6 py-5">
+
+              <Suspense fallback={<div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700" />}>
+                <Loader />
+              </Suspense>
+
+              <p className="mt-3 text-sm text-gray-700 text-center font-medium">
+                Summarising...
+              </p>
+            </div>
+          </div>
         )}
 
         {isLoggedIn && aicontent && (

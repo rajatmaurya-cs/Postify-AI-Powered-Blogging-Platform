@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, Suspense, lazy } from 'react'
 
 import { assets, blogCategories } from '../../assets/assets'
 import API from "../../Api/api";
 
 import toast from 'react-hot-toast'
-import Loader2 from '../../Effects/Generating';
+
+
+
+const Loader2 = lazy(() => import('../../Effects/Generating'))
 
 import BlogReport from '../../Pop-Up/BlogReport';
 import { Editor } from '@tinymce/tinymce-react';
@@ -85,7 +88,7 @@ const AddBlog = () => {
 
         const html = res.data.content.trim();
 
-        setContent(html);  
+        setContent(html);
 
         setContentType("ai")
       }
@@ -145,16 +148,16 @@ const AddBlog = () => {
     >
 
 
-      
+
       <h1 className="text-3xl font-bold text-gray-800">
         Create New Blog
       </h1>
 
 
-     
+
       <div className="grid md:grid-cols-2 gap-8">
 
-    
+
         <div>
           <p className="font-semibold mb-2">Upload Thumbnail</p>
 
@@ -181,7 +184,7 @@ const AddBlog = () => {
           </label>
         </div>
 
-     
+
         <div>
           <p className="font-semibold mb-2">Blog Title</p>
           <input
@@ -205,7 +208,7 @@ const AddBlog = () => {
       </div>
 
 
-  
+
       <div>
         <p className="font-semibold mb-2">Sub Title</p>
         <input
@@ -228,7 +231,7 @@ const AddBlog = () => {
 
 
 
-      
+
       <div className="space-y-4">
 
         <h2 className="text-2xl font-semibold">
@@ -271,7 +274,9 @@ const AddBlog = () => {
 
           {aiLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/70 rounded-xl">
-              <Loader2 />
+              <Suspense fallback={<div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700" />}>
+                <Loader2 />
+              </Suspense>
             </div>
           )}
         </div>
@@ -299,7 +304,7 @@ const AddBlog = () => {
 
 
 
-   
+
       <div className="flex gap-4">
 
         {!analysis && (
@@ -338,7 +343,7 @@ const AddBlog = () => {
 
 
 
-      
+
       <div className="grid md:grid-cols-2 gap-8 items-center">
 
         <div>
@@ -379,7 +384,7 @@ const AddBlog = () => {
 
 
 
- 
+
       <button
         type="submit"
         disabled={isAdding}
