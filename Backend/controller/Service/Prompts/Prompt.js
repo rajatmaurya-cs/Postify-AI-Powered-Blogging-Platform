@@ -1,6 +1,6 @@
 
-export const blogPrompt = (title , subTitle)=>
-    `
+export const blogPrompt = (title, subTitle) =>
+   `
 You are an expert editorial blog writer.
 
 Your task is to generate a HIGH-QUALITY, professionally structured blog article using ONLY semantic HTML.
@@ -52,7 +52,10 @@ The reader should forget this was written by AI.
 ARTICLE STRUCTURE
 =================
 
-1. Use <h1> EXACTLY once for the SubTitle.
+1 .Place the SubTitle at the very top of the content.
+   Use <h1> exactly once and only for the SubTitle.
+   Do not include, mention, or write the Title anywhere in the content.
+   Completely ignore the Title.
 
 2. Immediately follow with an introduction:
    • 2–3 paragraphs
