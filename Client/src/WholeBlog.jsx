@@ -1,5 +1,5 @@
-
 import React, { useContext, useEffect, useMemo, useState, Suspense, lazy } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -195,7 +195,10 @@ const WholeBlog = () => {
         {ailoading && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm">
             <div className="rounded-2xl bg-white/80 border border-white/40 shadow-2xl px-6 py-5">
-              <Loader />
+              <Suspense fallback={<div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700" />}>
+                <Loader />
+              </Suspense>
+
               <p className="mt-3 text-sm text-gray-700 text-center font-medium">
                 Summarising...
               </p>
@@ -209,20 +212,14 @@ const WholeBlog = () => {
       </div>
 
       <div className="flex justify-center items-center mt-8 mb-8">
-
-        {ailoading && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-sm">
-            <div className="rounded-2xl bg-white/80 border border-white/40 shadow-2xl px-6 py-5">
-
-              <Suspense fallback={<div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700" />}>
-                <Loader />
-              </Suspense>
-
-              <p className="mt-3 text-sm text-gray-700 text-center font-medium">
-                Summarising...
-              </p>
-            </div>
-          </div>
+        {isLoggedIn && !aicontent && (
+          <button
+            disabled={ailoading}
+            onClick={() => summariseMutation.mutate()}
+            className="px-6 rounded-xl disabled:opacity-60"
+          >
+            {ailoading ? "Summarising..." : <Button />}
+          </button>
         )}
 
         {isLoggedIn && aicontent && (
