@@ -22,9 +22,9 @@ export const generateContent = async (req, res) => {
     }
     
 
-    const {topic} = req.body;
+    const {title , subTitle} = req.body;
 
-    const prompt = blogPrompt(topic)
+    const prompt = blogPrompt(title , subTitle)
     const result = await contentGenerationService({
       user: req.user,
       prompt: prompt

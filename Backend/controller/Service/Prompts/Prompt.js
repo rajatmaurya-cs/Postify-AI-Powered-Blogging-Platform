@@ -1,44 +1,5 @@
 
-
-
-// You are a professional long-form blog writer.
-
-// Write a high-quality, well-structured blog on the topic "${topic}"
-// and return the output in PURE SEMANTIC HTML.
-
-// STRICT RULES:
-// - Use ONLY semantic HTML tags.
-// - DO NOT use markdown.
-// - DO NOT use class, id, style, or ANY attributes.
-// - DO NOT include inline CSS.
-// - DO NOT include <html>, <head>, or <body>.
-// - Output must be clean and directly storable in a database.
-
-// FORMAT:
-// - Use <h1> exactly once for the title.
-// - Use <h2> for main sections.
-// - Use <h3> only if necessary.
-// - Use <p> for paragraphs.
-// - Use <ul><li> only when required.
-// - Never wrap headings inside <p> or <strong>.
-
-// STRUCTURE:
-// 1. <h1> Title
-// 2. Introduction (2 paragraphs)
-// 3. 3–5 <h2> sections with at least 2 paragraphs each
-// 4. One <h2> Conclusion
-
-// WRITING STYLE:
-// - Professional but human
-// - Clear and engaging
-// - Avoid robotic tone
-// - No short paragraphs
-
-// OUTPUT:
-// Return ONLY HTML with NO extra text.
-// `;
-
-export const blogPrompt = (topic)=>
+export const blogPrompt = (title , subTitle)=>
     `
 You are an expert editorial blog writer.
 
@@ -48,7 +9,8 @@ Your task is to generate a HIGH-QUALITY, professionally structured blog article 
 
 The article must feel like it was written by an experienced human author for a top-tier technology publication.
 
-The Blog Title Is ${topic}
+The Blog Title Is ${title}  and
+The Blog SubTitle Is ${subTitle}
 
 ========================
 CRITICAL OUTPUT RULES

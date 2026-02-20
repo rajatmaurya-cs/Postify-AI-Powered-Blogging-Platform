@@ -27,18 +27,19 @@ const AddBlog = () => {
     return image ? URL.createObjectURL(image) : null;
   }, [image]);
 
- 
+
   React.useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
 
- 
+
 
   const generateContentMutation = useMutation({
-    mutationFn: async (topic) => {
-      const res = await API.post("/ai/Generatecontent", { topic });
+    mutationFn: async (title ,subTitle ) => {
+      
+      const res = await API.post("/ai/Generatecontent", { title : title , subTitle : subTitle });
       if (!res.data?.success) throw new Error(res.data?.message || "AI generation failed");
       return String(res.data.content ?? "");
     },
@@ -76,10 +77,10 @@ const AddBlog = () => {
     onSuccess: (data) => {
       toast.success(data?.message || "Blog added successfully");
 
-     
+
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
 
-     
+
       setTitle("");
       setSubTitle("");
       setCategory("startup");
@@ -95,15 +96,16 @@ const AddBlog = () => {
     },
   });
 
-  
+
   const aiLoading = generateContentMutation.isPending;
   const reportLoading = generateReportMutation.isPending;
   const isAdding = addBlogMutation.isPending;
 
   const handleGenerateContent = () => {
     if (!title.trim()) return toast.error("Please enter a title");
+    if (!subTitle.trim()) return toast.error("Subtitle is required");
     if (aiLoading) return;
-    generateContentMutation.mutate(title.trim());
+    generateContentMutation.mutate(title.trim() , subTitle.trim());
   };
 
   const handleGenerateReport = () => {
@@ -239,7 +241,7 @@ const AddBlog = () => {
               }}
               onEditorChange={(newValue) => {
                 setContent(newValue);
-               
+
               }}
             />
           </div>
