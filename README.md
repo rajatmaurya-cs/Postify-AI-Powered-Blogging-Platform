@@ -112,7 +112,7 @@ Vercel hosts and deploys the application
 ⚙️ Getting Started (Local Setup)
 
 1️⃣ Clone the repositor
-git clone https://github.com/your-username/Postify.git
+git clone https://github.com/rajatmaurya-cs/Postify-AI-Powered-Blogging-Platform.git
 cd Postify
 
 2️⃣ Setup Backend
