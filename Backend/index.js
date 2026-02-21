@@ -22,6 +22,7 @@ const app = express();
 
 
 /* ================= Backend Checking Route ================= */
+app.set("trust proxy", 1);
 console.log("This is index.js")
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 
@@ -50,7 +51,7 @@ const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type"],
 };
 
 app.use(cors(corsOptions));

@@ -140,7 +140,7 @@ export const login = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "None",  
+      sameSite: "Lax",  
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
@@ -149,7 +149,7 @@ export const login = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: "Lax",
       path: "/",
       maxAge: 15 * 60 * 1000, // 15 min
     });
@@ -268,7 +268,7 @@ export const googleLogin = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "Lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -277,7 +277,7 @@ export const googleLogin = async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "None",
+      sameSite: "Lax",
       path: "/",
       maxAge: 15 * 60 * 1000, // 15 min
     });
@@ -320,46 +320,33 @@ export const googleLogin = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    const accessToken = req.headers.authorization?.split(" ")[1];
-
+    const accessToken = req.cookies.accessToken;
 
     if (refreshToken) {
       const hashedToken = hashToken(refreshToken);
-
-      await RefreshToken.deleteOne({
-        token: hashedToken,
-      });
+      await RefreshToken.deleteOne({ token: hashedToken });
     }
 
-
+    // Optional: blacklist access token if you want
     if (accessToken) {
       const decoded = jwt.decode(accessToken);
-
-      const expiresIn =
-        decoded.exp - Math.floor(Date.now() / 1000);
+      const expiresIn = decoded?.exp ? decoded.exp - Math.floor(Date.now() / 1000) : 0;
 
       if (expiresIn > 0) {
-        await redisClient.set(
-          `bl_${accessToken}`,
-          "blocked",
-          { EX: expiresIn }
-        );
+        await redisClient.set(`bl_${accessToken}`, "blocked", { EX: expiresIn });
       }
     }
 
+    res.clearCookie("refreshToken", { path: "/" });
+    res.clearCookie("accessToken", { path: "/" });
 
-    res.clearCookie("refreshToken");
-
-    return res.status(200).json({
-      message: "Logged out successfully",
-    });
-
+    return res.status(200).json({ success: true, message: "Logged out successfully" });
   } catch (err) {
-    return res.status(500).json({
-      message: "Logout failed",
-    });
+    return res.status(500).json({ success: false, message: "Logout failed" });
   }
 };
+
+
 
 
 export const refreshAccessToken = async (req, res) => {
@@ -424,6 +411,7 @@ export const refreshAccessToken = async (req, res) => {
 
 
     return res.status(200).json({
+      success: true,
       user,
     });
 
