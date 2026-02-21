@@ -3,6 +3,39 @@ Postify is a production-grade, AI-powered blogging platform built with the MERN 
 
 🌐 Live Demo: https://postifyf.vercel.app
 
+
+
+
+## 📸 Screenshots
+
+### 🛠 Admin Dashboard
+![Admin Dashboard](./ScreenShots/DashBoard.png)
+
+### ⚙️ AI Configuration Panel
+![AI Config](./ScreenShots/Ai-Config.png)
+
+### ⚙️ AI Activities Panel
+![AI Config](./ScreenShots/Aiactivites.png)
+
+
+### 📝 Add Blog + AI Generation
+![Add Blog](./ScreenShots/AddBlog.png)
+
+### 📊 Blog Quality Report
+![Quality Report](./ScreenShots/BlgoReport.JPG)
+
+### 💬 Comments Moderation
+![Comments](./ScreenShots/Comments.png)
+
+### 🧠 Blog Summarisation
+![Summarise](./ScreenShots//Summarising.png)
+
+### 🚫 Daily AI Limit Reached
+![Daily Limit](./ScreenShots/LimitReached.png)
+
+
+
+
 🛠 Tech Stack
 Frontend: React, Tailwind CSS, React Query
 Backend: Node.js, Express.js
