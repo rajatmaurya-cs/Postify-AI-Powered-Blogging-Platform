@@ -2,11 +2,17 @@
 
 
 ![MERN](https://img.shields.io/badge/Stack-MERN-61DAFB?style=for-the-badge)
+
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge)
+
 ![Node](https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge)
+
 ![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge)
+
 ![Redis](https://img.shields.io/badge/Cache-Redis-DC382D?style=for-the-badge)
+
 ![Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?style=for-the-badge)
+
 ![Status](https://img.shields.io/badge/Status-Production--Ready-success?style=for-the-badge)
 
 
