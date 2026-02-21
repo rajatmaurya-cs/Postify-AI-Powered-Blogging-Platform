@@ -21,7 +21,18 @@ Loading.init({
 });
 
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (count, err) => {
+        if (err?.response?.status === 401) return false;
+        return count < 2;
+      },
+      refetchOnWindowFocus: false,
+    },
+    mutations: { retry: false },
+  },
+});
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

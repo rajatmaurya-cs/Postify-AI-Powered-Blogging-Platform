@@ -63,10 +63,11 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+
   const logout = useCallback(async () => {
     setIsLoggingOut(true);
     try {
-      await API.post("/auth/logout"); // backend should clear cookies
+      await API.post("/auth/logout"); // backend  clear cookies
     } catch (err) {
       console.log("Logout API failed:", err?.response?.data || err.message);
     } finally {
@@ -76,6 +77,21 @@ export const AuthProvider = ({ children }) => {
     }
   }, [clearAuth, navigate]);
 
+
+
+  useEffect(() => {
+    const onLogout = () => {
+      logout();
+    };
+
+    window.addEventListener("auth:logout", onLogout);
+    return () => {
+      window.removeEventListener("auth:logout", onLogout);
+    };
+  }, [logout]);
+
+
+  
   const value = useMemo(
     () => ({
       user,
