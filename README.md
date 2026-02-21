@@ -29,7 +29,7 @@ Postify is a production-grade, AI-powered blogging platform built with the MERN 
 - 🔐 Secure authentication (Google OAuth, OTP, JWT with rotation)  
 - 🛡 Role-based Admin Dashboard with full audit logs  
 - 💬 Two-layer AI + rule-based comment moderation  
-- 📊 AI usage analytics & activity tracking  
+- 📊 AI usage analytics & activity tracking.  
 - ⚙️ AI configuration panel (models, limits, toggles)  
 - 🚦 Redis-based rate limiting, cooldowns & abuse protection  
 - ⚡ High-performance UI with caching, lazy loading & CDN media  
