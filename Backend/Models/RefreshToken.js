@@ -18,7 +18,7 @@ const refreshTokenSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 7 * 24 * 60 * 60, // AUTO delete after 7 days
+    expires: 7 * 24 * 60 * 60, //  delete after 7 days
   },
 
 });

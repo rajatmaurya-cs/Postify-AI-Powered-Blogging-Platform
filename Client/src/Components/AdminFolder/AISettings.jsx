@@ -125,7 +125,7 @@ const AIConfigDashboard = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
-        {/* 1) AI Feature Toggle */}
+       
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">AI Feature Toggle</h2>
 
@@ -156,7 +156,7 @@ const AIConfigDashboard = () => {
           </button>
         </div>
 
-        {/* 2) App Daily Limit */}
+    
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">App Daily Limit</h2>
 
@@ -265,11 +265,11 @@ const AIConfigDashboard = () => {
             }
             className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 disabled:opacity-60"
           >
-            <option value="openai/gpt-oss-120b">GPT-OSS 120B (Highest Intelligence)</option>
-            <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B Versatile (Recommended)</option>
+            <option value="openai/gpt-oss-120b">GPT (Highest Intelligence)</option>
+            <option value="llama-3.3-70b-versatile">LLaMA Versatile (Recommended)</option>
             <option value="groq/compound">Groq Compound (Balanced)</option>
             <option value="groq/compound-mini">Groq Compound Mini (Fast & Cheap)</option>
-            <option value="llama-3.1-8b-instant">LLaMA 3.1 8B Instant (Ultra Fast)</option>
+            <option value="llama-3.1-8b-instant">LLaMA  Instant (Ultra Fast)</option>
           </select>
         </div>
       </div>
