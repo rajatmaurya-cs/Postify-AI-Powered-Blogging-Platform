@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import API from "../Api/api";
+import API, { tokenStore } from "../Api/api";
 import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const refreshPromiseRef = useRef(null);
 
   const clearAuth = useCallback(() => {
+    tokenStore.clear();
     setUser(null);
     setIsLoggedIn(false);
   }, []);
@@ -26,11 +27,19 @@ export const AuthProvider = ({ children }) => {
 
     refreshPromiseRef.current = (async () => {
       try {
-        const res = await API.post("/auth/refreshtoken");
+        const refreshToken = tokenStore.getRefreshToken();
+        const res = await API.post(
+          "/auth/refreshtoken",
+          refreshToken ? { refreshToken } : {}
+        );
         const u = res.data?.user;
 
         if (!u) throw new Error("Invalid refresh response: user missing");
 
+        tokenStore.setTokens({
+          accessToken: res.data?.accessToken,
+          refreshToken: res.data?.refreshToken,
+        });
         setUser(u);
         setIsLoggedIn(true);
 
@@ -55,9 +64,10 @@ export const AuthProvider = ({ children }) => {
     refreshAccessToken();
   }, [refreshAccessToken]);
 
-  // ✅ login no longer needs token param (cookies are set by backend)
-  const login = useCallback((userData) => {
+
+  const login = useCallback((userData, accessToken, refreshToken) => {
     if (!userData) return;
+    tokenStore.setTokens({ accessToken, refreshToken });
     setUser(userData);
     setIsLoggedIn(true);
     setLoading(false);
@@ -67,7 +77,9 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     setIsLoggingOut(true);
     try {
-      await API.post("/auth/logout"); // backend  clear cookies
+      await API.post("/auth/logout", {
+        refreshToken: tokenStore.getRefreshToken(),
+      }); 
     } catch (err) {
       console.log("Logout API failed:", err?.response?.data || err.message);
     } finally {

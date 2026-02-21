@@ -3,8 +3,10 @@ import { validateAccessToken } from "../Service/Authentication.js";
 
  const authMiddleware = async (req, res, next) => {
   try {
-    
-    const token = req.cookies?.accessToken;
+    const bearerToken = req.headers.authorization?.startsWith("Bearer ")
+      ? req.headers.authorization.split(" ")[1]
+      : null;
+    const token = req.cookies?.accessToken || bearerToken;
     
     console.log("AccessToken is : ",token)
 
