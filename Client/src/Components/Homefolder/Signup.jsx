@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import OtpInput from "react-otp-input";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 import API from "../../Api/api";
 import useGoogleAuth from "../../hooks/useGoogleAuth";
@@ -16,46 +16,48 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
 
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   const googleLogin = useGoogleAuth();
 
-
   const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("signup");
+  const { verifyOtp, isVerifying, isVerified, setIsVerified } =
+    useVerifyOtp("signup");
 
-  const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("signup");
-
-
-
-  const handleSignup = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await API.post("/auth/signup", {
-        fullName,
-        email,
-        password,
-      });
-
-      if (res.data.success) {
-        toast.success(res.data.message || "Signup successful");
-        Navigate("/login");
-      } else {
-        toast.error(res.data.message || "Signup failed");
+  
+  const signupMutation = useMutation({
+    mutationFn: async () => {
+      const res = await API.post("/auth/signup", { fullName, email, password });
+      if (!res.data?.success) {
+        throw new Error(res.data?.message || "Signup failed");
       }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || error.message || "Signup failed");
-    }
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data?.message || "Signup successful");
+      navigate("/login");
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message || err?.message || "Signup failed");
+    },
+  });
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    if (signupMutation.isPending) return;
+
+    if (!fullName.trim()) return toast.error("Name is required");
+    if (!email.trim()) return toast.error("Email is required");
+    if (!password.trim()) return toast.error("Password is required");
+
+    signupMutation.mutate();
   };
 
 
   useEffect(() => {
-
     if (otp.length === 6 && !isVerifying && !isVerified) {
-      console.log("Verifying OTP...");
       verifyOtp(email, otp);
     }
   }, [otp, isVerifying, isVerified, email, verifyOtp]);
-
 
 
   useEffect(() => {
@@ -66,43 +68,42 @@ const Signup = () => {
   }, [isVerified, setOtpSent]);
 
 
-
-
   useEffect(() => {
-
     const checkEmailVerification = async () => {
-
       try {
-
         const savedEmail = sessionStorage.getItem("signupEmail");
-
         if (!savedEmail) return;
 
-        const res = await API.post('/auth/verifyemail', { email: savedEmail })
+        const res = await API.post("/auth/verifyemail", { email: savedEmail });
 
-        if (res.data.success) {
+        if (res.data?.success) {
           setEmail(savedEmail);
           setIsVerified(true);
-          toast.success("Email verified Again")
+          toast.success("Email verified again");
         }
-
       } catch (error) {
-        toast.error(error)
+        toast.error(
+          error?.response?.data?.message || error?.message || "Verify email failed"
+        );
       }
     };
 
     checkEmailVerification();
+  }, [setIsVerified]);
 
-  }, []);
-
+  const isCreating = signupMutation.isPending;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
       <div className="w-full max-w-md bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8">
         <div className="w-full flex flex-col gap-6">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800">Create your account ✨</h2>
-            <p className="text-sm text-gray-500 mt-1">Signup to continue to your AI Blog</p>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Create your account ✨
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Signup to continue to your AI Blog
+            </p>
           </div>
 
           <form onSubmit={handleSignup} className="flex flex-col gap-4">
@@ -134,7 +135,7 @@ const Signup = () => {
 
               {!isVerified && email !== "" && (
                 <button
-                  className="px-4 py-3 bg-gray-900 hover:bg-black text-white rounded-lg whitespace-nowrap transition disabled:opacity-60"
+                  className="px-4 py-3 bg-gray-900 hover:bg-black text-white rounded-lg whitespace-nowrap transition disabled:opacity-60 disabled:cursor-not-allowed"
                   type="button"
                   disabled={sending}
                   onClick={() => sendOtp(email)}
@@ -155,12 +156,18 @@ const Signup = () => {
               />
             )}
 
+            
             {isVerified && (
               <button
                 type="submit"
-                className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200"
+                disabled={isCreating}
+                className={[
+                  "w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200",
+                  "disabled:cursor-not-allowed disabled:opacity-70",
+                  isCreating ? "blur-[1px]" : "",
+                ].join(" ")}
               >
-                Create Account
+                {isCreating ? "Creating Account..." : "Create Account"}
               </button>
             )}
           </form>
@@ -209,7 +216,7 @@ const Signup = () => {
           <p className="text-sm text-center text-gray-600">
             Already have an account?{" "}
             <span
-              onClick={() => Navigate("/login")}
+              onClick={() => navigate("/login")}
               className="text-amber-500 font-semibold hover:underline cursor-pointer"
             >
               Login
@@ -225,15 +232,13 @@ const Signup = () => {
           <button
             type="button"
             onClick={googleLogin}
-            className="w-full bg-white border border-gray-300 hover:bg-gray-100 
-            text-gray-700 font-semibold py-3 rounded-lg transition duration-200 
-            flex items-center justify-center gap-3"
+            className="w-full bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-semibold py-3 rounded-lg transition duration-200 flex items-center justify-center gap-3"
           >
             <img src={assets.google} alt="Google" className="w-5 h-5 object-contain" />
             <span>Signup with Google</span>
           </button>
 
-          <p className="text-xs text-center text-gray-500">Powered by AI ✨</p>
+          <p className="text-xs text-center text-gray-500">Powered by Groq ✨</p>
         </div>
       </div>
     </div>
