@@ -1,20 +1,31 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import API from "../../Api/api";
-import { useBlogs } from "../../hooks/useBlogs";
 import Swal from "sweetalert2";
+import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
+
+const LIMIT = 3; 
+
 const BlogList = () => {
   const queryClient = useQueryClient();
 
+ 
   const {
-    data: blogs = [],
+    data,
     isLoading,
     isError,
     error,
     isFetching,
-  } = useBlogs();
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useBlogsInfinite({ category: "All", limit: LIMIT });
 
+
+  const blogs = useMemo(() => {
+    return data?.pages?.flatMap((p) => p.blogs) ?? [];
+  }, [data]);
 
   const toggleMutation = useMutation({
     mutationFn: async (blogId) => {
@@ -27,14 +38,15 @@ const BlogList = () => {
     onMutate: () => toast.loading("Updating blog status...", { id: "toggle" }),
     onSuccess: (data) => {
       toast.success(data.message || "Updated!", { id: "toggle" });
-      queryClient.invalidateQueries({ queryKey: ["blogs", "all"] }); 
+
+    
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
     },
     onError: (err) => {
       toast.error(err?.message || "Failed to update blog status", { id: "toggle" });
     },
   });
 
-  
   const deleteMutation = useMutation({
     mutationFn: async (blogId) => {
       const res = await API.post("/blog/delete-blog", { blogId });
@@ -46,25 +58,16 @@ const BlogList = () => {
     onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
     onSuccess: (data) => {
       toast.success(data.message || "Deleted!", { id: "delete" });
-      queryClient.invalidateQueries({ queryKey: ["blogs", "all"] }); 
+
+      
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
     },
     onError: (err) => {
       toast.error(err?.message || "Failed to delete blog", { id: "delete" });
     },
   });
 
-
-  
-
-  if (isLoading) return <div className="mt-10 ml-10">Loading blogs...</div>;
-  if (isError) return <div className="mt-10 ml-10 text-red-600">{error?.message}</div>;
-
   const disableAll = toggleMutation.isPending || deleteMutation.isPending;
-
-
-
-
-
 
   const handleRemove = async (blogId) => {
     const result = await Swal.fire({
@@ -76,42 +79,41 @@ const BlogList = () => {
       cancelButtonText: "Cancel",
       confirmButtonColor: "#d33",
     });
-  
+
     if (result.isConfirmed) {
       deleteMutation.mutate(blogId);
     }
   };
 
+  const handleTogglePublish = async (blogId, isPublished) => {
+    const action = isPublished ? "Unpublish" : "Publish";
+    const actionText = isPublished
+      ? "This will hide the blog from users."
+      : "This will make the blog visible to users.";
 
+    const result = await Swal.fire({
+      icon: "warning",
+      title: `${action} this blog?`,
+      text: actionText,
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${action}`,
+      cancelButtonText: "Cancel",
+      confirmButtonColor: isPublished ? "#d33" : "#16a34a",
+    });
 
-const handleTogglePublish = async (blogId, isPublished) => {
-  const action = isPublished ? "Unpublish" : "Publish";
-  const actionText = isPublished
-    ? "This will hide the blog from users."
-    : "This will make the blog visible to users.";
+    if (result.isConfirmed) {
+      toggleMutation.mutate(blogId);
+    }
+  };
 
-  const result = await Swal.fire({
-    icon: "warning",
-    title: `${action} this blog?`,
-    text: actionText,
-    showCancelButton: true,
-    confirmButtonText: `Yes, ${action}`,
-    cancelButtonText: "Cancel",
-    confirmButtonColor: isPublished ? "#d33" : "#16a34a", 
-  });
-
-  if (result.isConfirmed) {
-    toggleMutation.mutate(blogId);
-  }
-};
-
-
+  if (isLoading) return <div className="mt-10 ml-10">Loading blogs...</div>;
+  if (isError) return <div className="mt-10 ml-10 text-red-600">{error?.message}</div>;
 
   return (
     <div className="mt-10">
       <div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-4xl ml-10">
         <div className="p-3 text-sm text-gray-500">
-          {isFetching ? "Refreshing..." : " "}
+          {isFetching && !isFetchingNextPage ? "Refreshing..." : " "}
         </div>
 
         <table className="w-full text-left">
@@ -146,7 +148,7 @@ const handleTogglePublish = async (blogId, isPublished) => {
 
                 <td className="p-4">
                   <button
-                    onClick={() => handleTogglePublish(blog._id , blog.isPublished)}
+                    onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
                     disabled={disableAll}
                     className="bg-gray-300 hover:bg-gray-700 hover:text-white px-4 py-1 rounded-2xl disabled:opacity-60"
                   >
@@ -184,6 +186,21 @@ const handleTogglePublish = async (blogId, isPublished) => {
             )}
           </tbody>
         </table>
+
+       
+        <div className="p-4 flex justify-center border-t">
+          {hasNextPage ? (
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="px-6 py-2 rounded-full bg-black text-white font-semibold disabled:opacity-50"
+            >
+              {isFetchingNextPage ? "Loading..." : "Load More"}
+            </button>
+          ) : (
+            <p className="text-sm text-gray-500">No more blogs</p>
+          )}
+        </div>
       </div>
     </div>
   );

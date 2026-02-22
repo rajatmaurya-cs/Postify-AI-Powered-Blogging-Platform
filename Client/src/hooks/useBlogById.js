@@ -10,8 +10,8 @@ export function useBlogById(blogId) {
       return res.data.blog;
     },
     enabled: !!blogId,
-    staleTime: 1000 * 60 * 5,     // 5 min cache fresh
-    gcTime: 1000 * 60 * 30,       // keep cache 30 min
+    staleTime: 1000 * 60 * 5,    
+    gcTime: 1000 * 60 * 30,       
     refetchOnWindowFocus: false,
     retry: 1,
   });

@@ -1,49 +1,46 @@
-import React, { useMemo, useState, } from "react";
+import React, { useMemo, useState } from "react";
 import { blogCategories } from "../../assets/assets";
 import { Link } from "react-router-dom";
-import { useBlogs } from "../../hooks/useBlogs";
+import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
 
+const LIMIT = 3;
 
 const BlogList = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
-
-
   const {
-    data: blogs = [],
+    data,
     isLoading,
     isError,
     error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isFetching,
-  } = useBlogs();
+  } = useBlogsInfinite({ category: activeCategory, limit: LIMIT });
+
+
+  const blogs = useMemo(() => {
+    return data?.pages?.flatMap((p) => p.blogs) ?? [];
+  }, [data]);
 
   const { filteredBlogs, publishedBlogs } = useMemo(() => {
     const searchText = search.toLowerCase().trim();
 
     const filtered = (blogs || []).filter((blog) => {
-      const matchesCategory =
-        activeCategory === "All" || blog.category === activeCategory;
-
-      const matchesSearch =
-        blog.title?.toLowerCase().includes(searchText)
-
-
-      return matchesCategory && matchesSearch;
+      const matchesSearch = (blog.title || "").toLowerCase().includes(searchText);
+      return matchesSearch;
     });
 
     const published = filtered.filter((blog) => blog.isPublished === true);
 
     return { filteredBlogs: filtered, publishedBlogs: published };
-  }, [blogs, search, activeCategory]);
-
-
-
-
-
+  }, [blogs, search]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-14">
+     
       <div className="flex justify-center mb-10">
         <input
           type="text"
@@ -66,16 +63,17 @@ const BlogList = () => {
         </button>
       </div>
 
+     
       <div className="flex flex-wrap gap-3 justify-center mb-14">
         {blogCategories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`relative px-6 py-2.5 rounded-full text-sm font-semibold
-              transition-all duration-300 ease-out
-              ${activeCategory === cat
-                ? "bg-gradient-to-r from-gray-900 to-black text-white shadow-lg shadow-black/30 scale-105"
-                : "bg-white/70 backdrop-blur text-gray-700 hover:text-black hover:bg-white hover:shadow-md hover:scale-105"
+            className={`relative px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ease-out
+              ${
+                activeCategory === cat
+                  ? "bg-gradient-to-r from-gray-900 to-black text-white shadow-lg shadow-black/30 scale-105"
+                  : "bg-white/70 backdrop-blur text-gray-700 hover:text-black hover:bg-white hover:shadow-md hover:scale-105"
               }`}
           >
             {cat}
@@ -83,82 +81,87 @@ const BlogList = () => {
         ))}
       </div>
 
-      {filteredBlogs.length > 0 ? (
+   
+      {filteredBlogs.length > 0 && (
         <h1 className="text-3xl font-bold text-gray-700 mb-10 text-center">
           Latest Blogs
         </h1>
-      ) : (
-        ""
       )}
 
-
-
-
+    
       {isError && (
         <p className="text-center text-red-400">
           Error fetching blogs: {error?.message}
         </p>
       )}
 
-      {(isLoading || isFetching) && (
+      
+      {isLoading && (
         <div className="flex justify-center items-center py-20">
           <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
-
-
-
-
-
+    
       {!isLoading && !isError && publishedBlogs.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {publishedBlogs.map((blog) => (
-            <Link
-              key={blog._id}
-              to={`/blog/${blog._id}`}
-              className="group bg-gray-300 rounded-2xl overflow-hidden 
-                       border hover:shadow-xl transition-all duration-300"
-            >
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={blog.image}
-                  srcSet={`
-                  ${blog.image}?w=400 400w,
-                  ${blog.image}?w=800 800w,
-                  ${blog.image}?w=1200 1200w
-                      `}
-                  sizes="(max-width: 640px) 100vw, 50vw"
-                  alt={blog.title}
-                  loading="lazy"
-                  decoding="async"
-                  width="400"
-                  height="250"
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                />
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {publishedBlogs.map((blog) => (
+              <Link
+                key={blog._id}
+                to={`/blog/${blog._id}`}
+                className="group bg-gray-300 rounded-2xl overflow-hidden border hover:shadow-xl transition-all duration-300"
+              >
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="250"
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  />
+                </div>
 
-              </div>
+                <div className="p-5">
+                  <span className="inline-block text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full mb-3">
+                    {blog.category}
+                  </span>
 
-              <div className="p-5">
-                <span className="inline-block text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full mb-3">
-                  {blog.category}
-                </span>
+                  <h2 className="text-lg font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:underline">
+                    {blog.title}
+                  </h2>
+                </div>
+              </Link>
+            ))}
+          </div>
 
-                <h2 className="text-lg font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:underline">
-                  {blog.title}
-                </h2>
-              </div>
-            </Link>
-          ))}
-        </div>
+          
+          <div className="mt-10 flex justify-center">
+            {hasNextPage ? (
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="px-6 py-3 rounded-full bg-black text-white font-semibold disabled:opacity-50"
+              >
+                {isFetchingNextPage ? "Loading..." : "Load More"}
+              </button>
+            ) : (
+              <p className="text-sm text-gray-500">No more blogs</p>
+            )}
+          </div>
+
+         
+          {!isFetchingNextPage && isFetching && (
+            <p className="text-center text-gray-400 mt-4">Refreshing...</p>
+          )}
+        </>
       ) : (
-        !isLoading &&
-        !isError && (
+        !isLoading && !isError && (
           <p className="text-center text-gray-500">No blogs found</p>
         )
       )}
-
-
     </div>
   );
 };

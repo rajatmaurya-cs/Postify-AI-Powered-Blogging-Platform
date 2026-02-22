@@ -107,22 +107,49 @@ export const addBlog = async (req, res) => {
 };
 
 
+
+
+
+
 export const getallblog = async (req, res) => {
   try {
-    const blogs = await Blog.find({})
+    const page = Math.max(parseInt(req.query.page || "1", 10), 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit || "8", 10), 1), 50);
+    const skip = (page - 1) * limit;
+
+    const category = req.query.category;
+    const filter = {};
+
+    
+    if (category && category !== "All") filter.category = category;
+
+  
+    filter.isPublished = true;
+
+    const blogs = await Blog.find(filter)
       .select("-content -aiAnalysis -subTitle")
       .sort({ createdAt: -1 })
-      .populate("moderatedBy","fullName");
+      .skip(skip)
+      .limit(limit)
+      .populate("moderatedBy", "fullName")
+      .lean();
 
-    if (blogs.length === 0) {
-      return res.json({ success: false, message: "No blog exists" });
-    }
+    const total = await Blog.countDocuments(filter);
+    const hasMore = skip + blogs.length < total;
 
     return res.json({
       success: true,
       blogs,
+      hasMore,
+      nextPage: hasMore ? page + 1 : null,
+      page,
+      limit,
+      total,
     });
 
+
+
+    
   } catch (error) {
     console.error("GET ALL BLOG ERROR ", error);
     return res.status(500).json({
@@ -131,6 +158,15 @@ export const getallblog = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+
+
+
+
 
 
 
