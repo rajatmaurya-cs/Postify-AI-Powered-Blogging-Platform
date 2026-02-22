@@ -37,6 +37,10 @@ Postify is a production-grade, AI-powered blogging platform built with the MERN 
 
 ##  📸 Project Glimpse
 
+
+## Home Page
+![User UI](./ScreenShots/HOme.png)
+
 ### 🛠 Admin Dashboard
 ![Admin Dashboard](./ScreenShots/DashBoard.png)
 
