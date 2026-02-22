@@ -23,8 +23,11 @@ const app = express();
 
 /* ================= Backend Checking Route ================= */
 app.set("trust proxy", 1);
-console.log("This is index.js")
-app.get("/api/health", (req, res) => res.json({ ok: true }));
+
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", service: "Postify Backend" });
+});
 
 
 
@@ -45,7 +48,7 @@ init();
 
 
 /* ================= MIDDLEWARE ================= */
-console.log("Frontend URL:", process.env.FRONTEND_URL);
+
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
@@ -73,11 +76,23 @@ app.use("/api/ai", authMiddleware, AiRouter);
 
 app.use("/api/ai/config", authMiddleware, adminMiddleware, configRoutes);
 
+
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Postify Backend API is running 🚀",
+    endpoints: {
+      health: "/api/health",
+      docs: "API only backend"
+    }
+  });
+});
+
 /* ================= 404 ================= */
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: "Route not found",
+    message: "Hav You Use AI Summarisation Until Now",
   });
 });
 
