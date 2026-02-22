@@ -29,7 +29,7 @@ const BlogList = () => {
 
   const toggleMutation = useMutation({
     mutationFn: async (blogId) => {
-      const res = await API.post("/blog/toggle-blog", { blogId });
+      const res = await API.post("/admin/blogs", { blogId });
       if (!res.data?.success) {
         throw new Error(res.data?.message || "Failed to update blog");
       }

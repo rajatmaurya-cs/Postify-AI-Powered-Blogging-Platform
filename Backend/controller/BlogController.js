@@ -162,6 +162,37 @@ export const getallblog = async (req, res) => {
 
 
 
+// GET /admin/blogs
+export const allBlogAdmin = async (req, res) => {
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 10;
+  const category = req.query.category || "All";
+
+  const filter = {}; // ✅ NO isPublished filter for admin
+  if (category !== "All") filter.category = category;
+
+  const total = await Blog.countDocuments(filter);
+
+  const blogs = await Blog.find(filter)
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  const hasMore = page * limit < total;
+
+  return res.json({
+    success: true,
+    blogs,
+    hasMore,
+    nextPage: hasMore ? page + 1 : null,
+    page,
+    limit,
+    total,
+  });
+};
+
+
+
 
 
 

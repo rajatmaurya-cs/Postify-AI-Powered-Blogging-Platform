@@ -3,7 +3,7 @@ import upload from '../Middleware/Multer.js'
 import authMiddleware from "../Middleware/authMiddleware.js"
 import adminMiddleware from "../Middleware/adminMiddleware.js"
 
-import  {addBlog , getallblog ,getblogbyid , deleteBlog , toggleblogpublish , GenerateReport} from '../controller/BlogController.js'
+import  {addBlog , getallblog ,getblogbyid , deleteBlog , toggleblogpublish , GenerateReport ,allBlogAdmin} from '../controller/BlogController.js'
 import {getDashboardStats} from '../controller/Dashboard.js'
 const blogRouter = express.Router();
 
@@ -11,8 +11,14 @@ const blogRouter = express.Router();
 /* ================= Add Blog ================= */
 blogRouter.post('/addblog',upload.single('image') , authMiddleware, adminMiddleware,addBlog)
 
-/* ================= GetAllBlogs ================= */
+/* ================= GetAllBlogs for Public================= */
 blogRouter.get('/allblog',getallblog) 
+
+
+/* ================= GetAllBlogs for Admin ================= */
+blogRouter.get('/admin/blogs' , allBlogAdmin)
+
+
 
 
 /* ================= getBlogById=================  */
