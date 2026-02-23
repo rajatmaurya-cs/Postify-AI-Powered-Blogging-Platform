@@ -12,7 +12,7 @@ import { analyzeContent } from "../utils/contentAnalyzer.js";
 
 export const addBlog = async (req, res) => {
   try {
-    
+
 
     if (!req.user) {
       return res.status(401).json({
@@ -21,7 +21,7 @@ export const addBlog = async (req, res) => {
       });
     }
 
-    
+
     let blogData;
     try {
       blogData = JSON.parse(req.body.blog);
@@ -62,7 +62,7 @@ export const addBlog = async (req, res) => {
       });
     }
 
-  
+
     const fileBuffer = fs.readFileSync(req.file.path);
 
     const uploadResponse = await imageKit.upload({
@@ -75,7 +75,7 @@ export const addBlog = async (req, res) => {
       throw new Error("Image upload failed");
     }
 
-  
+
     await Blog.create({
       title,
       subTitle,
@@ -120,14 +120,14 @@ export const getallblog = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const category = req.query.category;
-    
+
 
     const filter = {};
 
-    
+
     if (category && category !== "All") filter.category = category;
 
-  
+
     filter.isPublished = true;
 
     const blogs = await Blog.find(filter)
@@ -139,7 +139,7 @@ export const getallblog = async (req, res) => {
       .lean();
 
     const total = await Blog.countDocuments(filter);
-    
+
     const hasMore = skip + blogs.length < total;
 
     return res.json({
@@ -154,7 +154,7 @@ export const getallblog = async (req, res) => {
 
 
 
-    
+
   } catch (error) {
     console.error("GET ALL BLOG ERROR ", error);
     return res.status(500).json({
@@ -181,15 +181,19 @@ export const allBlogAdmin = async (req, res) => {
 
   const filter = {};
 
- 
+
 
   const total = await Blog.countDocuments(filter);
 
   const blogs = await Blog.find(filter)
+    .select("-content -aiAnalysis -subTitle")
     .sort({ createdAt: -1 })
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .populate("moderatedBy", "fullName")
+    .lean();
 
+    
   const hasMore = skip + blogs.length < total;
 
   return res.json({
@@ -213,7 +217,7 @@ export const allBlogAdmin = async (req, res) => {
 
 export const getblogbyid = async (req, res) => {
   try {
-      
+
 
     const { blogId } = req.params;
 
@@ -244,12 +248,12 @@ export const getblogbyid = async (req, res) => {
 export const deleteBlog = async (req, res) => {
   try {
 
-      if(!req.user){
-          return res.status(404).json({
-            success : false,
-            message : "Please Login"
-          })
-        }
+    if (!req.user) {
+      return res.status(404).json({
+        success: false,
+        message: "Please Login"
+      })
+    }
     const { blogId } = req.body;
 
 
@@ -282,12 +286,12 @@ export const deleteBlog = async (req, res) => {
 export const toggleblogpublish = async (req, res) => {
   try {
 
-      if(!req.user){
-          return res.status(404).json({
-            success : false,
-            message : "Please Login"
-          })
-        }
+    if (!req.user) {
+      return res.status(404).json({
+        success: false,
+        message: "Please Login"
+      })
+    }
 
 
     const { blogId } = req.body;
@@ -319,15 +323,15 @@ export const toggleblogpublish = async (req, res) => {
 
 export const GenerateReport = (req, res) => {
 
-    if(!req.user){
-          return res.status(404).json({
-            success : false,
-            message : "Please Login"
-          })
-        }
+  if (!req.user) {
+    return res.status(404).json({
+      success: false,
+      message: "Please Login"
+    })
+  }
 
-   
-    
+
+
   const { data } = req.body;
 
   const plaintextcontent = convertHtmlToText(data);
