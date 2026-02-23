@@ -11,6 +11,7 @@ const blogRouter = express.Router();
 /* ================= Add Blog ================= */
 blogRouter.post('/addblog',upload.single('image') , authMiddleware, adminMiddleware,addBlog)
 
+
 /* ================= GetAllBlogs for Public================= */
 blogRouter.get('/allblog',getallblog) 
 

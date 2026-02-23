@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState, Suspense, lazy } from "react";
-
+import Moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -305,8 +305,9 @@ const WholeBlog = () => {
                         {c.createdBy?.fullName || "User"}
                       </p>
                       <span className="text-xs text-gray-400">
-                        {/* replace Moment for speed later */}
-                        {new Date(c.createdAt).toLocaleString("en-IN")}
+                     
+                        {Moment(c.createdAt).fromNow()}
+                        
                       </span>
                     </div>
                     <p className="text-gray-700 text-sm mt-1 leading-relaxed">{c.content}</p>
