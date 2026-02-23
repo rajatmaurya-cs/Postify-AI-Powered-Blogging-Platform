@@ -1,8 +1,7 @@
 import Blog from '../Models/Blog.js'
 import fs from 'fs'
 import imageKit from '../Config/imagekit.js'
-// import main from '../Config/Gemini.js';
-// import groq from "../config/Gemini.js";
+
 import AILog from '../Models/AIlog.js';
 
 import { convertHtmlToText } from '../utils/htmlToPlainText.js'
@@ -114,10 +113,13 @@ export const addBlog = async (req, res) => {
 export const getallblog = async (req, res) => {
   try {
     const page = Math.max(parseInt(req.query.page || "1", 10), 1);
+
     const limit = Math.min(Math.max(parseInt(req.query.limit || "8", 10), 1), 50);
+
     const skip = (page - 1) * limit;
 
     const category = req.query.category;
+
     const filter = {};
 
     
@@ -135,6 +137,7 @@ export const getallblog = async (req, res) => {
       .lean();
 
     const total = await Blog.countDocuments(filter);
+    
     const hasMore = skip + blogs.length < total;
 
     return res.json({
