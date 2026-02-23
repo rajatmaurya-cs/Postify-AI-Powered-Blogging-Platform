@@ -6,7 +6,7 @@ import API from "../../Api/api";
 import Swal from "sweetalert2";
 const Comments = () => {
   const queryClient = useQueryClient();
-  const [filter, setFilter] = useState("all"); 
+  const [filter, setFilter] = useState("all");
 
   // 1 Fetch comments
   const {
@@ -24,7 +24,7 @@ const Comments = () => {
       }
       return res.data.comments || [];
     },
-    staleTime: 20_000, 
+    staleTime: 20_000,
   });
 
 
@@ -53,7 +53,7 @@ const Comments = () => {
     },
   });
 
-  
+
   const removeMutation = useMutation({
     mutationFn: async (commentId) => {
       const res = await API.post("/comment/removecomment", { commentId });
@@ -78,41 +78,41 @@ const Comments = () => {
 
 
   const handleRemove = async (commentId) => {
-  const result = await Swal.fire({
-    icon: "warning",
-    title: "Delete this comment?",
-    text: "This action cannot be undone.",
-    showCancelButton: true,
-    confirmButtonText: "Yes, delete",
-    cancelButtonText: "Cancel",
-    confirmButtonColor: "#d33",
-  });
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this comment?",
+      text: "This action cannot be undone.",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+    });
 
-  if (result.isConfirmed) {
-    removeMutation.mutate(commentId);
-  }
-};
+    if (result.isConfirmed) {
+      removeMutation.mutate(commentId);
+    }
+  };
 
-const handleTogglePublish = async (commentId, isApproved) => {
-  const action = isApproved ? "Unpublish" : "Publish";
-  const actionText = isApproved
-    ? "This will hide the Comment from users."
-    : "This will make the Comment visible to users.";
+  const handleTogglePublish = async (commentId, isApproved) => {
+    const action = isApproved ? "Unpublish" : "Publish";
+    const actionText = isApproved
+      ? "This will hide the Comment from users."
+      : "This will make the Comment visible to users.";
 
-  const result = await Swal.fire({
-    icon: "warning",
-    title: `${action} this Comment?`,
-    text: actionText,
-    showCancelButton: true,
-    confirmButtonText: `Yes, ${action}`,
-    cancelButtonText: "Cancel",
-    confirmButtonColor: isApproved ? "#d33" : "#16a34a", 
-  });
+    const result = await Swal.fire({
+      icon: "warning",
+      title: `${action} this Comment?`,
+      text: actionText,
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${action}`,
+      cancelButtonText: "Cancel",
+      confirmButtonColor: isApproved ? "#d33" : "#16a34a",
+    });
 
-  if (result.isConfirmed) {
-    toggleMutation.mutate(commentId);
-  }
-};
+    if (result.isConfirmed) {
+      toggleMutation.mutate(commentId);
+    }
+  };
 
 
 
@@ -149,14 +149,23 @@ const handleTogglePublish = async (commentId, isApproved) => {
         </div>
       </div>
 
-    
-      {isLoading && <p className="text-center mt-8 text-gray-500">Loading comments...</p>}
+
+      
+        
+
       {isError && <p className="text-center mt-8 text-red-500">{error?.message}</p>}
       {!isLoading && !isError && isFetching && (
         <p className="text-center mt-2 text-gray-500">Refreshing...</p>
       )}
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-7xl mt-6">
+
+        {isLoading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
+            <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
         <table className="w-full text-left table-fixed">
           <thead className="bg-gray-50 border-b">
             <tr className="text-gray-600 text-sm">
@@ -200,22 +209,21 @@ const handleTogglePublish = async (commentId, isApproved) => {
                   <td className="p-4 text-gray-600 text-sm">
                     {comment.createdAt
                       ? new Date(comment.createdAt).toLocaleString("en-IN", {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                          hour: "numeric",
-                          minute: "numeric",
-                        })
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                      })
                       : "—"}
                   </td>
 
                   <td className="p-4">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        comment.isApproved
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${comment.isApproved
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
-                      }`}
+                        }`}
                     >
                       {comment.isApproved ? "Published" : "Pending"}
                     </span>
@@ -223,7 +231,7 @@ const handleTogglePublish = async (commentId, isApproved) => {
 
                   <td className="p-4 text-center">
                     <button
-                      onClick={() => handleTogglePublish(comment._id,comment.isApproved)}
+                      onClick={() => handleTogglePublish(comment._id, comment.isApproved)}
                       disabled={disableAll}
                       className="bg-gray-200 hover:bg-gray-800 hover:text-white transition px-4 py-1 rounded-full text-sm disabled:opacity-60"
                     >

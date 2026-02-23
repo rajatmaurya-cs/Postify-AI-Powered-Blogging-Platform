@@ -10,12 +10,12 @@ import Swal from "sweetalert2";
 
 import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
 
-const LIMIT = 5; 
+const LIMIT = 5;
 
 const BlogList = () => {
- const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
- 
+
   const {
     data,
     isLoading,
@@ -25,7 +25,7 @@ const BlogList = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useBlogsInfinite({ category: "All", limit: LIMIT , isAdmin : true });
+  } = useBlogsInfinite({ category: "All", limit: LIMIT, isAdmin: true });
 
 
   const blogs = useMemo(() => {
@@ -44,7 +44,7 @@ const BlogList = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Updated!", { id: "toggle" });
 
-    
+
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
     },
     onError: (err) => {
@@ -64,7 +64,7 @@ const BlogList = () => {
     onSuccess: (data) => {
       toast.success(data.message || "Deleted!", { id: "delete" });
 
-      
+
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
     },
     onError: (err) => {
@@ -111,21 +111,30 @@ const BlogList = () => {
     }
   };
 
-  
+
   // TailWind Spinner
-  {isLoading && (
-  <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
-    <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-  </div>
-)}
+  {
+    isLoading && (
+      <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
+        <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
   if (isError) return <div className="mt-10 ml-10 text-red-600">{error?.message}</div>;
 
   return (
     <div className="mt-10">
+
       <div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-4xl ml-10">
         <div className="p-3 text-sm text-gray-500">
           {isFetching && !isFetchingNextPage ? "Refreshing..." : " "}
         </div>
+
+        {isLoading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
+            <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
 
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b">
@@ -150,9 +159,8 @@ const BlogList = () => {
                 </td>
 
                 <td
-                  className={`p-4 font-medium ${
-                    blog.isPublished ? "text-green-600" : "text-yellow-600"
-                  }`}
+                  className={`p-4 font-medium ${blog.isPublished ? "text-green-600" : "text-yellow-600"
+                    }`}
                 >
                   {blog.isPublished ? "Published" : "Not Published"}
                 </td>
@@ -166,8 +174,8 @@ const BlogList = () => {
                     {toggleMutation.isPending
                       ? "Updating..."
                       : blog.isPublished
-                      ? "Unpublish"
-                      : "Publish"}
+                        ? "Unpublish"
+                        : "Publish"}
                   </button>
                 </td>
 
@@ -198,7 +206,7 @@ const BlogList = () => {
           </tbody>
         </table>
 
-       
+
         <div className="p-4 flex justify-center border-t">
           {hasNextPage ? (
             <button

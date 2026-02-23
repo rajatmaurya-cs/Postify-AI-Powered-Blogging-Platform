@@ -180,17 +180,20 @@ const DashBoard = () => {
       {statsError && <p className="ml-10 text-red-500">Dashboard stats failed to load</p>}
 
 
-      {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
-          <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-        </div>
-      )}
+    
       {isError && <p className="ml-10 text-red-500">Error: {error?.message}</p>}
       {!isLoading && !isError && isFetching && <p className="ml-10 text-gray-500">Updating...</p>}
 
 
 
       <div className="bg-white rounded-xl shadow-sm overflow-x-auto max-w-4xl ml-10">
+
+          {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
+          <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+      
         <table className="w-full table-fixed text-left">
           <thead className="bg-gray-50 border-b">
             <tr className="text-gray-600 text-sm">

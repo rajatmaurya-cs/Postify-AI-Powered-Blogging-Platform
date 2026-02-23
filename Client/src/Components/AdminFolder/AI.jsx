@@ -19,7 +19,7 @@ const AI = () => {
       }
       return res.data.stats;
     },
-    staleTime: 30_000, // optional cache
+    staleTime: 30_000, 
   });
 
   const totalRequests = data?.totalRequests ?? (isLoading ? "..." : "-");
@@ -53,15 +53,23 @@ const AI = () => {
         </div>
       </div>
 
-      {/* Loading / Error states */}
-      {isLoading && <p className="mt-4 text-gray-500">Loading AI stats...</p>}
+
+     
       {isError && <p className="mt-4 text-red-500">{error?.message}</p>}
       {!isLoading && !isError && isFetching && (
         <p className="mt-2 text-gray-500">Refreshing...</p>
       )}
 
-      {/* Logs table */}
+
       <div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-4xl ml-10 mt-5">
+
+        
+          {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
+          <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b">
             <tr className="text-gray-600 text-sm">
