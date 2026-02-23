@@ -111,7 +111,13 @@ const BlogList = () => {
     }
   };
 
-  if (isLoading) return <div className="mt-10 ml-10">Loading blogs...</div>;
+  
+  // TailWind Spinner
+  {isLoading && (
+  <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
+    <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+  </div>
+)}
   if (isError) return <div className="mt-10 ml-10 text-red-600">{error?.message}</div>;
 
   return (
