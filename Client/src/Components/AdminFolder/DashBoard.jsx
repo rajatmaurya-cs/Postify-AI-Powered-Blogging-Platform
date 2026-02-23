@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import { assets } from "../../assets/assets";
 
@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import Swal from "sweetalert2";
 
-import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
+import { useLatestBlogs } from "../../hooks/useLatestBlogs"
 
 const LIMIT = 5;
 
@@ -20,26 +20,21 @@ const DashBoard = () => {
 
 
 
-
-  const {
-    data,
+   const {
+    data: latestBlogs = [],
     isLoading,
     isError,
     error,
     isFetching,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useBlogsInfinite({ category: "All", limit: LIMIT, isAdmin: true });
-
-
-  const latestBlogs = useMemo(() => {
-    return data?.pages?.flatMap((p) => p.blogs) ?? [];
-  }, [data]);
+  } = useLatestBlogs({ limit: LIMIT, isAdmin: true, category: "All" });
 
 
 
-   const {
+
+
+
+
+  const {
 
     data: stats,
 
@@ -57,7 +52,7 @@ const DashBoard = () => {
       const { totalBlogs = 0, totalComments = 0, draftBlogs = 0 } = res.data.stats || {};
       return { totalBlogs, totalComments, draftBlogs };
     },
-    staleTime: 30_000, 
+    staleTime: 30_000,
   });
 
 
@@ -73,7 +68,7 @@ const DashBoard = () => {
     onMutate: () => toast.loading("Updating blog status...", { id: "toggle" }),
     onSuccess: (data) => {
       toast.success(data.message || "Updated!", { id: "toggle" });
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["latest-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
     onError: (err) => toast.error(err?.message || "Failed to update blog status", { id: "toggle" }),
@@ -90,7 +85,7 @@ const DashBoard = () => {
     onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
     onSuccess: (data) => {
       toast.success(data.message || "Deleted!", { id: "delete" });
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["latest-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
     onError: (err) => toast.error(err?.message || "Failed to delete blog", { id: "delete" }),
@@ -152,6 +147,7 @@ const DashBoard = () => {
 
 
   return (
+
     <div className="flex flex-col gap-2">
       <div className="flex mt-10 ml-10">
         <div className="flex">
@@ -188,76 +184,77 @@ const DashBoard = () => {
       {isError && <p className="ml-10 text-red-500">Error: {error?.message}</p>}
       {!isLoading && !isError && isFetching && <p className="ml-10 text-gray-500">Updating...</p>}
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-4xl ml-10">
-        <table className="w-full text-left">
+     
+
+      <div className="bg-white rounded-xl shadow-sm overflow-x-auto max-w-4xl ml-10">
+        <table className="w-full table-fixed text-left">
           <thead className="bg-gray-50 border-b">
             <tr className="text-gray-600 text-sm">
-              <th className="p-4">#</th>
-              <th className="p-4">BLOG TITLE</th>
-              <th className="p-4">DATE</th>
-              <th className="p-4">STATUS</th>
-              <th className="p-4">ACTIONS</th>
-              <th className="p-4">REMOVE</th>
-              <th className="p-4">ModeratedBy</th>
+              <th className="p-4 w-12">#</th>
+              <th className="p-4 w-[420px]">BLOG TITLE</th>
+              <th className="p-4 w-28">DATE</th>
+              <th className="p-4 w-36">STATUS</th>
+              <th className="p-4 w-40">ACTIONS</th>
+              <th className="p-4 w-28">REMOVE</th>
+              <th className="p-4 w-40">ModeratedBy</th>
             </tr>
           </thead>
 
           <tbody>
             {latestBlogs.map((blog, index) => (
-              <tr key={blog._id} className="border-b hover:bg-gray-50">
+              <tr key={blog._id} className="border-b hover:bg-gray-50 align-top">
                 <td className="p-4">{index + 1}</td>
-                <td className="p-4">{blog.title}</td>
-                <td className="p-4">
+
+
+
+
+                <td className="p-4 break-words whitespace-normal">
+                  {blog.title}
+                </td>
+
+
+
+                <td className="p-4 whitespace-nowrap">
                   {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : "—"}
                 </td>
-                <td className={`p-4 font-medium ${blog.isPublished ? "text-green-600" : "text-yellow-600"}`}>
+
+                <td className={`p-4 font-medium whitespace-nowrap ${blog.isPublished ? "text-green-600" : "text-yellow-600"}`}>
                   {blog.isPublished ? "Published" : "Not Published"}
                 </td>
+
                 <td className="p-4">
                   <button
+                    className="w-28 bg-gray-300 hover:bg-gray-700 hover:text-white px-4 py-1 rounded-2xl disabled:opacity-60"
                     onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
                     disabled={disableAll}
-                    className="bg-gray-300 hover:bg-gray-700 hover:text-white px-4 py-1 rounded-2xl disabled:opacity-60"
                   >
-                    {toggleMutation.isPending ? "Updating..." : blog.isPublished ? "Unpublish" : "Publish"}
+                    {blog.isPublished ? "Unpublish" : "Publish"}
                   </button>
                 </td>
+
                 <td className="p-4">
                   <button
+                    className="w-20 bg-gray-300 hover:bg-gray-700 px-4 py-1 rounded-2xl disabled:opacity-60"
                     onClick={() => handleRemove(blog._id)}
                     disabled={disableAll}
-                    className="bg-gray-300 hover:bg-gray-700 px-4 py-1 w-25 rounded-2xl disabled:opacity-60"
                     title="Delete blog"
                   >
-                    {deleteMutation.isPending ? "..." : "❌"}
+                    ❌
                   </button>
                 </td>
-                <td className="p-4 font-medium">{blog.moderatedBy?.fullName || "NONE"}</td>
-              </tr>
-            ))}
 
-            {latestBlogs.length === 0 && (
-              <tr>
-                <td className="p-6 text-center text-gray-500" colSpan={7}>
-                  No blogs found.
+                <td className="p-4 font-medium break-words">
+                  {blog.moderatedBy?.fullName || "NONE"}
                 </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       </div>
 
 
-      <div className="ml-10 mt-4">
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-          className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          {isFetchingNextPage ? "Loading..." : hasNextPage ? "Load More" : "No more blogs"}
-        </button>
 
-      </div>
+
     </div>
   );
 };
