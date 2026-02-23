@@ -131,8 +131,8 @@ const BlogList = () => {
         </div>
 
         {isLoading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
-            <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+            <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 

@@ -150,8 +150,8 @@ const Comments = () => {
       </div>
 
 
-      
-        
+
+
 
       {isError && <p className="text-center mt-8 text-red-500">{error?.message}</p>}
       {!isLoading && !isError && isFetching && (
@@ -161,8 +161,8 @@ const Comments = () => {
       <div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-7xl mt-6">
 
         {isLoading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-white/60 z-50">
-            <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+            <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 
@@ -221,8 +221,8 @@ const Comments = () => {
                   <td className="p-4">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${comment.isApproved
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
                         }`}
                     >
                       {comment.isApproved ? "Published" : "Pending"}
