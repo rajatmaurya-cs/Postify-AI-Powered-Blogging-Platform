@@ -1,14 +1,19 @@
 import React, { useMemo } from "react";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import toast from "react-hot-toast";
+
 import API from "../../Api/api";
+
 import Swal from "sweetalert2";
+
 import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
 
-const LIMIT = 10; 
+const LIMIT = 5; 
 
 const BlogList = () => {
-  const queryClient = useQueryClient();
+ const queryClient = useQueryClient();
 
  
   const {

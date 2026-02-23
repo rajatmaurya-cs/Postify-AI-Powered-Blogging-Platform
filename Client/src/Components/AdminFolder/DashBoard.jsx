@@ -1,21 +1,52 @@
-import React, {useMemo } from "react";
+import React, { useMemo } from "react";
+
 import { assets } from "../../assets/assets";
+
 import API from "../../Api/api";
+
 import toast from "react-hot-toast";
-import { useBlogs } from "../../hooks/useBlogs";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import Swal from "sweetalert2";
+
+import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
+
+const LIMIT = 5;
+
 const DashBoard = () => {
+
   const queryClient = useQueryClient();
 
-   
 
 
 
   const {
+    data,
+    isLoading,
+    isError,
+    error,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useBlogsInfinite({ category: "All", limit: LIMIT, isAdmin: true });
+
+
+  const latestBlogs = useMemo(() => {
+    return data?.pages?.flatMap((p) => p.blogs) ?? [];
+  }, [data]);
+
+
+
+   const {
+
     data: stats,
+
     isLoading: statsLoading,
+
     isError: statsError,
+
   } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
@@ -29,13 +60,9 @@ const DashBoard = () => {
     staleTime: 30_000, 
   });
 
-  const { data: blogs = [], isLoading, isError, error, isFetching } = useBlogs();
 
-  const latestBlogs = useMemo(() => {
-    return [...blogs]
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 4);
-  }, [blogs]);
+
+
 
   const toggleMutation = useMutation({
     mutationFn: async (blogId) => {
@@ -46,8 +73,8 @@ const DashBoard = () => {
     onMutate: () => toast.loading("Updating blog status...", { id: "toggle" }),
     onSuccess: (data) => {
       toast.success(data.message || "Updated!", { id: "toggle" });
-      queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); 
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
     onError: (err) => toast.error(err?.message || "Failed to update blog status", { id: "toggle" }),
   });
@@ -63,8 +90,8 @@ const DashBoard = () => {
     onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
     onSuccess: (data) => {
       toast.success(data.message || "Deleted!", { id: "delete" });
-      queryClient.invalidateQueries({ queryKey: ["blogs", "all"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }); 
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
     onError: (err) => toast.error(err?.message || "Failed to delete blog", { id: "delete" }),
   });
@@ -77,30 +104,30 @@ const DashBoard = () => {
 
 
 
-   const handleRemove = async (blogId) => {
-      const result = await Swal.fire({
-        icon: "warning",
-        title: "Delete this Blog?",
-        text: "This action cannot be undone.",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete",
-        cancelButtonText: "Cancel",
-        confirmButtonColor: "#d33",
-      });
-    
-      if (result.isConfirmed) {
-        deleteMutation.mutate(blogId);
-      }
-    };
-  
-  
-  
+  const handleRemove = async (blogId) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Delete this Blog?",
+      text: "This action cannot be undone.",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+    });
+
+    if (result.isConfirmed) {
+      deleteMutation.mutate(blogId);
+    }
+  };
+
+
+
   const handleTogglePublish = async (blogId, isPublished) => {
     const action = isPublished ? "Unpublish" : "Publish";
     const actionText = isPublished
       ? "This will hide the blog from users."
       : "This will make the blog visible to users.";
-  
+
     const result = await Swal.fire({
       icon: "warning",
       title: `${action} this blog?`,
@@ -108,14 +135,14 @@ const DashBoard = () => {
       showCancelButton: true,
       confirmButtonText: `Yes, ${action}`,
       cancelButtonText: "Cancel",
-      confirmButtonColor: isPublished ? "#d33" : "#16a34a", 
+      confirmButtonColor: isPublished ? "#d33" : "#16a34a",
     });
-  
+
     if (result.isConfirmed) {
       toggleMutation.mutate(blogId);
     }
   };
-  
+
 
 
 
@@ -188,7 +215,7 @@ const DashBoard = () => {
                 </td>
                 <td className="p-4">
                   <button
-                    onClick={() => handleTogglePublish(blog._id , blog.isPublished)}
+                    onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
                     disabled={disableAll}
                     className="bg-gray-300 hover:bg-gray-700 hover:text-white px-4 py-1 rounded-2xl disabled:opacity-60"
                   >
@@ -197,7 +224,7 @@ const DashBoard = () => {
                 </td>
                 <td className="p-4">
                   <button
-                    onClick={() =>handleRemove(blog._id)}
+                    onClick={() => handleRemove(blog._id)}
                     disabled={disableAll}
                     className="bg-gray-300 hover:bg-gray-700 px-4 py-1 w-25 rounded-2xl disabled:opacity-60"
                     title="Delete blog"
@@ -218,6 +245,18 @@ const DashBoard = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+
+      <div className="ml-10 mt-4">
+        <button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+          className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
+        >
+          {isFetchingNextPage ? "Loading..." : hasNextPage ? "Load More" : "No more blogs"}
+        </button>
+
       </div>
     </div>
   );
