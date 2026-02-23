@@ -18,7 +18,7 @@ const BlogList = () => {
     hasNextPage,
     isFetchingNextPage,
     isFetching,
-  } = useBlogsInfinite({ category: activeCategory, limit: LIMIT });
+  } = useBlogsInfinite({ category: activeCategory, limit: LIMIT  , isAdmin : false});
 
 
   const blogs = useMemo(() => {

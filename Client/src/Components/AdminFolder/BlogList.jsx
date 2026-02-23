@@ -5,7 +5,7 @@ import API from "../../Api/api";
 import Swal from "sweetalert2";
 import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
 
-const LIMIT = 3; 
+const LIMIT = 10; 
 
 const BlogList = () => {
   const queryClient = useQueryClient();
@@ -20,7 +20,7 @@ const BlogList = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useBlogsInfinite({ category: "All", limit: LIMIT });
+  } = useBlogsInfinite({ category: "All", limit: LIMIT , isAdmin : true });
 
 
   const blogs = useMemo(() => {
@@ -29,7 +29,7 @@ const BlogList = () => {
 
   const toggleMutation = useMutation({
     mutationFn: async (blogId) => {
-      const res = await API.post("/admin/blogs", { blogId });
+      const res = await API.post("/blog/toggle-blog", { blogId });
       if (!res.data?.success) {
         throw new Error(res.data?.message || "Failed to update blog");
       }

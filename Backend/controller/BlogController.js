@@ -112,6 +112,7 @@ export const addBlog = async (req, res) => {
 
 export const getallblog = async (req, res) => {
   try {
+
     const page = Math.max(parseInt(req.query.page || "1", 10), 1);
 
     const limit = Math.min(Math.max(parseInt(req.query.limit || "8", 10), 1), 50);
@@ -119,6 +120,7 @@ export const getallblog = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const category = req.query.category;
+    
 
     const filter = {};
 
@@ -165,23 +167,30 @@ export const getallblog = async (req, res) => {
 
 
 
-// GET /admin/blogs
-export const allBlogAdmin = async (req, res) => {
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 10;
-  const category = req.query.category || "All";
 
-  const filter = {}; // ✅ NO isPublished filter for admin
-  if (category !== "All") filter.category = category;
+
+
+
+export const allBlogAdmin = async (req, res) => {
+
+  const page = parseInt(req.query.page, 10) || 1;
+
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  const skip = (page - 1) * limit;
+
+  const filter = {};
+
+ 
 
   const total = await Blog.countDocuments(filter);
 
   const blogs = await Blog.find(filter)
     .sort({ createdAt: -1 })
-    .skip((page - 1) * limit)
+    .skip(skip)
     .limit(limit);
 
-  const hasMore = page * limit < total;
+  const hasMore = skip + blogs.length < total;
 
   return res.json({
     success: true,
@@ -193,8 +202,6 @@ export const allBlogAdmin = async (req, res) => {
     total,
   });
 };
-
-
 
 
 
