@@ -52,6 +52,7 @@ const DashBoard = () => {
       const { totalBlogs = 0, totalComments = 0, draftBlogs = 0 } = res.data.stats || {};
       return { totalBlogs, totalComments, draftBlogs };
     },
+    enabled: !!latestBlogs?.length,
     staleTime: 30_000,
   });
 
