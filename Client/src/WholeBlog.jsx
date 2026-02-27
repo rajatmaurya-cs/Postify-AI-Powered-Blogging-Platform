@@ -33,7 +33,7 @@ const WholeBlog = () => {
 
 
   const { data: blog, isLoading: blogLoading, isError: blogError } = useBlogById(blogId);
-  const { data: comments = [], isLoading: commentsLoading } = useCommentsByBlog(blogId);
+  const { data: comments = [], isLoading: commentsLoading } = useCommentsByBlog(blogId , !!blog);
 
 
   const [comment, setComment] = useState("");
