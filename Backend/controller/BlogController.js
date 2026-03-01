@@ -1,9 +1,6 @@
 import Blog from '../Models/Blog.js'
 import fs from 'fs'
 import imageKit from '../Config/imagekit.js'
-
-import AILog from '../Models/AIlog.js';
-
 import { convertHtmlToText } from '../utils/htmlToPlainText.js'
 import { analyzeContent } from "../utils/contentAnalyzer.js";
 

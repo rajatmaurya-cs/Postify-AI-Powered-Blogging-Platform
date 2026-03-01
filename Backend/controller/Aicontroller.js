@@ -1,7 +1,4 @@
-// import groq from "../config/Gemini.js";
-import AILog from '../Models/AIlog.js';
-import Config from '../Models/Config.js'
-import { redisClient } from "../Config/redis.js";
+
 
 /*----------------------------------Prompts---------------------------------------------------*/
 import {blogPrompt} from './Service/Prompts/Prompt.js'

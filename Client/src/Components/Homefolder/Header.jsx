@@ -1,6 +1,6 @@
 
 
-import Gpt from '../../Effects/Gpt'
+import HeaderButton from '../../Effects/HeaderButton'
 
 const Header = () => {
 
@@ -13,7 +13,7 @@ const Header = () => {
 
                 <div className='inline-flex items-center justify-center gap-4 px-6 py-1.5 mb-4'>
 
-                    <div><Gpt /></div>
+                    <div><HeaderButton /></div>
 
                 </div>
 

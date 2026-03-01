@@ -2,7 +2,7 @@ import Comment from '../Models/Comments.js'
 import Blog from '../Models/Blog.js';
 import { spamFilter } from '../utils/spamFilter.js';
 import { aimoderation } from '../Service/aiModerationService.js';
-import AILog from '../Models/AIlog.js';
+
 import { redisClient } from "../Config/redis.js";
 import Config from "../Models/Config.js";
 

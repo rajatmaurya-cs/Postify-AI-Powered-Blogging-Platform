@@ -1,6 +1,5 @@
 
 import groq from "../../../Config/Gemini.js";
-import { redisClient } from "../../../Config/redis.js";
 import Config from "../../../Models/Config.js";
 import AILog from "../../../Models/AIlog.js";
 

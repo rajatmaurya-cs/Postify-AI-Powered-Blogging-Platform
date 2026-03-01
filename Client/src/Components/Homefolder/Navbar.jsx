@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../Context/Authcontext";
 import ProfileModal from "../../Pop-Up/ProfileModal";
+import { User } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
@@ -11,7 +13,7 @@ const Navbar = () => {
 
   return (
     <div className="flex flex-wrap justify-between items-center py-3 px-4 sm:py-5 sm:px-10 xl:px-32 gap-3">
-     
+
       <img
         src={assets.Postify}
         alt="logo"
@@ -19,45 +21,101 @@ const Navbar = () => {
         onClick={() => navigate("/")}
       />
 
-    
+
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
         {!user && (
           <>
             <button
               onClick={() => navigate("/login")}
-              className="group p-[3px] sm:p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 
-              shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-              active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-              active:scale-[0.995]"
+              aria-label="User Login"
+              className="
+        w-[131px] h-[51px] rounded-[15px]
+        grid place-items-center cursor-pointer
+        bg-[linear-gradient(to_bottom_right,#2e8eff_0%,rgba(46,142,255,0)_30%)]
+        bg-[rgba(46,142,255,0.2)]
+        transition duration-300
+        hover:bg-[rgba(46,142,255,0.7)]
+        hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+        focus:outline-none focus:bg-[rgba(46,142,255,0.7)]
+        focus:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+      "
             >
-              <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-3 py-1.5 sm:px-4 sm:py-2">
-                <span className="font-semibold text-sm sm:text-base">Login</span>
-              </div>
+              <span
+                className="
+          w-[127px] h-[47px] rounded-[13px]
+          bg-[#1a1a1a]
+          flex items-center justify-center gap-[15px]
+          text-white font-semibold
+        "
+              >
+                <User size={27} className="text-white" />
+                Log In
+              </span>
+
             </button>
           </>
         )}
 
         {user?.role === "ADMIN" && (
           <button
-            onClick={() => navigate("/admin")}
-            className="group p-2 sm:p-3 rounded-[16px] sm:rounded-[20px] bg-gradient-to-b from-white to-stone-200/40 
-            shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-            active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-            active:scale-[0.995] font-bold text-sm sm:text-base"
+            onClick={() => navigate('/admin')}
+            aria-label="User Login"
+            className="
+        w-[131px] h-[51px] rounded-[15px]
+        grid place-items-center cursor-pointer
+        bg-[linear-gradient(to_bottom_right,#2e8eff_0%,rgba(46,142,255,0)_30%)]
+        bg-[rgba(46,142,255,0.2)]
+        transition duration-300
+        hover:bg-[rgba(46,142,255,0.7)]
+        hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+        focus:outline-none focus:bg-[rgba(46,142,255,0.7)]
+        focus:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+      "
           >
-            Dashboard
+            <span
+              className="
+          w-[127px] h-[47px] rounded-[13px]
+          bg-[#1a1a1a]
+          flex items-center justify-center gap-[15px]
+          text-white font-semibold
+        "
+            >
+              <LayoutDashboard size={27} className="text-white" />
+              →
+
+
+            </span>
           </button>
         )}
+
 
         {user && user.role !== "ADMIN" && (
           <button
             onClick={() => setShowProfile(true)}
-            className="group p-2 sm:p-4 rounded-full bg-gradient-to-b from-white to-stone-200/40 
-            shadow-[0_1px_3px_rgba(0,0,0,0.5)] 
-            active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] 
-            active:scale-[0.995] text-sm sm:text-base"
+            aria-label="User Login"
+            className="
+        w-[131px] h-[51px] rounded-[15px]
+        grid place-items-center cursor-pointer
+        bg-[linear-gradient(to_bottom_right,#2e8eff_0%,rgba(46,142,255,0)_30%)]
+        bg-[rgba(46,142,255,0.2)]
+        transition duration-300
+        hover:bg-[rgba(46,142,255,0.7)]
+        hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+        focus:outline-none focus:bg-[rgba(46,142,255,0.7)]
+        focus:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+      "
           >
-            Profile
+            <span
+              className="
+          w-[127px] h-[47px] rounded-[13px]
+          bg-[#1a1a1a]
+          flex items-center justify-center gap-[15px]
+          text-white font-semibold
+        "
+            >
+              <User size={27} className="text-white" />
+
+            </span>
           </button>
         )}
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Gpt = () => {
+const HeaderButton = () => {
   return (
     <StyledWrapper>
       <button className="button">
@@ -108,4 +108,4 @@ const StyledWrapper = styled.div`
     opacity: 0;
   }`;
 
-export default Gpt;
+export default HeaderButton;

@@ -4,7 +4,7 @@ import {generateContent , summariseArticle} from '../controller/Aicontroller.js'
 import {Aidashboard} from '../controller/Dashboard.js'
 
 import checkAiLimit  from '../Middleware/aiLimitMiddleware.js'
-import authMiddleware from '../Middleware/authMiddleware.js'
+
 
 const AiRouter = express.Router();
 
