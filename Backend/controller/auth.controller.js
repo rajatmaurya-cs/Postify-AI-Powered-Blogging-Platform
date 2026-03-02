@@ -368,7 +368,7 @@ export const refreshAccessToken = async (req, res) => {
     });
 
     if (!storedToken) {
-      return res.status(403).json({ message: "Invalid refresh token" });
+      return res.status(403).json({ message: "Invalid Email or Password" });
     }
 
     const decoded = jwt.verify(
