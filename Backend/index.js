@@ -38,11 +38,12 @@ let isDbConnected = false;
 async function init() {
   if (!isDbConnected) {
     await connectDB();
-    connectRedis();
+   await connectRedis();
     isDbConnected = true;
   }
 }
-init();
+
+await init();
 
 
 
@@ -70,6 +71,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 
 app.use("/api/blog", blogRouter);
+
 app.use("/api/comment", commentRouter);
 
 app.use("/api/ai", authMiddleware, AiRouter);
