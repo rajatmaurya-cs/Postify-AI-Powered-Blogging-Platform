@@ -283,15 +283,16 @@ const DashBoard = () => {
     flex items-center gap-3
     px-5 py-3
     rounded-xl
-    bg-gradient-to-r from-blue-600 to-indigo-600
-    text-white font-semibold
-    shadow-md
-    hover:shadow-xl
+    bg-gray-200
+    text-gray-700 font-semibold
+    shadow-sm
+    hover:bg-gray-300
+    hover:shadow-md
     hover:scale-105
     transition-all duration-300
   "
 >
-  <span className="bg-white/20 p-2 rounded-full">
+  <span className="bg-gray-300 p-2 rounded-full">
     <ArrowBigLeft size={18} />
   </span>
   Home
