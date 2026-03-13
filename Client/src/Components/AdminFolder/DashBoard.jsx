@@ -274,25 +274,31 @@ const DashBoard = () => {
         </table>
       </div>
 
+
 <div className="flex justify-center mt-8 mb-8 sm:mt-10 sm:mb-10 px-4">
-  <button
-    onClick={() => navigate("/")}
-     className="
-              h-[51px] w-[131px] cursor-pointer place-items-center rounded-[15px]
-              bg-[rgba(46,142,255,0.2)]
-              bg-[linear-gradient(to_bottom_right,#2e8eff_0%,rgba(46,142,255,0)_30%)]
-              transition duration-300
-              hover:bg-[rgba(46,142,255,0.7)]
-              hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]
-              focus:outline-none
-              focus:bg-[rgba(46,142,255,0.7)]
-              focus:shadow-[0_0_10px_rgba(46,142,255,0.5)]
-              grid
-            "
-          >
-    <ArrowBigLeft  size={18} className="sm:w-5 sm:h-5" />
-    Home
-  </button>
+
+<button
+  onClick={() => navigate("/")}
+  className="
+    flex items-center gap-3
+    px-5 py-3
+    rounded-xl
+    bg-gradient-to-r from-blue-600 to-indigo-600
+    text-white font-semibold
+    shadow-md
+    hover:shadow-xl
+    hover:scale-105
+    transition-all duration-300
+  "
+>
+  <span className="bg-white/20 p-2 rounded-full">
+    <ArrowBigLeft size={18} />
+  </span>
+  Home
+</button>
+
+
+
 </div>
 
 
