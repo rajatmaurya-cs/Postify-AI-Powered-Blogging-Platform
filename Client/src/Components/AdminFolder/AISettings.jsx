@@ -1,5 +1,5 @@
 
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../../Api/api";
 import toast from "react-hot-toast";
@@ -82,7 +82,12 @@ const AIConfigDashboard = () => {
       queryClient.invalidateQueries({ queryKey: ["ai-config"] });
       queryClient.invalidateQueries({ queryKey: ["ai-config-history"] });
     },
-    onError: (err) => toast.error(err?.message || "Update failed", { id: "save-config" }),
+    onError: (err) => {
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to update.";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
   const saving = updateMutation.isPending;
@@ -125,7 +130,7 @@ const AIConfigDashboard = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
-       
+
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">AI Feature Toggle</h2>
 
@@ -144,19 +149,17 @@ const AIConfigDashboard = () => {
                 aiEnabled: !prev.aiEnabled,
               }))
             }
-            className={`w-16 h-8 flex items-center rounded-full p-1 transition ${
-              editedConfig.aiEnabled ? "bg-green-500" : "bg-gray-400"
-            } ${disableAll ? "opacity-60 cursor-not-allowed" : ""}`}
+            className={`w-16 h-8 flex items-center rounded-full p-1 transition ${editedConfig.aiEnabled ? "bg-green-500" : "bg-gray-400"
+              } ${disableAll ? "opacity-60 cursor-not-allowed" : ""}`}
           >
             <div
-              className={`bg-white w-6 h-6 rounded-full shadow-md transform transition ${
-                editedConfig.aiEnabled ? "translate-x-8" : ""
-              }`}
+              className={`bg-white w-6 h-6 rounded-full shadow-md transform transition ${editedConfig.aiEnabled ? "translate-x-8" : ""
+                }`}
             />
           </button>
         </div>
 
-    
+
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">App Daily Limit</h2>
 
@@ -214,7 +217,7 @@ const AIConfigDashboard = () => {
           />
         </div>
 
- 
+
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-4">AI Per-Minute Limit</h2>
 
@@ -245,7 +248,7 @@ const AIConfigDashboard = () => {
           />
         </div>
 
-        
+
         <div className="bg-white rounded-2xl shadow-lg p-6 md:col-span-2">
           <h2 className="text-xl font-semibold mb-4">AI Model</h2>
 
@@ -274,22 +277,21 @@ const AIConfigDashboard = () => {
         </div>
       </div>
 
-      
+
       <div className="max-w-5xl mt-10">
         <button
           onClick={handleSave}
           disabled={isUnchanged || disableAll}
-          className={`w-full py-3 rounded-2xl text-lg font-semibold transition ${
-            isUnchanged || disableAll
+          className={`w-full py-3 rounded-2xl text-lg font-semibold transition ${isUnchanged || disableAll
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700 text-white"
-          }`}
+            }`}
         >
           {saving ? "Saving..." : "Save All Changes"}
         </button>
       </div>
 
-    
+
       <div className="max-w-7xl mt-16">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">🕑 AI Config History</h2>
@@ -342,7 +344,7 @@ const AIConfigDashboard = () => {
                       <th className="px-6 py-4">AI Model</th>
                       <th className="px-6 py-4">User Limit</th>
 
-                 
+
                       <th className="px-6 py-4">Per-Minute</th>
 
                       <th className="px-6 py-4">App Limit</th>
@@ -365,11 +367,10 @@ const AIConfigDashboard = () => {
 
                         <td className="px-6 py-4">
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              item.configSnapshot?.aiEnabled
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${item.configSnapshot?.aiEnabled
                                 ? "bg-green-100 text-green-700"
                                 : "bg-red-100 text-red-700"
-                            }`}
+                              }`}
                           >
                             {item.configSnapshot?.aiEnabled ? "Enabled" : "Disabled"}
                           </span>
@@ -378,7 +379,7 @@ const AIConfigDashboard = () => {
                         <td className="px-6 py-4">{item.configSnapshot?.aiModel}</td>
                         <td className="px-6 py-4">{item.configSnapshot?.dailyAiLimit}</td>
 
-               
+
                         <td className="px-6 py-4">
                           {item.configSnapshot?.aiPerMinuteLimit ?? "—"}
                         </td>

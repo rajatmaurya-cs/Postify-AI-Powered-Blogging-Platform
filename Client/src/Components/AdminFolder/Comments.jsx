@@ -1,4 +1,4 @@
-import  { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Moment from "moment";
 import toast from "react-hot-toast";
@@ -49,8 +49,11 @@ const Comments = () => {
       queryClient.invalidateQueries({ queryKey: ["comments"] });
     },
     onError: (err) => {
-      toast.error(err?.message || "Update failed", { id: "toggle-comment" });
-    },
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to update comment status";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
 
@@ -68,8 +71,11 @@ const Comments = () => {
       queryClient.invalidateQueries({ queryKey: ["comments"] });
     },
     onError: (err) => {
-      toast.error(err?.message || "Remove failed", { id: "remove-comment" });
-    },
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to Delete";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
   const disableAll = toggleMutation.isPending || removeMutation.isPending;

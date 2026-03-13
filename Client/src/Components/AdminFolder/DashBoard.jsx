@@ -71,7 +71,12 @@ const DashBoard = () => {
       queryClient.invalidateQueries({ queryKey: ["latest-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
-    onError: (err) => toast.error(err?.message || "Failed to update blog status", { id: "toggle" }),
+    onError: (err) => {
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to update blog status";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
 
@@ -88,7 +93,12 @@ const DashBoard = () => {
       queryClient.invalidateQueries({ queryKey: ["latest-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     },
-    onError: (err) => toast.error(err?.message || "Failed to delete blog", { id: "delete" }),
+    onError: (err) => {
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to Delete the blog";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
   const disableAll = toggleMutation.isPending || deleteMutation.isPending;

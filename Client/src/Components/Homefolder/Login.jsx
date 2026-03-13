@@ -17,7 +17,9 @@ const Login = () => {
 
   // ✅ React Query mutation for login
   const loginMutation = useMutation({
+
     mutationFn: async ({ email, password }) => {
+      
       const res = await API.post("/auth/login", { email, password });
 
       // Normalize errors so onError runs properly
@@ -29,11 +31,13 @@ const Login = () => {
     },
 
     onSuccess: (data) => {
+
       login(data.user, data.accessToken);
+
       toast.success("Login successful");
 
       navigate("/admin");
-      
+
       
     },
 

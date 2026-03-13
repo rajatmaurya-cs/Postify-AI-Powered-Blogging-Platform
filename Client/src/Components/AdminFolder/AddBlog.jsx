@@ -49,8 +49,11 @@ const AddBlog = () => {
       toast.success("AI content generated");
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || err?.message || "AI Generation failed");
-    },
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to Generate the content";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
   const generateReportMutation = useMutation({
@@ -64,8 +67,11 @@ const AddBlog = () => {
       toast.success("Report generated");
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || err?.message || "Report failed");
-    },
+      const message =
+        err?.response?.data?.message || err?.message || "Failed Generate the Report";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
   const addBlogMutation = useMutation({
@@ -92,8 +98,11 @@ const AddBlog = () => {
       setShowReport(false);
     },
     onError: (err) => {
-      toast.error(err?.response?.data?.message || err?.message || "Upload failed");
-    },
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to upload the Blog";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
 
