@@ -1,6 +1,11 @@
 
 import { assets } from "../../assets/assets";
 
+import { useNavigate } from "react-router-dom";
+
+
+import { ArrowBigLeft } from 'lucide-react';
+
 import API from "../../Api/api";
 
 import toast from "react-hot-toast";
@@ -15,6 +20,8 @@ const LIMIT = 5;
 
 const DashBoard = () => {
 
+  const navigate = useNavigate();
+
   const queryClient = useQueryClient();
 
 
@@ -26,8 +33,6 @@ const DashBoard = () => {
     error,
     isFetching,
   } = useLatestBlogs({ limit: LIMIT, isAdmin: true, category: "All" });
-
-
 
 
 
@@ -269,6 +274,26 @@ const DashBoard = () => {
         </table>
       </div>
 
+<div className="flex justify-center mt-8 mb-8 sm:mt-10 sm:mb-10 px-4">
+  <button
+    onClick={() => navigate("/")}
+     className="
+              h-[51px] w-[131px] cursor-pointer place-items-center rounded-[15px]
+              bg-[rgba(46,142,255,0.2)]
+              bg-[linear-gradient(to_bottom_right,#2e8eff_0%,rgba(46,142,255,0)_30%)]
+              transition duration-300
+              hover:bg-[rgba(46,142,255,0.7)]
+              hover:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+              focus:outline-none
+              focus:bg-[rgba(46,142,255,0.7)]
+              focus:shadow-[0_0_10px_rgba(46,142,255,0.5)]
+              grid
+            "
+          >
+    <ArrowBigLeft  size={18} className="sm:w-5 sm:h-5" />
+    Home
+  </button>
+</div>
 
 
 

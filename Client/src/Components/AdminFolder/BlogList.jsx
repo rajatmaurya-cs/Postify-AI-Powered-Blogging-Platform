@@ -74,7 +74,7 @@ const BlogList = () => {
       const message =
         err?.response?.data?.message || err?.message || "Failed to update blog status";
 
-      toast.error(message, { id: "toggle" });
+      toast.error(message, { id: "delete" });
     }
   });
 
