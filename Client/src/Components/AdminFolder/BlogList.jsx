@@ -47,9 +47,12 @@ const BlogList = () => {
 
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
     },
-    onError: (err) => {
-      toast.error(err?.message || "Failed to update blog status", { id: "toggle" });
-    },
+     onError: (err) => {
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to update blog status";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
   const deleteMutation = useMutation({
@@ -68,8 +71,11 @@ const BlogList = () => {
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
     },
     onError: (err) => {
-      toast.error(err?.message || "Failed to delete blog", { id: "delete" });
-    },
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to update blog status";
+
+      toast.error(message, { id: "toggle" });
+    }
   });
 
   const disableAll = toggleMutation.isPending || deleteMutation.isPending;

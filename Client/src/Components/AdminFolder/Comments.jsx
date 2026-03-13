@@ -74,7 +74,7 @@ const Comments = () => {
       const message =
         err?.response?.data?.message || err?.message || "Failed to Delete";
 
-      toast.error(message, { id: "toggle" });
+      toast.error(message, { id: "remove-comment" });
     }
   });
 

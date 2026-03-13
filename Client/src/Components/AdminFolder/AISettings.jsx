@@ -86,7 +86,7 @@ const AIConfigDashboard = () => {
       const message =
         err?.response?.data?.message || err?.message || "Failed to update.";
 
-      toast.error(message, { id: "toggle" });
+      toast.error(message, { id: "save-config" });
     }
   });
 
