@@ -35,23 +35,32 @@ const Layout = () => {
 
     return (
         <>
-            <div className='flex items-center justify-between py-2 h-[70px] px-4 sm:px-12 border-b border-gray-200'>
-                <img
-                    src={assets.Postify}
-                    alt="logo"
-                    className="object-contain cursor-pointer w-32 sm:w-40 md:w-48"
-                    onClick={() => navigate("/")}
-                />
-                <button
-                    onClick={() => handlelogout()}
-                    disabled={isLoggingOut}
-                    className='text-sm px-8 py-2 bg-primary text-white rounded-full cursor-pointer'>
-                    {isLoggingOut ? "Logging out..." : " Logout"}</button>
+            <div>
+             
+                <div className='flex items-center justify-between py-2 h-[70px] px-4 sm:px-12 border-b border-gray-200'>
+                    <img
+                        src={assets.Postify}
+                        alt="logo"
+                        className="object-contain cursor-pointer w-32 sm:w-40 md:w-48"
+                        onClick={() => navigate("/")}
+                    />
 
+                    <button
+                        onClick={() => handlelogout()}
+                        disabled={isLoggingOut}
+                        className='text-sm px-8 py-2 bg-primary text-white rounded-full cursor-pointer'>
+                        {isLoggingOut ? "Logging out..." : " Logout"}
+                    </button>
+                </div>
+
+            
+                <div className="bg-blue-50 border-b border-blue-200 text-blue-700 text-sm text-center py-2">
+                    ⚠️: This admin panel is visible for demonstration purposes. Editing actions are restricted to the administrator.
+                </div>
             </div>
             <div className='flex h-[calc(100vh-70px)]'>
                 <Sidebar />
-               
+
                 <main className="relative flex-1 overflow-y-auto">
                     <Outlet />
                 </main>
