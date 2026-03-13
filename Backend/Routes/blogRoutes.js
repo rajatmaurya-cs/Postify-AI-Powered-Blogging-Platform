@@ -17,7 +17,7 @@ blogRouter.get('/allblog',getallblog)
 
 
 /* ================= GetAllBlogs for Admin ================= */
-blogRouter.get('/admin/blogs' , authMiddleware , adminMiddleware ,allBlogAdmin)
+blogRouter.get('/admin/blogs' , authMiddleware ,allBlogAdmin)
 
 
 

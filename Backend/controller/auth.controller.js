@@ -353,7 +353,7 @@ export const refreshAccessToken = async (req, res) => {
 
 
     if (!refreshToken) {
-      return res.status(401).json({ message: "No refresh token" });
+      return res.status(401).json({ message: "Invalid email or Password" });
     }
 
 

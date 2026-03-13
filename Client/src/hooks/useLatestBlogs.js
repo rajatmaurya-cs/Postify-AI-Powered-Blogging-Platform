@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import API from "../Api/api";
 
 export function useLatestBlogs({ limit = 5, isAdmin = true, category = "All" }) {
+  
   const endpoint =  "blog/admin/blogs" 
 
   return useQuery({

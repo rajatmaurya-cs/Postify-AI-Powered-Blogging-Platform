@@ -52,7 +52,7 @@ const Comments = () => {
       const message =
         err?.response?.data?.message || err?.message || "Failed to update comment status";
 
-      toast.error(message, { id: "toggle" });
+      toast.error(message, { id: "toggle-comment" });
     }
   });
 
