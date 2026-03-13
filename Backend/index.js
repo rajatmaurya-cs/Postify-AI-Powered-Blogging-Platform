@@ -76,7 +76,7 @@ app.use("/api/comment", commentRouter);
 
 app.use("/api/ai", authMiddleware, AiRouter);
 
-app.use("/api/ai/config", authMiddleware, adminMiddleware, configRoutes);
+app.use("/api/ai/config", authMiddleware,configRoutes);
 
 
 app.get("/", (req, res) => {

@@ -40,7 +40,7 @@ blogRouter.post('/Report', authMiddleware ,adminMiddleware, GenerateReport)
 
 /* ================= Blog Dashboard =================  */
 
-blogRouter.get('/BlogDashBoard', authMiddleware,adminMiddleware ,getDashboardStats)
+blogRouter.get('/BlogDashBoard', authMiddleware ,getDashboardStats)
 
 
 

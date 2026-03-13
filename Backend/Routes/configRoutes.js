@@ -9,7 +9,7 @@ import adminMiddleware from "../Middleware/adminMiddleware.js"
 const configRouter = express.Router();
 
 /* ================= AiEnable / UserLimit / AppLimit ================= */
-configRouter.get("/config-dashboard", adminMiddleware,getConfig);
+configRouter.get("/config-dashboard",getConfig);
 
 
 /* ================= Change Made by User._id ================= */
