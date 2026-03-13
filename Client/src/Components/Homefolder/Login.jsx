@@ -32,10 +32,9 @@ const Login = () => {
       login(data.user, data.accessToken);
       toast.success("Login successful");
 
-      const role = data.user?.role;
-      if (role === "USER") navigate("/");
-      else if (role === "ADMIN") navigate("/admin");
-      else navigate("/"); // fallback
+      navigate("/admin");
+      
+      
     },
 
      onError: (err) => {
