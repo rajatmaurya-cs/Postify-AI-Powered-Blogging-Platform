@@ -103,99 +103,125 @@ const ForgetPassword = () => {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-4">
-      <div className="w-full max-w-md bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-8">
-        <div className="w-full flex flex-col gap-6">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-800">Reset Password 🔑</h2>
-            <p className="text-sm text-gray-500 mt-1">Verify your email to set a new password</p>
+    <div className="min-h-screen flex items-center justify-center relative bg-[#fafbfc] px-4 font-sans overflow-hidden">
+      {/* Background Ornaments matching Login/Signup */}
+      <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3">
+        <div className="w-[600px] h-[600px] bg-gradient-to-br from-indigo-100/40 to-purple-100/40 rounded-full blur-3xl opacity-70"></div>
+      </div>
+      <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3">
+        <div className="w-[800px] h-[800px] bg-gradient-to-tr from-blue-50/50 to-emerald-50/50 rounded-full blur-3xl opacity-60"></div>
+      </div>
+
+      <div className="w-full max-w-[440px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+        
+        {/* Brand Logo / Header Area */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 mb-6">
+            <span className="text-2xl">🔑</span>
           </div>
+          <h2 className="text-3xl font-black tracking-tight text-gray-900 mb-2">Reset Password</h2>
+          <p className="text-gray-500 font-medium tracking-wide">Enter your email to receive a recovery code.</p>
+        </div>
 
-          <form onSubmit={handleResetPassword} className="flex flex-col gap-4">
-            {/* Email Input */}
-            <div className="flex gap-3">
-              <input
-                type="email"
-                placeholder="📧 Enter your email"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:bg-gray-100"
-                value={email}
-                disabled={isVerified}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setEmail(value);
-                  sessionStorage.setItem("forgetEmail", value);
-                }}
-                required
-              />
-
-              {!isVerified && email !== "" && (
-                <button
-                  className="px-4 py-3 bg-gray-900 hover:bg-black text-white rounded-lg whitespace-nowrap transition disabled:opacity-60"
-                  type="button"
-                  disabled={sending}
-                  onClick={() => sendOtp(email)}
-                >
-                  {sending ? "Sending..." : "Send OTP"}
-                </button>
-              )}
-            </div>
-
-
-            {isVerified && (
-              <>
+        {/* Main Card */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_40px_rgb(0,0,0,0.04)] border border-white p-8 sm:p-10">
+          <form onSubmit={handleResetPassword} className="space-y-6">
+            
+            <div className="space-y-4">
+              <div className="flex gap-3">
                 <input
-                  type="password"
-                  placeholder="🔒 Enter new password"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  type="email"
+                  placeholder="name@example.com"
+                  className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm font-bold rounded-2xl p-4 placeholder:font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-60 disabled:bg-gray-100"
+                  value={email}
+                  disabled={isVerified}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setEmail(value);
+                    sessionStorage.setItem("forgetEmail", value);
+                  }}
                   required
                 />
-                <button
-                  type="submit"
-                  className="w-full bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-lg transition duration-200"
-                  disabled={resetPasswordMutation.isPending}
-                >
-                  {resetPasswordMutation.isPending ? "Updating..." : "Update Password"}
-                </button>
-              </>
-            )}
+                
+                {!isVerified && email !== "" && (
+                  <button
+                    type="button"
+                    disabled={sending}
+                    onClick={() => sendOtp(email)}
+                    className="flex-shrink-0 px-6 bg-gray-900 text-white font-bold text-sm tracking-wide rounded-2xl hover:bg-black transition-all shadow-[0_4px_15px_rgb(0,0,0,0.1)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgb(0,0,0,0.15)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                  >
+                    {sending ? "Sending..." : "Send OTP"}
+                  </button>
+                )}
+              </div>
+
+              {otpSent && !isVerified && (
+                <div className="bg-indigo-50/50 border border-indigo-100/50 rounded-2xl p-6 flex flex-col items-center gap-4 animate-in slide-in-from-top-2 duration-300">
+                  <p className="text-sm font-bold tracking-wide text-indigo-900">Enter validation code</p>
+                  <div className="flex justify-center w-full">
+                    <OtpInput
+                      value={otp}
+                      onChange={setOtp}
+                      numInputs={6}
+                      disabled={isVerifying}
+                      containerStyle={{ display: "flex", justifyContent: "center", gap: "8px" }}
+                      inputStyle={{
+                        width: "42px",
+                        height: "48px",
+                        borderRadius: "12px",
+                        border: "1px solid #e5e7eb",
+                        backgroundColor: "#ffffff",
+                        fontSize: "18px",
+                        fontWeight: "800",
+                        color: "#111827",
+                        textAlign: "center",
+                        boxShadow: "0 2px 10px rgba(0,0,0,0.02)"
+                      }}
+                      renderInput={(props) => <input {...props} className="focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all font-sans" />}
+                    />
+                  </div>
+                  <p className="text-xs font-semibold text-indigo-500/70 tracking-wide">
+                    {isVerifying ? "Verifying code..." : "Check your spam folder if not received."}
+                  </p>
+                </div>
+              )}
+
+              {isVerified && (
+                <div className="space-y-4 animate-in fade-in duration-500">
+                  <input
+                    type="password"
+                    placeholder="Enter new password"
+                    className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm font-bold rounded-2xl p-4 placeholder:font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gray-900 text-white font-bold tracking-wide rounded-2xl overflow-hidden transition-all shadow-[0_8px_20px_rgb(0,0,0,0.12)] hover:-translate-y-0.5 hover:shadow-[0_12px_25px_rgb(0,0,0,0.2)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none mt-2"
+                    disabled={resetPasswordMutation.isPending}
+                  >
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    <span className="relative z-10 flex items-center gap-2">
+                       {resetPasswordMutation.isPending ? "Validating..." : "Update Password"}
+                    </span>
+                  </button>
+                </div>
+              )}
+
+            </div>
           </form>
 
-
-          {otpSent && (
-            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 flex flex-col items-center gap-3">
-              <p className="text-sm font-medium text-gray-700">Enter 6-digit OTP</p>
-              <OtpInput
-                value={otp}
-                onChange={setOtp}
-                numInputs={6}
-                disabled={isVerifying}
-                containerStyle={{ display: "flex", justifyContent: "center", gap: "10px" }}
-                inputStyle={{
-                  width: "44px",
-                  height: "46px",
-                  borderRadius: "10px",
-                  border: "2px solid #d1d5db",
-                  fontSize: "18px",
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-                renderInput={(props) => <input {...props} />}
-              />
-              <p className="text-xs text-gray-500">
-                {isVerifying ? "Verifying..." : "Didn't get it? Check your spam folder."}
-              </p>
-            </div>
-          )}
-
-          <div className="text-center">
-            <span
+          <div className="mt-8 text-center bg-gray-50/50 mx-[-2.5rem] mb-[-2.5rem] p-6 rounded-b-[2.5rem] border-t border-gray-100/80">
+            <button
               onClick={() => navigate("/login")}
-              className="text-amber-500 font-semibold hover:underline cursor-pointer text-sm"
+              className="text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-2"
             >
-              Back to Login
-            </span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Return to login
+            </button>
           </div>
         </div>
       </div>
