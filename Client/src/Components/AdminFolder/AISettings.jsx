@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../../Api/api";
@@ -95,6 +94,30 @@ const AIConfigDashboard = () => {
   if (configLoading || !currentConfig || !editedConfig) return null;
 
   if (configError) {
+    return (
+      <div className="h-screen flex justify-center items-center text-red-600 font-semibold">
+        {configErrObj?.message || "Failed to load config"}
+      </div>
+    );
+  }
+
+  const isUnchanged = JSON.stringify(editedConfig) === JSON.stringify(currentConfig);
+  const disableAll = saving || configFetching || historyFetching;
+
+  const handleSave = () => {
+    if (!editedConfig) return;
+
+    const payload = {
+      aiEnabled: editedConfig.aiEnabled,
+      aiModel: editedConfig.aiModel,
+      dailyAiLimit: editedConfig.dailyAiLimit,
+      dailyappLimit: editedConfig.dailyappLimit,
+      aiPerMinuteLimit: editedConfig.aiPerMinuteLimit,
+    };
+
+    updateMutation.mutate(payload);
+  };
+
   return (
     <div className="p-4 sm:p-8 animate-in fade-in duration-500 h-full overflow-y-auto">
       <div className="mb-10 max-w-5xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
