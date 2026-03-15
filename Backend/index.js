@@ -67,6 +67,8 @@ app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+
+
 /* ================= ROUTES ================= */
 app.use("/api/auth", authRoutes);
 
@@ -77,6 +79,13 @@ app.use("/api/comment", commentRouter);
 app.use("/api/ai", authMiddleware, AiRouter);
 
 app.use("/api/ai/config", authMiddleware,configRoutes);
+
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
 
 
 app.get("/", (req, res) => {

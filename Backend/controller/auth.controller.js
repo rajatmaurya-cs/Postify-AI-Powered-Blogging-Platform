@@ -87,6 +87,8 @@ export const login = async (req, res) => {
     let { email, password } = req.body;
     email = email.toLowerCase().trim();
 
+    console.log("Entered in Login bakcned")
+
 
     if (!email || !password) {
       return res.status(401).json({

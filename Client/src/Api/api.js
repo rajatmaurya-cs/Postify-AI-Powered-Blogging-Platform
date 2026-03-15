@@ -43,13 +43,13 @@ API.interceptors.response.use(
       refreshPromise = null;
       refreshFailed = false;
 
-      // Retry original request (cookies now updated)
+   
       return API(originalRequest);
     } catch (e) {
       refreshPromise = null;
       refreshFailed = true;
 
-      // Force logout in app
+     
       window.dispatchEvent(new Event("auth:logout"));
 
       return Promise.reject(e);

@@ -109,7 +109,7 @@ export const addBlog = async (req, res) => {
 
 export const getallblog = async (req, res) => {
   try {
-
+      console.log("Entered in getallblog");
     const page = Math.max(parseInt(req.query.page || "1", 10), 1);
 
     const limit = Math.min(Math.max(parseInt(req.query.limit || "8", 10), 1), 50);

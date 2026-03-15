@@ -86,27 +86,27 @@ const DashBoard = () => {
 
 
 
-  const deleteMutation = useMutation({
-    mutationFn: async (blogId) => {
-      const res = await API.post("/blog/delete-blog", { blogId });
-      if (!res.data?.success) throw new Error(res.data?.message || "Failed to delete blog");
-      return res.data;
-    },
-    onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
-    onSuccess: (data) => {
-      toast.success(data.message || "Deleted!", { id: "delete" });
-      queryClient.invalidateQueries({ queryKey: ["latest-blogs"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-    },
-    onError: (err) => {
-      const message =
-        err?.response?.data?.message || err?.message || "Failed to Delete the blog";
+  // const deleteMutation = useMutation({
+  //   mutationFn: async (blogId) => {
+  //     const res = await API.post("/blog/delete-blog", { blogId });
+  //     if (!res.data?.success) throw new Error(res.data?.message || "Failed to delete blog");
+  //     return res.data;
+  //   },
+  //   onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
+  //   onSuccess: (data) => {
+  //     toast.success(data.message || "Deleted!", { id: "delete" });
+  //     queryClient.invalidateQueries({ queryKey: ["latest-blogs"] });
+  //     queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+  //   },
+  //   onError: (err) => {
+  //     const message =
+  //       err?.response?.data?.message || err?.message || "Failed to Delete the blog";
 
-      toast.error(message, { id: "toggle" });
-    }
-  });
+  //     toast.error(message, { id: "toggle" });
+  //   }
+  // });
 
-  const disableAll = toggleMutation.isPending || deleteMutation.isPending;
+  const disableAll = toggleMutation.isPending;
 
   const totalBlogs = stats?.totalBlogs ?? (statsLoading ? "..." : "-");
   const totalComments = stats?.totalComments ?? (statsLoading ? "..." : "-");
@@ -114,21 +114,21 @@ const DashBoard = () => {
 
 
 
-  const handleRemove = async (blogId) => {
-    const result = await Swal.fire({
-      icon: "warning",
-      title: "Delete this Blog?",
-      text: "This action cannot be undone.",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#d33",
-    });
+  // const handleRemove = async (blogId) => {
+  //   const result = await Swal.fire({
+  //     icon: "warning",
+  //     title: "Delete this Blog?",
+  //     text: "This action cannot be undone.",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes, delete",
+  //     cancelButtonText: "Cancel",
+  //     confirmButtonColor: "#d33",
+  //   });
 
-    if (result.isConfirmed) {
-      deleteMutation.mutate(blogId);
-    }
-  };
+  //   if (result.isConfirmed) {
+  //     deleteMutation.mutate(blogId);
+  //   }
+  // };
 
 
 
@@ -163,7 +163,7 @@ const DashBoard = () => {
 
   return (
     <div className="flex flex-col h-full bg-white backdrop-blur-3xl animate-in fade-in duration-500">
-      
+
       {/* Header Area */}
       <div className="p-8 lg:p-10 border-b border-gray-100/80 bg-white/40 sticky top-0 z-10 backdrop-blur-xl">
         <h1 className="text-3xl font-black tracking-tight text-gray-900 mb-2">Workspace Overview</h1>
@@ -172,7 +172,7 @@ const DashBoard = () => {
 
       <div className="flex-1 overflow-y-auto w-full max-h-[calc(100vh-250px)]">
         <div className="p-8 lg:p-10 space-y-10">
-          
+
           {/* Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="group bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all hover:-translate-y-1">
@@ -233,105 +233,97 @@ const DashBoard = () => {
           </div>
 
           {/* Recent Content Table */}
-          <div className="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.02)] border border-gray-100/60 overflow-hidden relative">
-            
-            <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-              <h3 className="text-lg font-bold text-gray-900 tracking-tight">Recent Activity</h3>
-            </div>
+         <div className="w-full">
+  {isLoading && (
+    <div className="absolute inset-x-0 top-20 bottom-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin"></div>
+        <p className="text-sm font-semibold text-gray-500 tracking-wide animate-pulse">Loading workspace...</p>
+      </div>
+    </div>
+  )}
 
-            <div className="overflow-x-auto w-full">
-              {isLoading && (
-                <div className="absolute inset-x-0 top-20 bottom-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-8 h-8 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                    <p className="text-sm font-semibold text-gray-500 tracking-wide animate-pulse">Loading workspace...</p>
-                  </div>
-                </div>
-              )}
-              
-              <table className="w-full text-left border-collapse min-w-[900px] table-fixed">
-                <thead>
-                  <tr className="bg-white border-b border-gray-100 text-xs uppercase tracking-widest text-gray-400 font-bold">
-                    <th className="px-8 py-5 w-20">ID</th>
-                    <th className="px-8 py-5 w-[350px]">Story Title</th>
-                    <th className="px-8 py-5 w-36">Date</th>
-                    <th className="px-8 py-5 w-32">Status</th>
-                    <th className="px-8 py-5 w-36">Visibility</th>
-                    <th className="px-8 py-5 w-24 text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {latestBlogs.map((blog, index) => (
-                    <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors">
-                      <td className="px-8 py-6 text-sm font-semibold text-gray-400">
-                        {(index + 1).toString().padStart(2, '0')}
-                      </td>
-                      <td className="px-8 py-6">
-                        <p className="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2 pr-4">
-                          {blog.title}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1.5 font-bold uppercase tracking-wide bg-gray-100 inline-block px-2.5 py-1 rounded-md">
-                          {blog.category}
-                        </p>
-                      </td>
-                      <td className="px-8 py-6 text-sm text-gray-600 font-medium">
-                        {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}
-                      </td>
-                      <td className="px-8 py-6">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide ${
-                          blog.isPublished 
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-100" 
-                            : "bg-amber-50 text-amber-700 border border-amber-100"
-                        }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${blog.isPublished ? "bg-emerald-500" : "bg-amber-500"}`}></span>
-                          {blog.isPublished ? "LIVE" : "DRAFT"}
-                        </span>
-                      </td>
-                      <td className="px-8 py-6">
-                        <button
-                          className={`w-full relative overflow-hidden px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${
-                            blog.isPublished
-                              ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
-                              : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
-                          } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
-                          onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
-                          disabled={disableAll}
-                        >
-                          {blog.isPublished ? "Unpublish" : "Publish"}
-                        </button>
-                      </td>
-                      <td className="px-8 py-6 text-center">
-                        <button
-                          className="w-10 h-10 inline-flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:bg-red-50 disabled:hover:text-red-500"
-                          onClick={() => handleRemove(blog._id)}
-                          disabled={disableAll}
-                          title="Delete this story"
-                        >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              
-              {latestBlogs.length === 0 && !isLoading && !isError && (
-                <div className="py-20 text-center border-t border-gray-50">
-                  <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                  </div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-1">No Activity Yet</h4>
-                  <p className="text-gray-500 font-medium">When you write stories, they will appear here.</p>
-                </div>
-              )}
-            </div>
-          </div>
+  <table className="w-full text-left border-collapse table-auto">
+    <thead>
+      <tr className="bg-white border-b border-gray-100 text-xs uppercase tracking-widest text-gray-400 font-bold">
+        <th className="px-6 py-5 w-16">ID</th>
+        <th className="px-6 py-5">Story Title</th>
+        <th className="px-6 py-5 w-32">Date</th>
+        <th className="px-6 py-5 w-28">Status</th>
+        <th className="px-6 py-5 w-36">Visibility</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-gray-50">
+      {latestBlogs.map((blog, index) => (
+        <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors">
+          <td className="px-6 py-6 text-sm font-semibold text-gray-400">
+            {(index + 1).toString().padStart(2, "0")}
+          </td>
+          <td className="px-6 py-6">
+            <p className="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2 pr-2">
+              {blog.title}
+            </p>
+            <p className="text-xs text-gray-500 mt-1.5 font-bold uppercase tracking-wide bg-gray-100 inline-block px-2.5 py-1 rounded-md">
+              {blog.category}
+            </p>
+          </td>
+          <td className="px-6 py-6 text-sm text-gray-600 font-medium whitespace-nowrap">
+            {blog.createdAt
+              ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : "—"}
+          </td>
+          <td className="px-6 py-6">
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide ${
+                blog.isPublished
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                  : "bg-amber-50 text-amber-700 border border-amber-100"
+              }`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
+                }`}
+              ></span>
+              {blog.isPublished ? "LIVE" : "DRAFT"}
+            </span>
+          </td>
+          <td className="px-6 py-6">
+            <button
+              className={`w-full relative overflow-hidden whitespace-nowrap px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${
+                blog.isPublished
+                  ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
+                  : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
+              } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+              onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
+              disabled={disableAll}
+            >
+              {blog.isPublished ? "Unpublish" : "Publish"}
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 
-          {/* Back to Home Button */}
+  {latestBlogs.length === 0 && !isLoading && !isError && (
+    <div className="py-20 text-center border-t border-gray-50">
+      <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <h4 className="text-lg font-bold text-gray-900 mb-1">No Activity Yet</h4>
+      <p className="text-gray-500 font-medium">When you write stories, they will appear here.</p>
+    </div>
+  )}
+</div>
+
+         
           <div className="flex justify-center pt-4 pb-4">
             <button
               onClick={() => navigate("/")}
