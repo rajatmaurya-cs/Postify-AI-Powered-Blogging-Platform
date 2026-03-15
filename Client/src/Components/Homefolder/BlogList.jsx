@@ -1,5 +1,5 @@
 import  { useMemo, useState } from "react";
-import { blogCategories } from "../../assets/assets";
+import { blogCategories, assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
 
