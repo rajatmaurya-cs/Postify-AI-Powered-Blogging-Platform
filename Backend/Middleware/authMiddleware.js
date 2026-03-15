@@ -8,7 +8,7 @@ import { validateAccessToken } from "../Service/Authentication.js";
       : null;
     const token = req.cookies?.accessToken || bearerToken;
     
-    console.log("AccessToken is : ",token)
+   
 
     if (!token) {
       return res.status(401).json({ message: "No access token" });

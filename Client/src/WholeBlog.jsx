@@ -163,7 +163,7 @@ const WholeBlog = () => {
         className="fixed inset-0 w-screen h-screen object-cover opacity-30 blur-3xl -z-10"
       />
 
-      <article className="relative max-w-4xl mx-auto px-6 py-20 md:py-32">
+      <article className="relative w-[100%] mx-auto px-6 py-20 md:py-32">
         <header className="text-center mb-16 space-y-8 animate-in fade-in slide-in-from-bottom-6 duration-1000">
           <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-white/60 border border-gray-200 shadow-sm backdrop-blur-md hover:bg-white transition-colors cursor-default">
             <span className="text-xs font-bold tracking-widest uppercase text-gray-800">
@@ -171,9 +171,9 @@ const WholeBlog = () => {
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-gray-900 leading-[1.1]">
-            {blog.title}
-          </h1>
+          <h1 className="max-w-[700px] mx-auto text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-gray-900 leading-tight">
+  {blog.title}
+</h1>
 
           <div className="flex items-center justify-center gap-4 text-sm font-medium text-gray-500">
             <div className="flex items-center gap-3">
@@ -197,16 +197,17 @@ const WholeBlog = () => {
           </div>
         </header>
 
-        <div className="rounded-[2rem] overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] mb-16 ring-1 ring-gray-900/5 relative group">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <img
-            src={blog.image}
-            alt={blog.subTitle}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-auto object-cover transform transition-transform duration-1000 group-hover:scale-105"
-          />
-        </div>
+        <div className="w-[60%] mx-auto rounded-[2rem] overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] mb-16 ring-1 ring-gray-900/5 relative group">
+  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+  <img
+    src={blog.image}
+    alt={blog.subTitle}
+    loading="lazy"
+    decoding="async"
+    className="w-full h-auto object-cover transform transition-transform duration-1000 group-hover:scale-105"
+  />
+</div>
 
         {ailoading && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/20 backdrop-blur-md transition-all">
