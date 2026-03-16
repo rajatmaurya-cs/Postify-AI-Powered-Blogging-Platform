@@ -87,7 +87,7 @@ export const login = async (req, res) => {
     let { email, password } = req.body;
     email = email.toLowerCase().trim();
 
-    console.log("Entered in Login bakcned")
+
 
 
     if (!email || !password) {
@@ -183,8 +183,7 @@ export const googleLogin = async (req, res) => {
 
     const { code } = req.body;
 
-    console.log("The CLIENT_ID:", process.env.GOOGLE_CLIENT_ID)
-    console.log("The CLIENT_SECRET", process.env.GOOGLE_CLIENT_SECRET)
+  
 
     console.log("The code is : ", code)
 
@@ -210,7 +209,7 @@ export const googleLogin = async (req, res) => {
       }
     );
 
-    console.log("userRes is : ", userRes.data)
+    
 
 
 
@@ -349,8 +348,9 @@ export const logout = async (req, res) => {
 
 export const refreshAccessToken = async (req, res) => {
   try {
+    
     const refreshToken = req.cookies.refreshToken;
-    console.log("The RefreshToken is : ", refreshToken)
+    
 
 
 

@@ -33,7 +33,7 @@ const WholeBlog = () => {
 
 
   const { data: blog, isLoading: blogLoading, isError: blogError } = useBlogById(blogId);
-  const { data: comments = [], isLoading: commentsLoading } = useCommentsByBlog(blogId , !!blog);
+  const { data: comments = [], isLoading: commentsLoading } = useCommentsByBlog(blogId, !!blog);
 
 
   const [comment, setComment] = useState("");
@@ -172,15 +172,15 @@ const WholeBlog = () => {
           </div>
 
           <h1 className="max-w-[700px] mx-auto text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-gray-900 leading-tight">
-  {blog.title}
-</h1>
+            {blog.title}
+          </h1>
 
           <div className="flex items-center justify-center gap-4 text-sm font-medium text-gray-500">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-200 to-gray-400 p-[2px] shadow-sm transform transition hover:scale-105">
-                <img 
-                  src={blog.createdBy?.avatar || assets.user_icon} 
-                  className="w-full h-full rounded-full border-2 border-white object-cover" 
+                <img
+                  src={blog.createdBy?.avatar || assets.user_icon}
+                  className="w-full h-full rounded-full border-2 border-white object-cover"
                   alt="Author avatar"
                 />
               </div>
@@ -198,16 +198,16 @@ const WholeBlog = () => {
         </header>
 
         <div className="w-[60%] mx-auto rounded-[2rem] overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] mb-16 ring-1 ring-gray-900/5 relative group">
-  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-  <img
-    src={blog.image}
-    alt={blog.subTitle}
-    loading="lazy"
-    decoding="async"
-    className="w-full h-auto object-cover transform transition-transform duration-1000 group-hover:scale-105"
-  />
-</div>
+          <img
+            src={blog.image}
+            alt={blog.subTitle}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-cover transform transition-transform duration-1000 group-hover:scale-105"
+          />
+        </div>
 
         {ailoading && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/20 backdrop-blur-md transition-all">
@@ -231,7 +231,7 @@ const WholeBlog = () => {
             <button
               disabled={ailoading}
               onClick={() => summariseMutation.mutate()}
-              className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-900 text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+              className="group relative inline-flex items-center justify-center gap-2    text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
               {ailoading ? (
@@ -241,7 +241,9 @@ const WholeBlog = () => {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  ✨ <span className="tracking-wide">Read AI Summary</span>
+                  <span className="all-[unset]">
+                    <Button />
+                  </span>
                 </span>
               )}
             </button>
@@ -290,7 +292,7 @@ const WholeBlog = () => {
                   rows={3}
                   className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50/50 px-6 py-5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:bg-white transition-all placeholder:text-gray-400 font-medium"
                 />
-                
+
                 <div className="flex justify-end mt-4">
                   <button
                     type="submit"
@@ -366,3 +368,6 @@ const WholeBlog = () => {
   );
 };
 export default WholeBlog;
+
+
+{/* ✨ <span className="tracking-wide">Read AI Summary</span> */ }
