@@ -183,8 +183,8 @@ const Comments = () => {
           </div>
         )}
 
-        <div className="w-full min-w-0 flex-1 relative overflow-hidden">
-          <table className="w-full table-auto text-left border-collapse">
+       <div className="w-full min-w-0 flex-1 relative overflow-x-auto">
+         <table className="min-w-[850px] w-full table-auto text-left border-collapse">
             <thead className="bg-gray-50/50 border-b border-gray-100 sticky top-0 z-10">
               <tr className="text-[11px] uppercase tracking-widest text-gray-400 font-bold">
                 <th className="px-4 lg:px-6 py-4 w-[6%] whitespace-nowrap">#</th>

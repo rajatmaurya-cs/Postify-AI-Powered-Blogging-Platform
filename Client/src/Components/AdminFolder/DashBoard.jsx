@@ -96,7 +96,7 @@ const DashBoard = () => {
 
 
 
-  
+
 
 
   const handleTogglePublish = async (blogId, isPublished) => {
@@ -200,97 +200,97 @@ const DashBoard = () => {
           </div>
 
           {/* Recent Content Table */}
-         <div className="w-full">
-  {isLoading && (
-    <div className="absolute inset-x-0 top-20 bottom-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin"></div>
-        <p className="text-sm font-semibold text-gray-500 tracking-wide animate-pulse">Loading workspace...</p>
-      </div>
-    </div>
-  )}
+          <div className="w-full overflow-x-auto">
 
-  <table className="w-full text-left border-collapse table-auto">
-    <thead>
-      <tr className="bg-white border-b border-gray-100 text-xs uppercase tracking-widest text-gray-400 font-bold">
-        <th className="px-6 py-5 w-16">ID</th>
-        <th className="px-6 py-5">Story Title</th>
-        <th className="px-6 py-5 w-32">Date</th>
-        <th className="px-6 py-5 w-28">Status</th>
-        <th className="px-6 py-5 w-36">Visibility</th>
-      </tr>
-    </thead>
-    <tbody className="divide-y divide-gray-50">
-      {latestBlogs.map((blog, index) => (
-        <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors">
-          <td className="px-6 py-6 text-sm font-semibold text-gray-400">
-            {(index + 1).toString().padStart(2, "0")}
-          </td>
-          <td className="px-6 py-6">
-            <p className="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2 pr-2">
-              {blog.title}
-            </p>
-            <p className="text-xs text-gray-500 mt-1.5 font-bold uppercase tracking-wide bg-gray-100 inline-block px-2.5 py-1 rounded-md">
-              {blog.category}
-            </p>
-          </td>
-          <td className="px-6 py-6 text-sm text-gray-600 font-medium whitespace-nowrap">
-            {blog.createdAt
-              ? new Date(blog.createdAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              : "—"}
-          </td>
-          <td className="px-6 py-6">
-            <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide ${
-                blog.isPublished
-                  ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                  : "bg-amber-50 text-amber-700 border border-amber-100"
-              }`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
-                }`}
-              ></span>
-              {blog.isPublished ? "LIVE" : "DRAFT"}
-            </span>
-          </td>
-          <td className="px-6 py-6">
-            <button
-              className={`w-full relative overflow-hidden whitespace-nowrap px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${
-                blog.isPublished
-                  ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
-                  : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
-              } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
-              onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
-              disabled={disableAll}
-            >
-              {blog.isPublished ? "Unpublish" : "Publish"}
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+            {isLoading && (
+              <div className="absolute inset-x-0 top-20 bottom-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-8 h-8 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                  <p className="text-sm font-semibold text-gray-500 tracking-wide animate-pulse">Loading workspace...</p>
+                </div>
+              </div>
+            )}
 
-  {latestBlogs.length === 0 && !isLoading && !isError && (
-    <div className="py-20 text-center border-t border-gray-50">
-      <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-        </svg>
-      </div>
-      <h4 className="text-lg font-bold text-gray-900 mb-1">No Activity Yet</h4>
-      <p className="text-gray-500 font-medium">When you write stories, they will appear here.</p>
-    </div>
-  )}
-</div>
+            <table className="min-w-[700px] w-full text-left border-collapse table-auto">
 
-         
+              <thead>
+                <tr className="bg-white border-b border-gray-100 text-xs uppercase tracking-widest text-gray-400 font-bold">
+                  <th className="px-6 py-5 w-16">ID</th>
+                  <th className="px-6 py-5">Story Title</th>
+                  <th className="px-6 py-5 w-32">Date</th>
+                  <th className="px-6 py-5 w-28">Status</th>
+                  <th className="px-6 py-5 w-36">Visibility</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-gray-50">
+                {latestBlogs.map((blog, index) => (
+                  <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-6 text-sm font-semibold text-gray-400">
+                      {(index + 1).toString().padStart(2, "0")}
+                    </td>
+                    <td className="px-6 py-6">
+                      <p className="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2 pr-2">
+                        {blog.title}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1.5 font-bold uppercase tracking-wide bg-gray-100 inline-block px-2.5 py-1 rounded-md">
+                        {blog.category}
+                      </p>
+                    </td>
+                    <td className="px-6 py-6 text-sm text-gray-600 font-medium whitespace-nowrap">
+                      {blog.createdAt
+                        ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                        : "—"}
+                    </td>
+                    <td className="px-6 py-6">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide ${blog.isPublished
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                            : "bg-amber-50 text-amber-700 border border-amber-100"
+                          }`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
+                            }`}
+                        ></span>
+                        {blog.isPublished ? "LIVE" : "DRAFT"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-6">
+                      <button
+                        className={`w-full relative overflow-hidden whitespace-nowrap px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${blog.isPublished
+                            ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
+                            : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
+                          } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+                        onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
+                        disabled={disableAll}
+                      >
+                        {blog.isPublished ? "Unpublish" : "Publish"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {latestBlogs.length === 0 && !isLoading && !isError && (
+              <div className="py-20 text-center border-t border-gray-50">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <h4 className="text-lg font-bold text-gray-900 mb-1">No Activity Yet</h4>
+                <p className="text-gray-500 font-medium">When you write stories, they will appear here.</p>
+              </div>
+            )}
+          </div>
+
+
           <div className="flex justify-center pt-4 pb-4">
             <button
               onClick={() => navigate("/")}

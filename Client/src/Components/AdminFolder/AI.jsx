@@ -162,7 +162,13 @@ const AI = () => {
                       </span>
                     </td>
                     <td className="px-8 py-6 text-sm text-gray-500 font-medium whitespace-nowrap">
-                      {log.createdAt ? Moment(log.createdAt).format("MMM DD, YYYY • h:mm A") : "—"}
+                      {log.createdAt
+              ? new Date(log.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : "—"}
                     </td>
                   </tr>
                 ))

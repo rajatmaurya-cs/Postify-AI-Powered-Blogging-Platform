@@ -135,7 +135,7 @@ const BlogList = () => {
           </div>
         </div>
 
-        <div className="w-full min-w-0 flex-1 relative overflow-hidden">
+        <div className="w-full min-w-0 flex-1 relative overflow-x-auto">
           {isLoading && (
             <div className="absolute inset-1 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center rounded-[2rem]">
               <div className="flex flex-col items-center gap-3 bg-white p-6 rounded-3xl shadow-xl border border-gray-100">
@@ -145,7 +145,7 @@ const BlogList = () => {
             </div>
           )}
 
-          <table className="w-full table-auto border-collapse text-left">
+          <table className="min-w-[850px] w-full table-auto border-collapse text-left">
             <thead>
               <tr className="bg-white border-b border-gray-100/80 text-[11px] font-bold uppercase tracking-widest text-gray-400">
                 <th className="px-4 lg:px-6 py-4 w-[6%] whitespace-nowrap">#</th>
@@ -179,25 +179,23 @@ const BlogList = () => {
                   <td className="px-4 lg:px-6 py-5 text-sm text-gray-600 font-medium whitespace-nowrap">
                     {blog.createdAt
                       ? new Date(blog.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
                       : "—"}
                   </td>
 
                   <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide ${
-                        blog.isPublished
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide ${blog.isPublished
                           ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
                           : "bg-amber-50 text-amber-700 border border-amber-100"
-                      }`}
+                        }`}
                     >
                       <span
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
-                        }`}
+                        className={`w-1.5 h-1.5 rounded-full ${blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
+                          }`}
                       ></span>
                       {blog.isPublished ? "PUBLISHED" : "DRAFT"}
                     </span>
@@ -207,17 +205,16 @@ const BlogList = () => {
                     <button
                       onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
                       disabled={disableAll || toggleMutation.isPending}
-                      className={`min-w-[110px] px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${
-                        blog.isPublished
+                      className={`min-w-[110px] px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${blog.isPublished
                           ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
                           : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
-                      } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+                        } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
                     >
                       {toggleMutation.isPending
                         ? "Wait..."
                         : blog.isPublished
-                        ? "Hide"
-                        : "Make Live"}
+                          ? "Hide"
+                          : "Make Live"}
                     </button>
                   </td>
 
