@@ -86,25 +86,7 @@ const DashBoard = () => {
 
 
 
-  // const deleteMutation = useMutation({
-  //   mutationFn: async (blogId) => {
-  //     const res = await API.post("/blog/delete-blog", { blogId });
-  //     if (!res.data?.success) throw new Error(res.data?.message || "Failed to delete blog");
-  //     return res.data;
-  //   },
-  //   onMutate: () => toast.loading("Deleting blog...", { id: "delete" }),
-  //   onSuccess: (data) => {
-  //     toast.success(data.message || "Deleted!", { id: "delete" });
-  //     queryClient.invalidateQueries({ queryKey: ["latest-blogs"] });
-  //     queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
-  //   },
-  //   onError: (err) => {
-  //     const message =
-  //       err?.response?.data?.message || err?.message || "Failed to Delete the blog";
 
-  //     toast.error(message, { id: "toggle" });
-  //   }
-  // });
 
   const disableAll = toggleMutation.isPending;
 
@@ -114,22 +96,7 @@ const DashBoard = () => {
 
 
 
-  // const handleRemove = async (blogId) => {
-  //   const result = await Swal.fire({
-  //     icon: "warning",
-  //     title: "Delete this Blog?",
-  //     text: "This action cannot be undone.",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Yes, delete",
-  //     cancelButtonText: "Cancel",
-  //     confirmButtonColor: "#d33",
-  //   });
-
-  //   if (result.isConfirmed) {
-  //     deleteMutation.mutate(blogId);
-  //   }
-  // };
-
+  
 
 
   const handleTogglePublish = async (blogId, isPublished) => {
