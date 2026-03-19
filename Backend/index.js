@@ -26,7 +26,9 @@ app.set("trust proxy", 1);
 
 
 app.get("/api/health", (req, res) => {
+
   res.json({ status: "ok", service: "Postify Backend" });
+
 });
 
 
@@ -59,12 +61,16 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+
 app.options(/.*/, cors(corsOptions));
 
 
 
 
 app.use(express.json());
+
+
 app.use(cookieParser());
 
 

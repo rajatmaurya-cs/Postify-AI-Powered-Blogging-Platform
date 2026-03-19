@@ -12,7 +12,7 @@ const Footer = () => {
           {/* Left - Developer Info */}
           <div className="flex flex-col items-center lg:items-start space-y-2">
             <a
-              href="https://rajat-dev.vercel.app"
+              href="https://portfolio-site-kappa-lilac.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-2 text-gray-900 font-bold tracking-tight hover:text-indigo-600 transition-colors"

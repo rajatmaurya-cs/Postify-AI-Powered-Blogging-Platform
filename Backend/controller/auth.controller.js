@@ -84,7 +84,9 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
+
     let { email, password } = req.body;
+    
     email = email.toLowerCase().trim();
 
 
@@ -122,11 +124,13 @@ export const login = async (req, res) => {
 
 
     const accessToken = createAccessToken(user);
+
     const refreshToken = createRefreshToken(user);
 
 
 
     await RefreshToken.deleteMany({ userId: user._id });
+
     await RefreshToken.create({
       userId: user._id,
       token: hashToken(refreshToken),
@@ -348,6 +352,7 @@ export const logout = async (req, res) => {
 
 export const refreshAccessToken = async (req, res) => {
   try {
+    
     
     const refreshToken = req.cookies.refreshToken;
     

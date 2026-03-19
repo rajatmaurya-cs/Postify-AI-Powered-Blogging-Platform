@@ -133,7 +133,7 @@ export const getallblog = async (req, res) => {
       .skip(skip)
       .limit(limit)
       .populate("moderatedBy", "fullName")
-      .populate("createdBy", "fullName")
+      .populate("createdBy", "fullName avatar")
       .lean();
 
     const total = await Blog.countDocuments(filter);

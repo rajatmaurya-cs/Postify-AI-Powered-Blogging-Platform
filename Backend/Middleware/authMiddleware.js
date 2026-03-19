@@ -1,29 +1,35 @@
 import { redisClient } from "../Config/redis.js";
-import { validateAccessToken } from "../Service/Authentication.js"; 
+import { validateAccessToken } from "../Service/Authentication.js";
 
- const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     const bearerToken = req.headers.authorization?.startsWith("Bearer ")
       ? req.headers.authorization.split(" ")[1]
       : null;
+      
     const token = req.cookies?.accessToken || bearerToken;
-    
-   
+
+
 
     if (!token) {
       return res.status(401).json({ message: "No access token" });
     }
 
-    
+
     const isBlocked = await redisClient.get(`bl_${token}`);
+
     if (isBlocked) {
+
       return res.status(401).json({
+
         message: "Session expired. Please login again.",
+
       });
     }
 
-    
+
     const decoded = validateAccessToken(token);
+    
     req.user = decoded;
 
     next();
@@ -34,4 +40,4 @@ import { validateAccessToken } from "../Service/Authentication.js";
 };
 
 
-  export default authMiddleware;
+export default authMiddleware;

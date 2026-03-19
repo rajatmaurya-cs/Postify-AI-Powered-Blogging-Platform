@@ -37,7 +37,11 @@ function createRefreshToken(user) {
 /*----------------validateAccessToken--------------------------- */
 
 function validateAccessToken(token) {
+
+// header.payload.signature
+
   return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); 
+
 }
 
 

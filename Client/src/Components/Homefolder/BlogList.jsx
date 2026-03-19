@@ -1,4 +1,4 @@
-import  { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { blogCategories, assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
 import { useBlogsInfinite } from "../../hooks/useBlogsInfinite";
@@ -18,7 +18,7 @@ const BlogList = () => {
     hasNextPage,
     isFetchingNextPage,
     isFetching,
-  } = useBlogsInfinite({ category: activeCategory, limit: LIMIT  , isAdmin : false});
+  } = useBlogsInfinite({ category: activeCategory, limit: LIMIT, isAdmin: false });
 
 
   const blogs = useMemo(() => {
@@ -43,10 +43,10 @@ const BlogList = () => {
       <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-white to-transparent pointer-events-none z-0"></div>
 
       <div className="relative max-w-7xl mx-auto px-6 sm:px-12 lg:px-20 z-10">
-        
+
         {/* Search & Filter Header Section */}
         <div className="flex flex-col items-center justify-center space-y-12 mb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          
+
           <div className="w-full max-w-2xl relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-100 rounded-[2rem] blur-xl opacity-50 group-hover:opacity-100 transition duration-500 z-0"></div>
             <div className="relative flex items-center bg-white/90 backdrop-blur-xl border border-gray-200/80 p-2 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all z-10">
@@ -79,10 +79,9 @@ const BlogList = () => {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={`relative px-7 py-3 rounded-full text-sm font-bold tracking-wide transition-all duration-300 ease-out
-                  ${
-                    activeCategory === cat
-                      ? "bg-gray-900 text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] scale-[1.02]"
-                      : "bg-white/80 backdrop-blur-md text-gray-600 border border-gray-200/80 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm hover:scale-[1.02]"
+                  ${activeCategory === cat
+                    ? "bg-gray-900 text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] scale-[1.02]"
+                    : "bg-white/80 backdrop-blur-md text-gray-600 border border-gray-200/80 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm hover:scale-[1.02]"
                   }`}
               >
                 {cat}
@@ -144,12 +143,16 @@ const BlogList = () => {
                       <h3 className="text-xl font-bold text-gray-900 leading-tight mb-4 group-hover:text-indigo-600 transition-colors line-clamp-2">
                         {blog.title}
                       </h3>
-                      
+
                       <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <img 
-                            src={blog.createdBy?.avatar || assets.user_icon} 
-                            alt={blog.createdBy?.fullName || "Author"}
+                          <img
+                            src={blog?.createdBy?.avatar || assets.user_icon}
+                            alt={blog?.createdBy?.fullName || "Author"}
+                            referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              e.currentTarget.src = assets.user_icon;
+                            }}
                             className="w-8 h-8 rounded-full object-cover bg-gray-100 ring-2 ring-white shadow-sm"
                           />
                           <span className="text-sm font-semibold text-gray-700">{blog.createdBy?.fullName || "Author"}</span>
@@ -189,7 +192,7 @@ const BlogList = () => {
                     <div className="h-px w-12 bg-gray-200"></div>
                   </div>
                 )}
-                
+
                 {!isFetchingNextPage && isFetching && (
                   <p className="text-center text-gray-400 mt-6 text-sm font-medium animate-pulse">Syncing latest metrics...</p>
                 )}
