@@ -12,6 +12,7 @@ import Config from "../Models/Config.js";
 
 export const addComment = async (req, res) => {
   try {
+
     console.log("Entered in addComment Backend");
 
     if (!req.user) {
@@ -25,6 +26,7 @@ export const addComment = async (req, res) => {
 
     /* ---------------- COMMENT RATE LIMIT ---------------- */
     const key = `CommentAttempts:${userId}`;
+    
     const attempts = await redisClient.incr(key);
 
     if (attempts === 1) {

@@ -73,7 +73,14 @@ const WholeBlog = () => {
 
       queryClient.invalidateQueries({ queryKey: ["comments", blogId] });
     },
-    onError: (err) => toast.error(err.message || "Comment failed"),
+     onError: (err) => {
+      const message =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to Add The comment";
+
+      toast.error(message, { id: "toggle" });
+    },
   });
 
 
@@ -371,4 +378,3 @@ const WholeBlog = () => {
 export default WholeBlog;
 
 
-{/* ✨ <span className="tracking-wide">Read AI Summary</span> */ }
