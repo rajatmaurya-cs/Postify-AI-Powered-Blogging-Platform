@@ -20,7 +20,7 @@ const checkAiLimit = async (req, res, next) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    if (role === "ADMIN") return next();
+   
 
     // --------  Per-minute per-user rate limit (Redis) --------
     const perMinute = Number(config.aiPerMinuteLimit ?? 0);
@@ -71,6 +71,9 @@ const checkAiLimit = async (req, res, next) => {
         message: "Daily AI app limit reached. Try again tomorrow.",
       });
     }
+
+    
+     if (role === "ADMIN") return next();
 
     // --------  Per-user daily limit (Mongo, atomic & safe) 
 
