@@ -78,6 +78,7 @@ const checkAiLimit = async (req, res, next) => {
     // --------  Per-user daily limit (Mongo, atomic & safe) 
 
     const userLimit = Number(config.dailyAiLimit ?? 0);
+
     if (!Number.isFinite(userLimit) || userLimit <= 0) {
       return res
         .status(500)
@@ -100,6 +101,7 @@ const checkAiLimit = async (req, res, next) => {
         },
         { upsert: true, new: true }
       );
+      
     } catch (err) {
       if (err?.code === 11000) {
       

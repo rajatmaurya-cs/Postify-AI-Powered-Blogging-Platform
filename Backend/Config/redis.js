@@ -12,3 +12,4 @@ export const connectRedis = async () => {
    await redisClient.connect();
    console.log("✅ Redis Connected Successfully");
 };
+

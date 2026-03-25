@@ -1,11 +1,18 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AuthContext } from "../Context/Authcontext";
 import { assets } from "../assets/assets";
 
 const BlogReport = ({ type, analysis, onClose }) => {
   const { user } = useContext(AuthContext);
+  const [mounted, setMounted] = useState(false);
 
-  if (!analysis) return null;
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!analysis || !mounted) return null;
 
   const verdictColor =
     analysis.verdict === "Good"
@@ -22,8 +29,8 @@ const BlogReport = ({ type, analysis, onClose }) => {
   const typeLabel =
     type === "ai" ? "🤖 AI Generated" : "👤 Human Written";
 
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999]">
       <div className="relative bg-black text-white w-[420px] rounded-2xl shadow-2xl p-6 border border-gray-800">
 
      
@@ -104,7 +111,8 @@ const BlogReport = ({ type, analysis, onClose }) => {
           This report is auto-generated and requires human review.
         </p>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
