@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState, Suspense, lazy } from "react";
+import React, { useContext, useEffect, useMemo, useState, Suspense, lazy , useRef } from "react";
 import Moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -25,6 +25,7 @@ import { useCommentsByBlog } from "./hooks/useCommentsByBlog";
 
 
 const WholeBlog = () => {
+    const contentRef = useRef(null);
   const { blogId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -117,7 +118,22 @@ const WholeBlog = () => {
   });
 
 
+
+
   const ailoading = summariseMutation.isPending;
+
+
+
+useEffect(() => {
+  if (aicontent && !ailoading) {
+    contentRef.current?.scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'start' 
+    });
+  }
+}, [aicontent, ailoading]);
+
+
 
   useEffect(() => {
     document.body.style.overflow = ailoading ? "hidden" : "";
@@ -230,7 +246,8 @@ const WholeBlog = () => {
           </div>
         )}
 
-        <div className="prose prose-lg md:prose-xl max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900 prose-p:text-gray-600 prose-p:leading-relaxed prose-a:text-indigo-600 prose-a:decoration-indigo-300 hover:prose-a:decoration-indigo-600 prose-img:rounded-3xl prose-blockquote:border-l-4 prose-blockquote:border-gray-900 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:not-italic prose-blockquote:text-gray-700">
+        <div   ref={contentRef}  
+        className="prose prose-lg md:prose-xl max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900 prose-p:text-gray-600 prose-p:leading-relaxed prose-a:text-indigo-600 prose-a:decoration-indigo-300 hover:prose-a:decoration-indigo-600 prose-img:rounded-3xl prose-blockquote:border-l-4 prose-blockquote:border-gray-900 prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:not-italic prose-blockquote:text-gray-700">
           <div className="rich-text" dangerouslySetInnerHTML={contentHtml} />
         </div>
 
@@ -239,9 +256,9 @@ const WholeBlog = () => {
             <button
               disabled={ailoading}
               onClick={() => summariseMutation.mutate()}
-              className="group relative inline-flex items-center justify-center gap-2    text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+              className=""
             >
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
+
               {ailoading ? (
                 <span className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -249,9 +266,9 @@ const WholeBlog = () => {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <span className="all-[unset]">
+              
                     <Button />
-                  </span>
+                
                 </span>
               )}
             </button>
