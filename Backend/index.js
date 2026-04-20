@@ -51,7 +51,7 @@ await init();
 
 
 /* ================= MIDDLEWARE ================= */
-process.env.FRONTEND_URL
+
 
 const corsOptions = {
    origin: [
