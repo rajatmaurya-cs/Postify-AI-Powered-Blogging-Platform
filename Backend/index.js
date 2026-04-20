@@ -53,12 +53,27 @@ await init();
 /* ================= MIDDLEWARE ================= */
 
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+];
+
 const corsOptions = {
-   origin: [
-    process.env.FRONTEND_URL,
-    "http://localhost:3001", 
-    "http://localhost:3000"
-  ],
+  origin: function (origin, callback) {
+    console.log("Request Origin:", origin);
+
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error("Not allowed by CORS"));
+  },
+
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
