@@ -60,6 +60,8 @@
 
 
 
+import mongoose from "mongoose";
+
 const commentSchema = new mongoose.Schema({
   content: {
     type: String,
@@ -103,10 +105,14 @@ const commentSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-
-// ⭐️
+// Compound index for: "get approved comments for a blog, newest first"
 commentSchema.index({
   blogId: 1,
   isApproved: 1,
   createdAt: -1
 });
+
+// This line was missing
+const Comment = mongoose.model("Comment", commentSchema);
+
+export default Comment;
