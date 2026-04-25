@@ -194,15 +194,19 @@ export const getCommentsByBlogId = async (req, res) => {
   try {
     const { blogId } = req.params;
 
+    console.log("The blog id is: ",blogId);
+
     const comments = await Comment.find({
       blogId,
       isApproved: true
     })
-      .select("content createdBy createdAt updatedAt riskLevel")
+      .select("content createdBy createdAt updatedAt riskLevel isApproved")
       .populate("createdBy", "fullName avatar")
       .sort({ createdAt: -1 })
       .lean();
 
+      console.log("The comments are: ",comments)
+      
     return res.status(200).json({
       success: true,
       message: comments.length

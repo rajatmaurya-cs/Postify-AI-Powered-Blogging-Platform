@@ -38,6 +38,8 @@ const WholeBlog = () => {
   
   const { data: comments = [], isLoading: commentsLoading } = useCommentsByBlog(blogId, !!blog);
 
+  console.log("The Fronted comments are: ",comments)
+
 
   const [comment, setComment] = useState("");
   const [content, setContent] = useState("");
@@ -54,10 +56,10 @@ const WholeBlog = () => {
   }, [blogId, blog?.content]);
 
 
-  const approvedComments = useMemo(
-    () => comments.filter((c) => c.isApproved),
-    [comments]
-  );
+  // const approvedComments = useMemo(
+  //   () => comments.filter((c) => c.isApproved),
+  //   [comments]
+  // );
 
 
   const contentHtml = useMemo(() => ({ __html: content }), [content]);
@@ -307,7 +309,7 @@ useEffect(() => {
             <div className="bg-white rounded-3xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-gray-100">
               <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-6 flex items-center gap-3">
                 <span>Discussion</span>
-                <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full font-semibold">{approvedComments.length}</span>
+                <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full font-semibold">{comments.length}</span>
               </h3>
 
               <form onSubmit={handlecomments} className="relative mb-12">
@@ -336,14 +338,14 @@ useEffect(() => {
                     <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
                     <p className="text-sm font-medium">Loading responses...</p>
                   </div>
-                ) : approvedComments.length === 0 ? (
+                ) : comments.length === 0 ? (
                   <div className="py-16 text-center bg-gray-50/50 rounded-2xl border border-gray-100 border-dashed">
                     <p className="text-gray-500 font-medium tracking-wide">
                       No thoughts shared yet. Start the conversation.
                     </p>
                   </div>
                 ) : (
-                  approvedComments.map((c) => (
+                  comments.map((c) => (
                     <div
                       key={c._id}
                       className="group flex gap-5 p-6 rounded-2xl hover:bg-gray-50 border border-transparent hover:border-gray-100 transition-colors"
