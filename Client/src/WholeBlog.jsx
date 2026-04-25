@@ -28,6 +28,7 @@ const WholeBlog = () => {
     const contentRef = useRef(null);
   const { blogId } = useParams();
   const navigate = useNavigate();
+  
   const queryClient = useQueryClient();
 
   const { isLoggedIn } = useContext(AuthContext);

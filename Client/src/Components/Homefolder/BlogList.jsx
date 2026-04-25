@@ -26,6 +26,7 @@ const BlogList = () => {
   }, [data]);
 
   const { filteredBlogs, publishedBlogs } = useMemo(() => {
+    
     const searchText = search.toLowerCase().trim();
 
     const filtered = (blogs || []).filter((blog) => {

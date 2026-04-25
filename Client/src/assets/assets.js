@@ -56,6 +56,7 @@ export const assets = {
 
 
 }
+
 export const blogCategories = [
     'All',
     'Technology',

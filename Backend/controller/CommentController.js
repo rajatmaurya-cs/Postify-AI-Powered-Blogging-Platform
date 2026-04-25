@@ -155,42 +155,69 @@ export const addComment = async (req, res) => {
 
 
 
-  export const getCommentsByBlogId = async (req, res) => {
-    try {
-      const { blogId } = req.params;
+  // export const getCommentsByBlogId = async (req, res) => {
+  //   try {
+  //     const { blogId } = req.params;
 
-      const comments = await Comment.find({
-        blogId,
-        isApproved: true
-      })
-        .populate("createdBy", "fullName email avatar")
-        .sort({ createdAt: -1 });
-
-
-      if (comments.length === 0) {
-        return res.status(200).json({
-          success: true,
-          message: "No comments yet",
-          comments: []
-        });
-      }
-
-      res.status(200).json({
-        success: true,
-        message: "Comments fetched successfully",
-        comments
-      });
-
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
-    }
-  };
+  //     const comments = await Comment.find({
+  //       blogId,
+  //       isApproved: true
+  //     })
+  //       .populate("createdBy", "fullName email avatar")
+  //       .sort({ createdAt: -1 });
 
 
+  //     if (comments.length === 0) {
+  //       return res.status(200).json({
+  //         success: true,
+  //         message: "No comments yet",
+  //         comments: []
+  //       });
+  //     }
 
+  //     res.status(200).json({
+  //       success: true,
+  //       message: "Comments fetched successfully",
+  //       comments
+  //     });
+
+  //   } catch (error) {
+  //     res.status(500).json({
+  //       success: false,
+  //       message: error.message
+  //     });
+  //   }
+  // };
+
+
+export const getCommentsByBlogId = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+
+    const comments = await Comment.find({
+      blogId,
+      isApproved: true
+    })
+      .select("content createdBy createdAt updatedAt riskLevel")
+      .populate("createdBy", "fullName avatar")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.status(200).json({
+      success: true,
+      message: comments.length
+        ? "Comments fetched successfully"
+        : "No comments yet",
+      comments
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error"
+    });
+  }
+};
 
 
   export const toggleComment = async (req, res) => {

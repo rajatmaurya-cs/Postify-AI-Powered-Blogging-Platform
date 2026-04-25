@@ -13,6 +13,7 @@ const refreshClient = axios.create({
 });
 
 let refreshPromise = null;
+
 let refreshFailed = false;
 
 API.interceptors.response.use(
