@@ -56,11 +56,7 @@ const WholeBlog = () => {
   }, [blogId, blog?.content]);
 
 
-  // const approvedComments = useMemo(
-  //   () => comments.filter((c) => c.isApproved),
-  //   [comments]
-  // );
-
+ 
 
   const contentHtml = useMemo(() => ({ __html: content }), [content]);
 
