@@ -6,8 +6,9 @@ import adminMiddleware from '../Middleware/adminMiddleware.js';
 const commentRouter = express.Router();
 
 /* ================= Add Comment ================= */
-// commentRouter.post('/addcomment' ,authMiddleware,addComment) ✅
-commentRouter.post('/addcomment',addComment) // Only for Testing
+commentRouter.post('/addcomment' ,authMiddleware,addComment) 
+
+// commentRouter.post('/addcomment',addComment) // Only for Testing
 
 
 /* ================= Get CommentById ================= */

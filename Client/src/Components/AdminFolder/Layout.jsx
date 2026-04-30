@@ -9,7 +9,9 @@ import { Menu, X } from "lucide-react";
 const Layout = () => {
 
     const navigate = useNavigate();
+    
     const { logout, isLoggingOut } = useContext(AuthContext)
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 

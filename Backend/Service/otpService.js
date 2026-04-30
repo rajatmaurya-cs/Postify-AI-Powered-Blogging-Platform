@@ -5,15 +5,18 @@ import { sendOtpEmail } from "../utils/mailer.js";
 
 
 export const sendOtpService = async (email, purpose) => {
+
   if (!purpose) {
     throw new Error("OTP purpose is required");
   }
 
   const otpKey = `otp:${purpose}:${email}`;
+  
   const cooldownKey = `otpCooldown:${purpose}:${email}`;
 
 
   const cooldown = await redisClient.get(cooldownKey);
+  
   if (cooldown) {
     throw new Error("Please wait 60 seconds before requesting another OTP");
   }

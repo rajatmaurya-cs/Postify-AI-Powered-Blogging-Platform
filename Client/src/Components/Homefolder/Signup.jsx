@@ -20,8 +20,9 @@ const Signup = () => {
   const googleLogin = useGoogleAuth();
 
   const { sendOtp, sending, otpSent, setOtpSent } = useSendOtp("signup");
-  const { verifyOtp, isVerifying, isVerified, setIsVerified } =
-    useVerifyOtp("signup");
+
+  const { verifyOtp, isVerifying, isVerified, setIsVerified } = useVerifyOtp("signup");
+    
 
   
   const signupMutation = useMutation({
@@ -95,7 +96,7 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafbfc] px-4 font-sans relative overflow-hidden">
-      {/* Abstract Background Ornaments */}
+
       <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-200/40 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-200/40 blur-[120px] rounded-full pointer-events-none"></div>
 

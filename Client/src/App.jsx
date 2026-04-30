@@ -41,6 +41,7 @@ function App() {
 
   return (
     <Suspense fallback={<div></div>}>
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />

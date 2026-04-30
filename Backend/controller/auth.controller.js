@@ -19,7 +19,9 @@ import { redisClient } from "../Config/redis.js";
 
 /*------------------------------------- Model Import ----------------------------------- */
 import User from "../Models/User.js";
+
 import VerifiedEmail from "../Models/VerifiedEmail.js";
+
 import RefreshToken from "../Models/RefreshToken.js";
 
 
@@ -197,6 +199,7 @@ export const googleLogin = async (req, res) => {
 
 
     const { tokens } = await oauth2client.getToken(code);
+
     oauth2client.setCredentials(tokens);
 
 
@@ -213,10 +216,7 @@ export const googleLogin = async (req, res) => {
       }
     );
 
-    
-
-
-
+  
     const {
       id: googleId,
 
@@ -224,11 +224,6 @@ export const googleLogin = async (req, res) => {
       name: fullName,
       picture,
     } = userRes.data;
-
-
-
-
-
 
 
     let user = await User.findOne({
@@ -259,6 +254,7 @@ export const googleLogin = async (req, res) => {
 
 
     const accessToken = createAccessToken(user);
+
     const refreshToken = createRefreshToken(user);
 
 
@@ -320,7 +316,9 @@ export const googleLogin = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
+
     const refreshToken = req.cookies.refreshToken;
+
     const accessToken = req.cookies.accessToken;
 
     if (refreshToken) {
@@ -463,12 +461,14 @@ export const verifyOtp = async (req, res) => {
     }
 
     email = email.toLowerCase().trim();
-    purpose = purpose.toUpperCase().trim(); // e.g. SIGNUP, RESET_PASSWORD
+
+    purpose = purpose.toUpperCase().trim(); 
 
     const otpKey = `otp:${purpose}:${email}`;
+
     const attemptsKey = `otpAttempts:${purpose}:${email}`;
 
-    // ✅ Get OTP from Redis (purpose-based)
+    
     const storedOtp = await redisClient.get(otpKey);
 
     if (!storedOtp) {
@@ -478,7 +478,7 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
-    // ✅ Attempts limiter (purpose-based)
+   
     const attempts = await redisClient.incr(attemptsKey);
 
     if (attempts === 1) {
@@ -492,7 +492,7 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
-    // ✅ Compare OTP
+
     const isMatch = await bcrypt.compare(otp.toString(), storedOtp);
 
     if (!isMatch) {
@@ -502,8 +502,9 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
-    // ✅ Success: delete OTP + attempts
+ 
     await redisClient.del(otpKey);
+
     await redisClient.del(attemptsKey);
 
     /**
@@ -522,6 +523,7 @@ export const verifyOtp = async (req, res) => {
       success: true,
       message: "Email verified successfully",
     });
+
   } catch (error) {
     console.log("verifyOtp error:", error);
 
@@ -534,7 +536,7 @@ export const verifyOtp = async (req, res) => {
 
 
 /*---------------------------------------verifyemails------------------------------------- */
-export const verifyEmails = async (req, res) => {
+export const verifyEmails = async (req, res) => { // Used for to Prevent PageRefresh again api calling
   try {
 
     let { email } = req.body;
@@ -591,8 +593,6 @@ export const resetpassword = async (req, res) => {
         message: "Invalid Email",
       });
     }
-
-
 
 
     user.password = newpassword;
