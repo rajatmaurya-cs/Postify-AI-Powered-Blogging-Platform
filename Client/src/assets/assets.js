@@ -21,6 +21,8 @@ import setting from './setting.png'
 
 import Postify from "./Postify.webp"
 
+import Mail from './Mail.jpg'
+
 
 export const assets = {
 
@@ -51,6 +53,8 @@ export const assets = {
 
     Postify,
     BackGround,
+
+    Mail
 
 
 

@@ -1,47 +1,4 @@
-import nodemailer from "nodemailer";
-
-import {assets} from '../../Client/src/assets/assets'
-
-
-const transporter = nodemailer.createTransport({
-  host: process.env.BREVO_SMTP_HOST || "smtp-relay.brevo.com",
-  port: Number(process.env.BREVO_SMTP_PORT || 587),
-  secure: false, 
-  auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_PASS,
-  },
-});
-
-// export async function sendOtpEmail(to, otp) {
-
- 
-//   const info = await transporter.sendMail({
-//     from: `${process.env.BREVO_FROM_NAME} <${process.env.BREVO_FROM_EMAIL}>`,
-//     to,
-//     subject: "OTP Verification",
-//     html: `
-//       <div style="font-family: Arial, sans-serif;">
-//         <h2>OTP Verification</h2>
-//         <p>Your OTP is:</p>
-//         <h1 style="letter-spacing: 6px;">${otp}</h1>
-//         <p>This code is valid for <b>5 minutes</b>.</p>
-//       </div>
-//     `,
-//   });
- 
-//   return info;
-// }
-
-
-export async function sendOtpEmail(to, otp) {
-
- 
-  const info = await transporter.sendMail({
-    from: `${process.env.BREVO_FROM_NAME} <${process.env.BREVO_FROM_EMAIL}>`,
-    to,
-    subject: "OTP Verification",
-    html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -153,7 +110,7 @@ export async function sendOtpEmail(to, otp) {
               -->
               <img
                 class="banner-img"
-                src={assets.Mail}
+                src="./Client/src/assets/Mail.jpg"
                 alt="Secure verification illustration"
                 width="552"
                 style="display:block;border:0;width:100%;max-width:552px;height:auto;border-radius:14px;"
@@ -208,7 +165,7 @@ export async function sendOtpEmail(to, otp) {
                       <tr>
                         <td align="center" class="otp-box" style="background-color:#f5f3ff;border:2px dashed #a5b4fc;border-radius:14px;padding:26px 40px;">
                           <p class="otp-label" style="margin:0 0 10px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:700;color:#6366f1;letter-spacing:2px;text-transform:uppercase;">Your One-Time Passcode</p>
-                          <p class="otp-code" style="margin:0;font-family:'Courier New',Courier,monospace;font-size:42px;font-weight:700;color:#312e81;letter-spacing:12px;line-height:1.2;">${otp}</p>
+                          <p class="otp-code" style="margin:0;font-family:'Courier New',Courier,monospace;font-size:42px;font-weight:700;color:#312e81;letter-spacing:12px;line-height:1.2;">{{OTP_CODE}}</p>
                         </td>
                       </tr>
                     </table>
@@ -275,7 +232,7 @@ export async function sendOtpEmail(to, otp) {
                 <tr>
                   <td align="center" style="padding-bottom:10px;">
                     <p class="footer-links" style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#9ca3af;">
-                      <a href="https://portfolio-site-kappa-lilac.vercel.app" style="color:#6366f1;text-decoration:none;">Desgin & Developed By Rajat Maurya</a>
+                      <a href="https://portfolio-site-kappa-lilac.vercel.app" style="color:#6366f1;text-decoration:none;">Design & Developed By Rajat Maurya</a>
                       &nbsp;&nbsp;·&nbsp;&nbsp;
                     
                     </p>
@@ -301,8 +258,4 @@ export async function sendOtpEmail(to, otp) {
   </table>
 
 </body>
-</html>`,
-  });
- 
-  return info;
-}
+</html> -->
