@@ -120,8 +120,8 @@ const ForgetPassword = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 mb-6">
             <span className="text-2xl">🔑</span>
           </div>
-          <h2 className="text-3xl font-black tracking-tight text-gray-900 mb-2">Reset Password</h2>
-          <p className="text-gray-500 font-medium tracking-wide">Enter your email to receive a recovery code.</p>
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-2 font-[family-name:var(--font-display)]">Reset Password</h2>
+          <p className="text-gray-500 font-normal tracking-normal">Enter your email to receive a recovery code.</p>
         </div>
 
         {/* Main Card */}
@@ -133,7 +133,7 @@ const ForgetPassword = () => {
                 <input
                   type="email"
                   placeholder="name@example.com"
-                  className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm font-bold rounded-2xl p-4 placeholder:font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-60 disabled:bg-gray-100"
+                  className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm font-medium rounded-2xl p-4 placeholder:font-normal placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-60 disabled:bg-gray-100"
                   value={email}
                   disabled={isVerified}
                   onChange={(e) => {
@@ -149,7 +149,7 @@ const ForgetPassword = () => {
                     type="button"
                     disabled={sending}
                     onClick={() => sendOtp(email)}
-                    className="flex-shrink-0 px-6 bg-gray-900 text-white font-bold text-sm tracking-wide rounded-2xl hover:bg-black transition-all shadow-[0_4px_15px_rgb(0,0,0,0.1)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgb(0,0,0,0.15)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                    className="flex-shrink-0 px-6 bg-gray-900 text-white font-semibold text-sm tracking-normal rounded-2xl hover:bg-black transition-all shadow-[0_4px_15px_rgb(0,0,0,0.1)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgb(0,0,0,0.15)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
                   >
                     {sending ? "Sending..." : "Send OTP"}
                   </button>
@@ -158,7 +158,7 @@ const ForgetPassword = () => {
 
               {otpSent && !isVerified && (
                 <div className="bg-indigo-50/50 border border-indigo-100/50 rounded-2xl p-6 flex flex-col items-center gap-4 animate-in slide-in-from-top-2 duration-300">
-                  <p className="text-sm font-bold tracking-wide text-indigo-900">Enter validation code</p>
+                  <p className="text-sm font-medium tracking-normal text-indigo-900">Enter validation code</p>
                   <div className="flex justify-center w-full">
                     <OtpInput
                       value={otp}
@@ -181,7 +181,7 @@ const ForgetPassword = () => {
                       renderInput={(props) => <input {...props} className="focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all font-sans" />}
                     />
                   </div>
-                  <p className="text-xs font-semibold text-indigo-500/70 tracking-wide">
+                  <p className="text-xs font-medium text-indigo-500/70 tracking-normal">
                     {isVerifying ? "Verifying code..." : "Check your spam folder if not received."}
                   </p>
                 </div>
@@ -192,14 +192,14 @@ const ForgetPassword = () => {
                   <input
                     type="password"
                     placeholder="Enter new password"
-                    className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm font-bold rounded-2xl p-4 placeholder:font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all"
+                    className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 text-sm font-medium rounded-2xl p-4 placeholder:font-normal placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white transition-all"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
                   />
                   <button
                     type="submit"
-                    className="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gray-900 text-white font-bold tracking-wide rounded-2xl overflow-hidden transition-all shadow-[0_8px_20px_rgb(0,0,0,0.12)] hover:-translate-y-0.5 hover:shadow-[0_12px_25px_rgb(0,0,0,0.2)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none mt-2"
+                    className="w-full group relative inline-flex items-center justify-center px-8 py-4 bg-gray-900 text-white font-semibold tracking-normal rounded-2xl overflow-hidden transition-all shadow-[0_8px_20px_rgb(0,0,0,0.12)] hover:-translate-y-0.5 hover:shadow-[0_12px_25px_rgb(0,0,0,0.2)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none mt-2"
                     disabled={resetPasswordMutation.isPending}
                   >
                     <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
@@ -216,7 +216,7 @@ const ForgetPassword = () => {
           <div className="mt-8 text-center bg-gray-50/50 mx-[-2.5rem] mb-[-2.5rem] p-6 rounded-b-[2.5rem] border-t border-gray-100/80">
             <button
               onClick={() => navigate("/login")}
-              className="text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-2"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

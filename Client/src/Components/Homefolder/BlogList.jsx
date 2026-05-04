@@ -61,12 +61,12 @@ const BlogList = () => {
                 placeholder="Search premium articles..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-transparent py-4 pr-6 text-gray-900 placeholder-gray-400 focus:outline-none text-lg font-medium tracking-wide"
+                className="w-full bg-transparent py-4 pr-6 text-gray-900 placeholder-gray-400 focus:outline-none text-base font-normal tracking-normal"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="mr-2 p-2 px-4 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 font-semibold text-sm transition-colors border border-gray-100"
+                  className="mr-2 p-2 px-4 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 font-medium text-sm transition-colors border border-gray-100"
                 >
                   Clear
                 </button>
@@ -79,7 +79,7 @@ const BlogList = () => {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`relative px-7 py-3 rounded-full text-sm font-bold tracking-wide transition-all duration-300 ease-out
+                className={`relative px-7 py-3 rounded-full text-sm font-semibold tracking-normal transition-all duration-300 ease-out
                   ${activeCategory === cat
                     ? "bg-gray-900 text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] scale-[1.02]"
                     : "bg-white/80 backdrop-blur-md text-gray-600 border border-gray-200/80 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm hover:scale-[1.02]"
@@ -95,7 +95,7 @@ const BlogList = () => {
         <div className="relative w-full z-10 min-h-[400px]">
           {filteredBlogs.length > 0 && (
             <div className="flex items-center justify-between mb-12">
-              <h2 className="text-3xl font-extrabold tracking-tight text-gray-900">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 font-[family-name:var(--font-display)]">
                 Latest Insights
               </h2>
               <div className="h-px flex-1 bg-gradient-to-r from-gray-200 to-transparent ml-8"></div>
@@ -104,14 +104,14 @@ const BlogList = () => {
 
           {isError && (
             <div className="p-6 bg-red-50/50 rounded-3xl border border-red-100 text-center max-w-lg mx-auto">
-              <p className="text-red-600 font-medium">Unable to load insights: {error?.message}</p>
+              <p className="text-red-600 font-normal">Unable to load insights: {error?.message}</p>
             </div>
           )}
 
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-32 space-y-4">
               <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin"></div>
-              <p className="text-gray-400 font-medium tracking-wide animate-pulse">Curating articles...</p>
+              <p className="text-gray-400 font-normal tracking-normal animate-pulse">Curating articles...</p>
             </div>
           )}
 
@@ -134,14 +134,14 @@ const BlogList = () => {
                         className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute top-4 left-4 z-20">
-                        <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-xs font-bold tracking-widest uppercase text-gray-900 shadow-sm border border-white/20">
+                        <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-xs font-semibold tracking-wider uppercase text-gray-900 shadow-sm border border-white/20">
                           {blog.category}
                         </span>
                       </div>
                     </div>
 
                     <div className="p-8 flex-1 flex flex-col">
-                      <h3 className="text-xl font-bold text-gray-900 leading-tight mb-4 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                      <h3 className="text-lg font-semibold text-gray-900 leading-snug mb-4 group-hover:text-indigo-600 transition-colors line-clamp-2">
                         {blog.title}
                       </h3>
 
@@ -156,7 +156,7 @@ const BlogList = () => {
                             }}
                             className="w-8 h-8 rounded-full object-cover bg-gray-100 ring-2 ring-white shadow-sm"
                           />
-                          <span className="text-sm font-semibold text-gray-700">{blog.createdBy?.fullName || "Author"}</span>
+                          <span className="text-sm font-medium text-gray-700">{blog.createdBy?.fullName || "Author"}</span>
                         </div>
                         <div className="p-2 rounded-full bg-gray-50 group-hover:bg-indigo-50 transition-colors">
                           <svg className="w-4 h-4 text-gray-400 group-hover:text-indigo-600 transition-colors transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -174,7 +174,7 @@ const BlogList = () => {
                   <button
                     onClick={() => fetchNextPage()}
                     disabled={isFetchingNextPage}
-                    className="group relative inline-flex items-center justify-center px-10 py-4 bg-white border border-gray-200 text-gray-900 font-bold tracking-wide rounded-full overflow-hidden transition-all hover:border-gray-300 hover:shadow-lg disabled:opacity-50 disabled:hover:shadow-none"
+                    className="group relative inline-flex items-center justify-center px-10 py-4 bg-white border border-gray-200 text-gray-900 font-semibold tracking-normal rounded-full overflow-hidden transition-all hover:border-gray-300 hover:shadow-lg disabled:opacity-50 disabled:hover:shadow-none"
                   >
                     <span className="absolute inset-0 bg-gray-50 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                     {isFetchingNextPage ? (
@@ -189,13 +189,13 @@ const BlogList = () => {
                 ) : (
                   <div className="flex items-center gap-4 text-gray-400">
                     <div className="h-px w-12 bg-gray-200"></div>
-                    <p className="text-sm font-medium tracking-widest uppercase">End of Insights</p>
+                    <p className="text-sm font-medium tracking-wider uppercase">End of Insights</p>
                     <div className="h-px w-12 bg-gray-200"></div>
                   </div>
                 )}
 
                 {!isFetchingNextPage && isFetching && (
-                  <p className="text-center text-gray-400 mt-6 text-sm font-medium animate-pulse">Syncing latest metrics...</p>
+                  <p className="text-center text-gray-400 mt-6 text-sm font-normal animate-pulse">Syncing latest metrics...</p>
                 )}
               </div>
             </div>
@@ -207,8 +207,8 @@ const BlogList = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">No Insights Found</h3>
-                <p className="text-gray-500 font-medium">Try adjusting your filters or search terms.</p>
+                <h3 className="text-xl font-semibold tracking-tight text-gray-900 mb-2">No Insights Found</h3>
+                <p className="text-gray-500 font-normal">Try adjusting your filters or search terms.</p>
               </div>
             )
           )}

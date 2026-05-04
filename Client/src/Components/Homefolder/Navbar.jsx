@@ -24,19 +24,19 @@ const Navbar = () => {
 
         <div className="flex items-center gap-4">
           {!user ? (
-            <button
+              <button
               onClick={() => navigate("/login")}
-              className="group relative inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gray-900 text-white font-semibold rounded-full overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-0.5"
+              className="group relative inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gray-900 text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-0.5"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
               <User size={18} className="text-white relative z-10" />
-              <span className="relative z-10 tracking-wide text-sm">Sign In</span>
+              <span className="relative z-10 tracking-normal text-sm">Sign In</span>
             </button>
           ) : (
             <>
               <button
                 onClick={() => navigate("/admin")}
-                className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors border border-gray-200/60"
+                className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors border border-gray-200/60"
               >
                 <LayoutDashboard size={18} />
                 <span>Dashboard</span>
@@ -49,7 +49,7 @@ const Navbar = () => {
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-[2px]">
                   <img src={user?.avatar || assets.user_icon} className="w-full h-full rounded-full border-2 border-white object-cover" alt="Profile" />
                 </div>
-                <span className="text-sm font-bold text-gray-800 tracking-tight">{user.name?.split(' ')[0] || 'Profile'}</span>
+                <span className="text-sm font-semibold text-gray-800 tracking-tight">{user.name?.split(' ')[0] || 'Profile'}</span>
               </button>
             </>
           )}

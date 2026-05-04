@@ -10,11 +10,11 @@ const Header = () => {
                     <HeaderButton />
                 </div>
 
-                <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-[1.1] text-gray-900 mb-6 drop-shadow-sm">
+                <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.1] text-gray-900 mb-6 drop-shadow-sm font-[family-name:var(--font-display)]">
                     Too long? Click <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 drop-shadow-[0_2px_2px_rgba(0,0,0,0.1)]">AI Summariser</span>
                 </h1>
                 
-                <p className="text-xl sm:text-2xl text-gray-500 font-medium tracking-wide max-w-2xl mx-auto">
+                <p className="text-lg sm:text-xl text-gray-500 font-normal tracking-normal max-w-2xl mx-auto leading-relaxed">
                     Get the core idea instantly. Move on to what matters next.
                 </p>
             </div>

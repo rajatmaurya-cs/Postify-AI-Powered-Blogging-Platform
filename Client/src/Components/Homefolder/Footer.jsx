@@ -15,21 +15,21 @@ const Footer = () => {
               href="https://portfolio-site-kappa-lilac.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 text-gray-900 font-bold tracking-tight hover:text-indigo-600 transition-colors"
+              className="group inline-flex items-center gap-2 text-gray-900 font-semibold tracking-tight hover:text-indigo-600 transition-colors"
             >
               <span>Designed & Developed by Rajat Maurya</span>
               <CiShare1 className="text-gray-400 group-hover:text-indigo-600 transition-colors transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" size={20} />
             </a>
-            <p className="text-sm text-gray-400 font-medium tracking-wide">Building premium digital experiences.</p>
+            <p className="text-sm text-gray-400 font-normal tracking-normal">Building premium digital experiences.</p>
           </div>
 
           {/* Center - Copyright & Links */}
           <div className="flex flex-col items-center flex-1 order-3 lg:order-2 mt-8 lg:mt-0 pt-8 lg:pt-0 border-t lg:border-t-0 border-gray-100 lg:border-none w-full lg:w-auto">
-            <p className="text-gray-500 font-medium tracking-wide mb-3">
-              © {new Date().getFullYear()} <span className="font-bold text-gray-900">Postify</span>. All rights reserved.
+            <p className="text-gray-500 font-normal tracking-normal mb-3">
+              © {new Date().getFullYear()} <span className="font-semibold text-gray-900">Postify</span>. All rights reserved.
             </p>
             
-            <div className="flex items-center gap-6 text-sm font-semibold text-gray-400">
+            <div className="flex items-center gap-6 text-sm font-medium text-gray-400">
               <Link to="/privacy-policy" className="hover:text-gray-900 transition-colors">
                 Privacy Policy
               </Link>
