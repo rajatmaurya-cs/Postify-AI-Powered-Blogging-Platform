@@ -1,8 +1,4 @@
 import nodemailer from "nodemailer";
-
-import {assets} from '../../Client/src/assets/assets'
-
-
 const transporter = nodemailer.createTransport({
   host: process.env.BREVO_SMTP_HOST || "smtp-relay.brevo.com",
   port: Number(process.env.BREVO_SMTP_PORT || 587),
@@ -153,7 +149,7 @@ export async function sendOtpEmail(to, otp) {
               -->
               <img
                 class="banner-img"
-                src={assets.Mail}
+                src="https://ik.imagekit.io/rider/blogs/Mail.jpg"
                 alt="Secure verification illustration"
                 width="552"
                 style="display:block;border:0;width:100%;max-width:552px;height:auto;border-radius:14px;"

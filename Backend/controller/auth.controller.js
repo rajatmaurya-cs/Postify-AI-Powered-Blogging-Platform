@@ -431,6 +431,9 @@ export const refreshAccessToken = async (req, res) => {
 export const sendOtp = async (req, res) => {
   try {
     let { email, purpose } = req.body;
+
+    console.log("The Email that we Recicved: ",email);
+    console.log("The purpose that we recieved: ",purpose);
     email = email.toLowerCase().trim();
     purpose = purpose.toUpperCase().trim();
 
