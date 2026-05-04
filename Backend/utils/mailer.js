@@ -167,12 +167,12 @@ export async function sendOtpEmail(to, otp) {
                   <td align="center" style="padding-bottom:16px;">
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td align="center" style="background-color:#eef2ff;border-radius:50%;width:52px;height:52px;text-align:center;vertical-align:middle;">
-                          <img
-                            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkw0IDZWMTJDNCAyMCAxMiAyMiAxMiAyMkMxMiAyMiAyMCAyMCAyMCAxMlY2TDEyIDJaIiBzdHJva2U9IiM0RjQ2RTUiIHN0cm9rZS13aWR0aD0iMS41IiBmaWxsPSIjRTBFN0ZGIi8+PHBhdGggZD0iTTkgMTJMMTEgMTRMMTUgMTAiIHN0cm9rZT0iIzRGNDZFNSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4="
+                        <td>
+                            <img
+                            src="https://ik.imagekit.io/rider/ChatGPT%20Image%20May%204,%202026%20at%2012_11_35%20PM.png"
                             alt="Secure"
-                            width="28"
-                            height="28"
+                            width="70"
+                            height="70"
                             style="display:block;border:0;margin:0 auto;"
                           />
                         </td>
