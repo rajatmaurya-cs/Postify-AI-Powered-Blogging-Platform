@@ -5,7 +5,7 @@ import { assets } from "../assets/assets";
 import Swal from "sweetalert2";
 
 const ProfileModal = ({ onClose }) => {
-    const { logout, user, isLoggingOut } = useContext(AuthContext);
+    const { logout, user, isLoggingOut,setIsLoggingOut } = useContext(AuthContext);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -25,8 +25,14 @@ const ProfileModal = ({ onClose }) => {
             });
 
             if (result.isConfirmed) {
-                onClose();
-                logout();
+              
+                
+                
+               
+                await logout();
+
+                 onClose();
+               
             }
         } catch (error) {
             console.log(error);
