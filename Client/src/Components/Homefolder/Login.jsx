@@ -9,39 +9,50 @@ import { assets } from "../../assets/assets";
 import useGoogleAuth from "../../hooks/useGoogleAuth";
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+
+
+  const [googleLoading, setGoogleLoading] = useState(
+    () => sessionStorage.getItem("googleAuthPending") === "true"
+  );
+
+  const googleLogin = useGoogleAuth(setGoogleLoading);
+
+
+  console.log("The item in sessionStorage is: ",JSON.parse(sessionStorage.getItem("googleAuthPending")))
+
+  const { login, loading } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
-  // ✅ React Query mutation for login
+
+
   const loginMutation = useMutation({
 
     mutationFn: async ({ email, password }) => {
-      
+
       const res = await API.post("/auth/login", { email, password });
 
-      // Normalize errors so onError runs properly
+
       if (!res.data?.success) {
         throw new Error(res.data?.message || "Login failed");
       }
 
-      return res.data; // { success, user, accessToken, ... }
+      return res.data;
     },
 
     onSuccess: (data) => {
-
       login(data.user, data.accessToken);
-
       toast.success("Login successful");
-
       navigate("/admin");
 
-      
+
     },
 
-     onError: (err) => {
+    onError: (err) => {
       const msg =
         err?.response?.data?.message ||
         err?.message ||
@@ -55,8 +66,10 @@ const Login = () => {
     e.preventDefault();
     loginMutation.mutate({ email, password });
   };
+  
+ 
 
-  const googleLogin = useGoogleAuth();
+   const isAnyLoading = loginMutation.isPending || googleLoading || loading;
 
   return (
     <>
@@ -124,7 +137,7 @@ const Login = () => {
                 disabled={loginMutation.isPending}
               >
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                {loginMutation.isPending ? (
+                {isAnyLoading ? (
                   <span className="flex items-center gap-2">
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                     Signing in...
@@ -133,6 +146,7 @@ const Login = () => {
                   <span className="relative z-10">Sign In</span>
                 )}
               </button>
+
             </form>
 
             <div className="relative">
@@ -148,7 +162,7 @@ const Login = () => {
               type="button"
               onClick={googleLogin}
               className="w-full bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold tracking-normal py-3.5 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-sm hover:shadow-md hover:-translate-y-0.5"
-              disabled={loginMutation.isPending}
+              disabled={isAnyLoading}
             >
               <img
                 src={assets.google}
