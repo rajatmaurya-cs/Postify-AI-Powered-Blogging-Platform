@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy, useContext ,useEffect } from "react";
+import React, { Suspense, lazy, useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AuthContext } from "./Context/Authcontext";
 const Home = lazy(() => import("./Components/Homefolder/Home"));
@@ -19,29 +19,66 @@ const AIconfig = lazy(() => import("./Components/AdminFolder/AISettings"));
 const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy.jsx"))
 const Terms = lazy(() => import("./Pages/Terms.jsx"))
 
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
+function HomeSkeleton() {
+  return (
+    <div className="min-h-screen w-full animate-pulse bg-white">
 
+      <div className="border-b border-gray-50 bg-white">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+       
+          <div className="h-8 w-32 rounded bg-gray-300" />
+          
+          
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-32 rounded-full bg-gray-300" />
+            <div className="h-10 w-28 rounded-full bg-gray-300" />
+          </div>
+        </div>
+      </div>
 
+     
+      <div className="mx-auto flex max-w-4xl flex-col items-center px-6 py-20 text-center">
+      
+        <div className="mb-8 h-12 w-64 rounded-full bg-gray-300" />
+        
+      
+        <div className="mb-4 h-14 w-full max-w-2xl rounded-lg bg-gray-300" />
+        <div className="mb-6 h-14 w-3/4 rounded-lg bg-gray-300" />
+        
+      
+        <div className="h-5 w-96 rounded bg-gray-80" />
+      </div>
+
+     
+      <div className="mx-auto max-w-5xl px-6 pb-20">
+   
+        <div className="mx-auto mb-8 h-14 w-full max-w-2xl rounded-full bg-gray-300" />
+        
+      
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="h-10 w-16 rounded-full bg-gray-300" /> 
+          <div className="h-10 w-28 rounded-full bg-gray-300" />
+          <div className="h-10 w-24 rounded-full bg-gray-300" />
+          <div className="h-10 w-24 rounded-full bg-gray-300" />
+          <div className="h-10 w-24 rounded-full bg-gray-300" />
+          <div className="h-10 w-36 rounded-full bg-gray-300" />
+          <div className="h-10 w-36 rounded-full bg-gray-300" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
+
   const { loading } = useContext(AuthContext);
 
-    useEffect(() => {
-    if (loading) {
-      Loading.dots("Loading...");
-    } else {
-      Loading.remove();
-    }
-
-  
-    return () => Loading.remove();
-  }, [loading]);
-
-  if (loading) return  null;
+  if (loading) return <HomeSkeleton />;
 
   return (
-    <Suspense fallback={<div></div>}>
-      
+
+    <Suspense fallback={<HomeSkeleton/>}>
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />

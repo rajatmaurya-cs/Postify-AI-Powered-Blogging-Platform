@@ -15,9 +15,6 @@ const useGoogleAuth = (setGoogleLoading) => {
 
     try {
       
-
-
-
       if (!authResult?.code) return;
 
       console.log("The Authorizarion code is : ", authResult.code)

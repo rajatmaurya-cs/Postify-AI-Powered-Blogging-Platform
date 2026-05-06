@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import API from "../../Api/api";
 import toast from "react-hot-toast";
-import { Loading } from "notiflix/build/notiflix-loading-aio";
+
 
 const AIConfigDashboard = () => {
   const queryClient = useQueryClient();
 
   const [editedConfig, setEditedConfig] = useState(null);
+
   const [showHistory, setShowHistory] = useState(false);
 
   // -------- Fetch current config --------
@@ -53,13 +54,7 @@ const AIConfigDashboard = () => {
     retry: 1,
   });
 
-  // -------- Notiflix loader --------
-  useEffect(() => {
-    const shouldShow = configLoading || !currentConfig || !editedConfig;
-    if (shouldShow) Loading.dots("Loading AI config...");
-    else Loading.remove();
-    return () => Loading.remove();
-  }, [configLoading, currentConfig, editedConfig]);
+
 
   // Keep same object structure as currentConfig
   useEffect(() => {
@@ -91,16 +86,6 @@ const AIConfigDashboard = () => {
 
   const saving = updateMutation.isPending;
 
-  if (configLoading || !currentConfig || !editedConfig) return null;
-
-  if (configError) {
-    return (
-      <div className="h-screen flex justify-center items-center text-red-600 font-semibold">
-        {configErrObj?.message || "Failed to load config"}
-      </div>
-    );
-  }
-
   const isUnchanged = JSON.stringify(editedConfig) === JSON.stringify(currentConfig);
   const disableAll = saving || configFetching || historyFetching;
 
@@ -117,6 +102,25 @@ const AIConfigDashboard = () => {
 
     updateMutation.mutate(payload);
   };
+
+  if (configLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-white">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-100 border-t-blue-600" />
+      </div>
+    );
+  }
+
+  
+  if (configError) {
+    return (
+      <div className="h-screen flex justify-center items-center text-red-600 font-semibold">
+        {configErrObj?.message || "Failed to load config"}
+      </div>
+    );
+  }
+
+
 
   return (
     <div className="p-4 sm:p-8 animate-in fade-in duration-500 h-full overflow-y-auto">
