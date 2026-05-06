@@ -103,13 +103,14 @@ const AIConfigDashboard = () => {
     updateMutation.mutate(payload);
   };
 
-  if (configLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-white">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-100 border-t-blue-600" />
-      </div>
-    );
-  }
+ 
+if (configLoading ||!editedConfig) {
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-white">
+      <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-100 border-t-blue-600" />
+    </div>
+  );
+}
 
   
   if (configError) {
@@ -140,7 +141,7 @@ const AIConfigDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mb-12">
 
-        {/* Global AI Toggle */}
+      
         <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-8 relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-8">
             <button
