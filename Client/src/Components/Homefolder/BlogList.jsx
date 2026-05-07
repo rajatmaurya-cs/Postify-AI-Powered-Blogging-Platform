@@ -175,7 +175,7 @@ const BlogList = () => {
 
 
 
-          {!isLoading ? (
+          {isLoading ? (
             <div className="space-y-16">
               <div className="flex items-center justify-between mb-12">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900 font-[family-name:var(--font-display)]">
