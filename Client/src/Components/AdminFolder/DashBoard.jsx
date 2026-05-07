@@ -44,10 +44,10 @@ const TableRowSkeleton = () => (
 const StatCardSkeleton = () => (
   <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] animate-pulse">
     <div className="flex items-center gap-5">
-      <div className="w-14 h-14 rounded-2xl bg-gray-200"></div>
+      <div className="w-14 h-14 rounded-2xl bg-gray-200 animate-shimmer"></div>
       <div className="flex-1 space-y-3">
-        <div className="h-8 bg-gray-200 rounded-lg w-16"></div>
-        <div className="h-3 bg-gray-200 rounded w-24"></div>
+        <div className="h-8 bg-gray-200 rounded-lg w-16 animate-shimmer "></div>
+        <div className="h-3 bg-gray-200 rounded w-24 animate-shimmer "></div>
       </div>
     </div>
   </div>
@@ -90,7 +90,8 @@ const DashBoard = () => {
       if (!res.data?.success) {
         throw new Error(res.data?.message || "Failed to load dashboard stats");
       }
-      const { totalBlogs = 0, totalComments = 0, draftBlogs = 0 } = res.data.stats || {};
+      const { totalBlogs, totalComments, draftBlogs } = res.data.stats || {};
+
       return { totalBlogs, totalComments, draftBlogs };
     },
     enabled: !!latestBlogs?.length,
@@ -170,8 +171,7 @@ const DashBoard = () => {
       <div className="flex-1 overflow-y-auto w-full max-h-[calc(100vh-250px)]">
         <div className="p-8 lg:p-10 space-y-10">
 
-          {/* Stat Cards */}
-          {/* Stat Cards */}
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {statsLoading ? (
               <>
