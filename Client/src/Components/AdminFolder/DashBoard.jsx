@@ -18,7 +18,44 @@ import { useLatestBlogs } from "../../hooks/useLatestBlogs"
 
 const LIMIT = 5;
 
+const TableRowSkeleton = () => (
+  <tr className="animate-pulse">
+    <td className="px-6 py-6">
+      <div className="h-4 bg-gray-200 rounded w-6 animate-shimmer"></div>
+    </td>
+    <td className="px-6 py-6 space-y-2">
+      <div className="h-5 bg-gray-200 rounded w-3/4 animate-shimmer"></div>
+      <div className="h-4 bg-gray-200 rounded w-20 animate-shimmer"></div>
+    </td>
+    <td className="px-6 py-6">
+      <div className="h-4 bg-gray-200 rounded w-24 animate-shimmer"></div>
+    </td>
+    <td className="px-6 py-6">
+      <div className="h-6 bg-gray-200 rounded-full w-16 animate-shimmer"></div>
+    </td>
+    <td className="px-6 py-6">
+      <div className="h-9 bg-gray-200 rounded-xl w-full animate-shimmer"></div>
+    </td>
+  </tr>
+);
+
+
+
+const StatCardSkeleton = () => (
+  <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] animate-pulse">
+    <div className="flex items-center gap-5">
+      <div className="w-14 h-14 rounded-2xl bg-gray-200"></div>
+      <div className="flex-1 space-y-3">
+        <div className="h-8 bg-gray-200 rounded-lg w-16"></div>
+        <div className="h-3 bg-gray-200 rounded w-24"></div>
+      </div>
+    </div>
+  </div>
+);
+
 const DashBoard = () => {
+
+
 
   const navigate = useNavigate();
 
@@ -90,14 +127,7 @@ const DashBoard = () => {
 
   const disableAll = toggleMutation.isPending;
 
-  const totalBlogs = stats?.totalBlogs ?? (statsLoading ? "..." : "-");
-  const totalComments = stats?.totalComments ?? (statsLoading ? "..." : "-");
-  const draftBlogs = stats?.draftBlogs ?? (statsLoading ? "..." : "-");
-
-
-
-
-
+  
 
   const handleTogglePublish = async (blogId, isPublished) => {
     const action = isPublished ? "Unpublish" : "Publish";
@@ -141,42 +171,53 @@ const DashBoard = () => {
         <div className="p-8 lg:p-10 space-y-10">
 
           {/* Stat Cards */}
+          {/* Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="group bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all hover:-translate-y-1">
-              <div className="flex items-center gap-5">
-                <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <img src={assets.dashboard_icon_1} className="w-7 h-7 object-contain opacity-70 group-hover:opacity-100" alt="" />
+            {statsLoading ? (
+              <>
+                <StatCardSkeleton />
+                <StatCardSkeleton />
+                <StatCardSkeleton />
+              </>
+            ) : (
+              <>
+                <div className="group bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all hover:-translate-y-1">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <img src={assets.dashboard_icon_1} className="w-7 h-7 object-contain opacity-70 group-hover:opacity-100" alt="" />
+                    </div>
+                    <div>
+                      <p className="text-3xl font-black text-gray-900 tracking-tight">{stats?.totalBlogs ?? 0}</p>
+                      <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">Total Stories</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-3xl font-black text-gray-900 tracking-tight">{totalBlogs}</p>
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">Total Stories</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="group bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all hover:-translate-y-1">
-              <div className="flex items-center gap-5">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <img src={assets.dashboard_icon_2} className="w-7 h-7 object-contain opacity-70 group-hover:opacity-100" alt="" />
+                <div className="group bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all hover:-translate-y-1">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <img src={assets.dashboard_icon_2} className="w-7 h-7 object-contain opacity-70 group-hover:opacity-100" alt="" />
+                    </div>
+                    <div>
+                      <p className="text-3xl font-black text-gray-900 tracking-tight">{stats?.totalComments ?? 0}</p>
+                      <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">Discussions</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-3xl font-black text-gray-900 tracking-tight">{totalComments}</p>
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">Discussions</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="group bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all hover:-translate-y-1">
-              <div className="flex items-center gap-5">
-                <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <img src={assets.dashboard_icon_3} className="w-7 h-7 object-contain opacity-70 group-hover:opacity-100" alt="" />
+                <div className="group bg-white p-6 rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)] transition-all hover:-translate-y-1">
+                  <div className="flex items-center gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <img src={assets.dashboard_icon_3} className="w-7 h-7 object-contain opacity-70 group-hover:opacity-100" alt="" />
+                    </div>
+                    <div>
+                      <p className="text-3xl font-black text-gray-900 tracking-tight">{stats?.draftBlogs ?? 0}</p>
+                      <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">In Draft</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-3xl font-black text-gray-900 tracking-tight">{draftBlogs}</p>
-                  <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mt-1">In Draft</p>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
 
           {/* State Messages */}
@@ -202,14 +243,7 @@ const DashBoard = () => {
           {/* Recent Content Table */}
           <div className="w-full overflow-x-auto">
 
-            {isLoading && (
-              <div className="absolute inset-x-0 top-20 bottom-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="w-8 h-8 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                  <p className="text-sm font-semibold text-gray-500 tracking-wide animate-pulse">Loading workspace...</p>
-                </div>
-              </div>
-            )}
+
 
             <table className="min-w-[700px] w-full text-left border-collapse table-auto">
 
@@ -223,7 +257,7 @@ const DashBoard = () => {
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-50">
+              {/* <tbody className="divide-y divide-gray-50">
                 {latestBlogs.map((blog, index) => (
                   <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-6 text-sm font-semibold text-gray-400">
@@ -274,6 +308,69 @@ const DashBoard = () => {
                     </td>
                   </tr>
                 ))}
+              </tbody> */}
+
+              <tbody className="divide-y divide-gray-50">
+                {isLoading ? (
+                  <>
+                    <TableRowSkeleton />
+                    <TableRowSkeleton />
+                    <TableRowSkeleton />
+                    <TableRowSkeleton />
+                    <TableRowSkeleton />
+                  </>
+                ) : (
+                  latestBlogs.map((blog, index) => (
+                    <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors">
+                      <td className="px-6 py-6 text-sm font-semibold text-gray-400">
+                        {(index + 1).toString().padStart(2, "0")}
+                      </td>
+                      <td className="px-6 py-6">
+                        <p className="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2 pr-2">
+                          {blog.title}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1.5 font-bold uppercase tracking-wide bg-gray-100 inline-block px-2.5 py-1 rounded-md">
+                          {blog.category}
+                        </p>
+                      </td>
+                      <td className="px-6 py-6 text-sm text-gray-600 font-medium whitespace-nowrap">
+                        {blog.createdAt
+                          ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })
+                          : "—"}
+                      </td>
+                      <td className="px-6 py-6">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide ${blog.isPublished
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                            : "bg-amber-50 text-amber-700 border border-amber-100"
+                            }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
+                              }`}
+                          ></span>
+                          {blog.isPublished ? "LIVE" : "DRAFT"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-6">
+                        <button
+                          className={`w-full relative overflow-hidden whitespace-nowrap px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${blog.isPublished
+                            ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
+                            : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
+                            } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+                          onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
+                          disabled={disableAll}
+                        >
+                          {blog.isPublished ? "Unpublish" : "Publish"}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
 

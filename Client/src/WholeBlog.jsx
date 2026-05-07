@@ -153,12 +153,30 @@ useEffect(() => {
 
   if (blogLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
-        <div className="flex items-center gap-3 px-6 py-4 bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-gray-100">
-          <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-sm font-medium text-gray-600 tracking-wide">Loading story...</span>
-        </div>
+     <div className="skeleton-fade mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+      
+      {/* Category pill */}
+      <div className="mb-8 flex justify-center">
+        <div className="animate-shimmer h-8 w-28 rounded-full" />
       </div>
+
+      {/* Title - 2 lines to match "Design Your Days" */}
+      <div className="mb-10 space-y-4">
+        <div className="animate-shimmer mx-auto h-12 w-3/4 rounded-lg sm:h-16" />
+        <div className="animate-shimmer mx-auto h-12 w-1/2 rounded-lg sm:h-16" />
+      </div>
+
+      {/* Author row: avatar + name + date */}
+      <div className="mb-12 flex items-center justify-center gap-3">
+        <div className="animate-shimmer h-10 w-10 rounded-full" />
+        <div className="animate-shimmer h-5 w-28 rounded-md" />
+        <div className="h-1 w-1 rounded-full bg-gray-300" />
+        <div className="animate-shimmer h-5 w-24 rounded-md" />
+      </div>
+
+      {/* Hero image */}
+      <div className="animate-shimmer aspect-[16/9] w-full rounded-2xl" />
+    </div>
     );
   }
 

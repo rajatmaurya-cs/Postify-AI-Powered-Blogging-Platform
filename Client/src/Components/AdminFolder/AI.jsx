@@ -1,7 +1,43 @@
-
 import { useQuery } from "@tanstack/react-query";
 import API from "../../Api/api";
 import Moment from "moment";
+
+// Skeleton components
+const StatCardSkeleton = () => (
+  <div className="bg-white rounded- border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden animate-pulse">
+    <div className="absolute -right-6 -top-6 w-24 h-24 bg-gray-100 rounded-full blur-2xl"></div>
+    <div className="relative z-10 flex flex-col gap-2">
+      <div className="h-3 bg-gray-200 rounded w-24 animate-shimmer "></div>
+      <div className="flex items-baseline gap-3 mt-2">
+        <div className="h-10 bg-gray-200 rounded-lg w-16 animate-shimmer "></div>
+        <div className="h-5 bg-gray-200 rounded-md w-12 animate-shimmer "></div>
+      </div>
+    </div>
+  </div>
+);
+
+const TableRowSkeleton = () => (
+  <tr className="animate-pulse">
+    <td className="px-8 py-6">
+      <div className="h-4 bg-gray-200 rounded w-12 animate-shimmer"></div>
+    </td>
+    <td className="px-8 py-6">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-gray-200 animate-shimmer "></div>
+        <div className="h-4 bg-gray-200 rounded w-32 animate-shimmer "></div>
+      </div>
+    </td>
+    <td className="px-8 py-6">
+      <div className="h-5 bg-gray-200 rounded w-16 animate-shimmer "></div>
+    </td>
+    <td className="px-8 py-6">
+      <div className="h-7 bg-gray-200 rounded-lg w-32 animate-shimmer "></div>
+    </td>
+    <td className="px-8 py-6">
+      <div className="h-4 bg-gray-200 rounded w-24 animate-shimmer "></div>
+    </td>
+  </tr>
+);
 
 const AI = () => {
   const {
@@ -22,11 +58,7 @@ const AI = () => {
     staleTime: 30_000,
   });
 
-  const totalRequests = data?.totalRequests ?? (isLoading ? "..." : "-");
-  const todayRequests = data?.todayRequests ?? (isLoading ? "..." : "-");
-  const mostUsedAI = data?.mostUsedAI ?? (isLoading ? "..." : "-");
-  const uniqueUsers = data?.uniqueUsers ?? (isLoading ? "..." : "-");
-  const logs = data?.logs ?? [];
+  const logs = data?.logs?? [];
 
   return (
     <div className="p-4 sm:p-8 animate-in fade-in duration-500 flex flex-col h-full">
@@ -37,46 +69,57 @@ const AI = () => {
 
       {/* Top cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
-          <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-indigo-50 to-indigo-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-          <div className="relative z-10 flex flex-col gap-2">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Today's Load</p>
-            <div className="flex items-baseline gap-3">
-              <h2 className="text-4xl font-black text-gray-900 tracking-tight">{todayRequests}</h2>
-              <span className="text-sm font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">Reqs</span>
+        {!isLoading? (
+          <>
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </>
+        ) : (
+          <>
+            <div className="bg-white rounded- border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-indigo-50 to-indigo-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="relative z-10 flex flex-col gap-2">
+                <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Today's Load</p>
+                <div className="flex items-baseline gap-3">
+                  <h2 className="text-4xl font-black text-gray-900 tracking-tight">{data?.todayRequests?? 0}</h2>
+                  <span className="text-sm font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">Reqs</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
-          <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-          <div className="relative z-10 flex flex-col gap-2">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Cumulative Activity</p>
-            <div className="flex items-baseline gap-3">
-              <h2 className="text-4xl font-black text-gray-900 tracking-tight">{totalRequests}</h2>
-              <span className="text-sm font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Total</span>
+            <div className="bg-white rounded- border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="relative z-10 flex flex-col gap-2">
+                <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Cumulative Activity</p>
+                <div className="flex items-baseline gap-3">
+                  <h2 className="text-4xl font-black text-gray-900 tracking-tight">{data?.totalRequests?? 0}</h2>
+                  <span className="text-sm font-semibold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Total</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
-          <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-          <div className="relative z-10 flex flex-col gap-2">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Primary Model</p>
-            <h2 className="text-xl font-bold text-gray-900 mt-2 truncate pr-4">{mostUsedAI}</h2>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
-          <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-          <div className="relative z-10 flex flex-col gap-2">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Active Base</p>
-            <div className="flex items-baseline gap-3">
-              <h2 className="text-4xl font-black text-gray-900 tracking-tight">{uniqueUsers}</h2>
-              <span className="text-sm font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">Users</span>
+            <div className="bg-white rounded- border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="relative z-10 flex flex-col gap-2">
+                <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Primary Model</p>
+                <h2 className="text-xl font-bold text-gray-900 mt-2 truncate pr-4">{data?.mostUsedAI?? "—"}</h2>
+              </div>
             </div>
-          </div>
-        </div>
+
+            <div className="bg-white rounded- border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 relative overflow-hidden group">
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+              <div className="relative z-10 flex flex-col gap-2">
+                <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Active Base</p>
+                <div className="flex items-baseline gap-3">
+                  <h2 className="text-4xl font-black text-gray-900 tracking-tight">{data?.uniqueUsers?? 0}</h2>
+                  <span className="text-sm font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">Users</span>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="space-y-4 mb-4">
@@ -85,7 +128,7 @@ const AI = () => {
             ⚠️ {error?.message}
           </div>
         )}
-        {!isLoading && !isError && isFetching && (
+        {!isLoading &&!isError && isFetching && (
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 text-sm font-medium rounded-xl">
             <div className="w-3 h-3 border-2 border-indigo-600/30 border-t-indigo-600 rounded-full animate-spin"></div>
             Refreshing metrics...
@@ -93,22 +136,13 @@ const AI = () => {
         )}
       </div>
 
-      <div className="bg-white rounded-[2rem] shadow-[0_4px_20px_rgb(0,0,0,0.02)] border border-gray-100/60 overflow-hidden relative flex-1 flex flex-col">
+      <div className="bg-white rounded- shadow-[0_4px_20px_rgb(0,0,0,0.02)] border border-gray-100/60 overflow-hidden relative flex-1 flex flex-col">
         <div className="px-8 py-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-           <h3 className="text-lg font-bold text-gray-900 tracking-tight">Recent Operations Log</h3>
+          <h3 className="text-lg font-bold text-gray-900 tracking-tight">Recent Operations Log</h3>
         </div>
 
-        <div className="overflow-x-auto flex-1 relative">
-          {isLoading && (
-            <div className="absolute inset-x-0 top-0 bottom-0 bg-white/60 backdrop-blur-sm z-10 flex items-center justify-center">
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-8 h-8 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                <p className="text-sm font-bold text-gray-500 tracking-wide animate-pulse">Scanning logs...</p>
-              </div>
-            </div>
-          )}
-
-          <table className="w-full text-left border-collapse min-w-[700px] table-auto">
+        <div className="overflow-x-auto flex-1">
+          <table className="w-full text-left border-collapse min-w- table-auto">
             <thead className="bg-white border-b border-gray-100/80 sticky top-0 z-10">
               <tr className="text-xs uppercase tracking-widest text-gray-400 font-bold">
                 <th className="px-8 py-5 w-20">Seq</th>
@@ -120,7 +154,15 @@ const AI = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-50">
-              {!isLoading && logs.length === 0 ? (
+              {!isLoading? (
+                <>
+                  <TableRowSkeleton />
+                  <TableRowSkeleton />
+                  <TableRowSkeleton />
+                  <TableRowSkeleton />
+                  <TableRowSkeleton />
+                </>
+              ) : logs.length === 0? (
                 <tr>
                   <td colSpan={5} className="px-8 py-24 text-center">
                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -141,7 +183,7 @@ const AI = () => {
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-100 to-purple-100 flex flex-shrink-0 items-center justify-center text-indigo-700 font-bold text-xs shadow-inner">
-                          {log.userId?.fullName ? log.userId.fullName.charAt(0).toUpperCase() : "?"}
+                          {log.userId?.fullName? log.userId.fullName.charAt(0).toUpperCase() : "?"}
                         </div>
                         <p className="text-sm font-bold text-gray-900 truncate">
                           {log.userId?.fullName || "System Generated"}
@@ -149,7 +191,7 @@ const AI = () => {
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <span className={`inline-flex px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest ${log.role === 'admin' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600'}`}>
+                      <span className={`inline-flex px-2 py-1 rounded text- font-bold uppercase tracking-widest ${log.role === 'admin'? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600'}`}>
                         {log.role}
                       </span>
                     </td>
@@ -163,12 +205,8 @@ const AI = () => {
                     </td>
                     <td className="px-8 py-6 text-sm text-gray-500 font-medium whitespace-nowrap">
                       {log.createdAt
-              ? new Date(log.createdAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })
-              : "—"}
+                       ? Moment(log.createdAt).format("MMM D, YYYY")
+                        : "—"}
                     </td>
                   </tr>
                 ))
@@ -180,4 +218,5 @@ const AI = () => {
     </div>
   );
 };
+
 export default AI;

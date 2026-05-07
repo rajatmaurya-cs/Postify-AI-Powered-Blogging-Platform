@@ -127,31 +127,28 @@ const Comments = () => {
         <div className="inline-flex flex-wrap bg-gray-100/80 p-1.5 rounded-2xl border border-gray-200/60 shadow-inner w-fit max-w-full">
           <button
             onClick={() => setFilter("all")}
-            className={`px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all whitespace-nowrap ${
-              filter === "all"
-                ? "bg-white text-gray-900 shadow-[0_2px_10px_rgb(0,0,0,0.06)]"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all whitespace-nowrap ${filter === "all"
+              ? "bg-white text-gray-900 shadow-[0_2px_10px_rgb(0,0,0,0.06)]"
+              : "text-gray-500 hover:text-gray-700"
+              }`}
           >
             All
           </button>
           <button
             onClick={() => setFilter("approved")}
-            className={`px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all whitespace-nowrap ${
-              filter === "approved"
-                ? "bg-emerald-50 text-emerald-700 shadow-[0_2px_10px_rgb(16,185,129,0.1)] border border-emerald-100"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all whitespace-nowrap ${filter === "approved"
+              ? "bg-emerald-50 text-emerald-700 shadow-[0_2px_10px_rgb(16,185,129,0.1)] border border-emerald-100"
+              : "text-gray-500 hover:text-gray-700"
+              }`}
           >
             Approved
           </button>
           <button
             onClick={() => setFilter("pending")}
-            className={`px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all whitespace-nowrap ${
-              filter === "pending"
-                ? "bg-amber-50 text-amber-700 shadow-[0_2px_10px_rgb(245,158,11,0.1)] border border-amber-100"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all whitespace-nowrap ${filter === "pending"
+              ? "bg-amber-50 text-amber-700 shadow-[0_2px_10px_rgb(245,158,11,0.1)] border border-amber-100"
+              : "text-gray-500 hover:text-gray-700"
+              }`}
           >
             Pending
           </button>
@@ -174,17 +171,11 @@ const Comments = () => {
       </div>
 
       <div className="w-full min-w-0 bg-white rounded-[2rem] shadow-[0_4px_20px_rgb(0,0,0,0.02)] border border-gray-100/60 overflow-hidden relative flex-1 flex flex-col">
-        {isLoading && (
-          <div className="absolute inset-x-0 top-16 bottom-0 bg-white/60 backdrop-blur-sm z-10 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3 bg-white p-6 rounded-3xl shadow-xl border border-gray-100">
-              <div className="h-10 w-10 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin" />
-              <p className="text-sm font-bold text-gray-700">Loading comments...</p>
-            </div>
-          </div>
-        )}
 
-       <div className="w-full min-w-0 flex-1 relative overflow-x-auto">
-         <table className="min-w-[850px] w-full table-auto text-left border-collapse">
+    
+
+        <div className="w-full min-w-0 flex-1 relative overflow-x-auto">
+          <table className="min-w-[850px] w-full table-auto text-left border-collapse">
             <thead className="bg-gray-50/50 border-b border-gray-100 sticky top-0 z-10">
               <tr className="text-[11px] uppercase tracking-widest text-gray-400 font-bold">
                 <th className="px-4 lg:px-6 py-4 w-[6%] whitespace-nowrap">#</th>
@@ -198,7 +189,43 @@ const Comments = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-50">
-              {!isLoading && comments.length === 0 ? (
+              {isLoading ? (
+                // Skeleton rows while loading
+                [...Array(5)].map((_, i) => (
+                  <tr key={i} className="animate-pulse align-middle">
+                    <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
+                      <div className="h-4 w-6 bg-gray-200 rounded-md animate-shimmer"></div>
+                    </td>
+
+                    <td className="px-4 lg:px-6 py-5">
+                      <div className="h-4 w-24 bg-gray-200 rounded-md animate-shimmer "></div>
+                    </td>
+
+                    <td className="px-4 lg:px-6 py-5">
+                      <div className="space-y-2">
+                        <div className="h-4 w-full bg-gray-200 rounded-md animate-shimmer "></div>
+                        <div className="h-4 w-3/4 bg-gray-200 rounded-md animate-shimmer "></div>
+                      </div>
+                    </td>
+
+                    <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
+                      <div className="h-4 w-20 bg-gray-200 rounded-md animate-shimmer "></div>
+                    </td>
+
+                    <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
+                      <div className="h-6 w-20 bg-gray-200 rounded-full animate-shimmer "></div>
+                    </td>
+
+                    <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
+                      <div className="h-9 w-[110px] mx-auto bg-gray-200 rounded-xl animate-shimmer "></div>
+                    </td>
+
+                    <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
+                      <div className="h-10 w-10 mx-auto bg-gray-200 rounded-xl animate-shimmer "></div>
+                    </td>
+                  </tr>
+                ))
+              ) : !isLoading && comments.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-8 py-24 text-center">
                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -212,7 +239,7 @@ const Comments = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={1.5}
-                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                         />
                       </svg>
                     </div>
@@ -224,100 +251,100 @@ const Comments = () => {
                     </p>
                   </td>
                 </tr>
-              ) : (
+              )
+               : (
                 comments.map((comment, index) => (
-                  <tr key={comment._id} className="group hover:bg-gray-50/40 transition-colors align-middle">
-                    <td className="px-4 lg:px-6 py-5 text-sm font-semibold text-gray-400 whitespace-nowrap">
-                      {(index + 1).toString().padStart(2, "0")}
-                    </td>
+              <tr key={comment._id} className="group hover:bg-gray-50/40 transition-colors align-middle">
+                <td className="px-4 lg:px-6 py-5 text-sm font-semibold text-gray-400 whitespace-nowrap">
+                  {(index + 1).toString().padStart(2, "0")}
+                </td>
 
-                    <td className="px-4 lg:px-6 py-5 min-w-0">
-                      <p
-                        className="text-sm font-bold text-gray-900 break-words leading-6"
-                        title={comment.createdBy?.fullName}
-                      >
-                        {comment.createdBy?.fullName || "Anonymous"}
-                      </p>
-                    </td>
+                <td className="px-4 lg:px-6 py-5 min-w-0">
+                  <p
+                    className="text-sm font-bold text-gray-900 break-words leading-6"
+                    title={comment.createdBy?.fullName}
+                  >
+                    {comment.createdBy?.fullName || "Anonymous"}
+                  </p>
+                </td>
 
-                    <td className="px-4 lg:px-6 py-5 min-w-0">
-                      <p
-                        className="text-sm text-gray-600 font-medium break-words leading-6"
-                        title={comment.content}
-                      >
-                        {comment.content}
-                      </p>
-                    </td>
+                <td className="px-4 lg:px-6 py-5 min-w-0">
+                  <p
+                    className="text-sm text-gray-600 font-medium break-words leading-6"
+                    title={comment.content}
+                  >
+                    {comment.content}
+                  </p>
+                </td>
 
-                    <td className="px-4 lg:px-6 py-5 text-sm text-gray-500 font-medium whitespace-nowrap">
-                    {Moment(comment.createdAt).fromNow()}
-                    </td>
+                <td className="px-4 lg:px-6 py-5 text-sm text-gray-500 font-medium whitespace-nowrap">
+                  {Moment(comment.createdAt).fromNow()}
+                </td>
 
-                    <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide ${
-                          comment.isApproved
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                            : "bg-amber-50 text-amber-700 border border-amber-100"
+                <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide ${comment.isApproved
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                        : "bg-amber-50 text-amber-700 border border-amber-100"
+                      }`}
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${comment.isApproved ? "bg-emerald-500" : "bg-amber-500"
                         }`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            comment.isApproved ? "bg-emerald-500" : "bg-amber-500"
-                          }`}
-                        ></span>
-                        {comment.isApproved ? "APPROVED" : "PENDING"}
-                      </span>
-                    </td>
+                    ></span>
+                    {comment.isApproved ? "APPROVED" : "PENDING"}
+                  </span>
+                </td>
 
-                    <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
-                      <button
-                        onClick={() => handleTogglePublish(comment._id, comment.isApproved)}
-                        disabled={disableAll}
-                        className={`min-w-[110px] px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${
-                          comment.isApproved
-                            ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
-                            : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
-                        } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
-                      >
-                        {toggleMutation.isPending
-                          ? "Wait..."
-                          : comment.isApproved
-                          ? "Hide"
-                          : "Approve"}
-                      </button>
-                    </td>
+                <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
+                  <button
+                    onClick={() => handleTogglePublish(comment._id, comment.isApproved)}
+                    disabled={disableAll}
+                    className={`min-w-[110px] px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${comment.isApproved
+                        ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
+                        : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
+                      } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+                  >
+                    {toggleMutation.isPending
+                      ? "Wait..."
+                      : comment.isApproved
+                        ? "Hide"
+                        : "Approve"}
+                  </button>
+                </td>
 
-                    <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
-                      <button
-                        onClick={() => handleRemove(comment._id)}
-                        disabled={disableAll}
-                        className="w-10 h-10 inline-flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
-                        title="Delete comment permanently"
+                <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
+                  <button
+                    onClick={() => handleRemove(comment._id)}
+                    disabled={disableAll}
+                    className="w-10 h-10 inline-flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                    title="Delete comment permanently"
+                  >
+                    {removeMutation.isPending ? (
+                      "..."
+                    ) : (
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
-                        {removeMutation.isPending ? (
-                          "..."
-                        ) : (
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        )}
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </td>
+              </tr>
+              ))
               )}
             </tbody>
+
+
           </table>
         </div>
       </div>

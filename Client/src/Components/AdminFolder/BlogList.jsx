@@ -136,14 +136,7 @@ const BlogList = () => {
         </div>
 
         <div className="w-full min-w-0 flex-1 relative overflow-x-auto">
-          {isLoading && (
-            <div className="absolute inset-1 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center rounded-[2rem]">
-              <div className="flex flex-col items-center gap-3 bg-white p-6 rounded-3xl shadow-xl border border-gray-100">
-                <div className="h-10 w-10 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin" />
-                <p className="text-sm font-bold text-gray-700">Loading catalog...</p>
-              </div>
-            </div>
-          )}
+
 
           <table className="min-w-[850px] w-full table-auto border-collapse text-left">
             <thead>
@@ -159,106 +152,154 @@ const BlogList = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-50">
-              {blogs.map((blog, index) => (
-                <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors align-middle">
-                  <td className="px-4 lg:px-6 py-5 text-sm font-semibold text-gray-400 whitespace-nowrap">
-                    {(index + 1).toString().padStart(2, "0")}
-                  </td>
+              {
 
-                  <td className="px-4 lg:px-6 py-5 min-w-0">
-                    <div className="min-w-0">
-                      <p className="text-sm lg:text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors break-words leading-6">
-                        {blog.title}
-                      </p>
-                      <p className="text-[11px] font-medium text-gray-500 mt-2 uppercase tracking-wide bg-gray-100 inline-block px-2 py-0.5 rounded-md">
-                        ID: {blog._id.slice(-6)}
-                      </p>
-                    </div>
-                  </td>
+                isLoading ? (
+                  [...Array(LIMIT)].map((_, index) => (
+                    <tr key={index} className="skeleton-fade">
+                      {/* # column w-[6%] */}
+                      <td className="px-4 lg:px-6 py-5 w-[6%] whitespace-nowrap">
+                        <div className="h-4 w-6 rounded animate-shimmer" />
+                      </td>
 
-                  <td className="px-4 lg:px-6 py-5 text-sm text-gray-600 font-medium whitespace-nowrap">
-                    {blog.createdAt
-                      ? new Date(blog.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                      : "—"}
-                  </td>
+                      {/* TITLE column w-[34%] */}
+                      <td className="px-4 lg:px-6 py-5 w-[34%] min-w-0">
+                        <div className="h-5 w-full max-w-[14rem] rounded animate-shimmer mb-2" />
+                        <div className="h-5 w-20 rounded-md animate-shimmer" />
+                      </td>
 
-                  <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide ${blog.isPublished
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-                          : "bg-amber-50 text-amber-700 border border-amber-100"
-                        }`}
-                    >
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full ${blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
-                          }`}
-                      ></span>
-                      {blog.isPublished ? "PUBLISHED" : "DRAFT"}
-                    </span>
-                  </td>
+                      {/* CREATED column w-[14%] */}
+                      <td className="px-4 lg:px-6 py-5 w-[14%] whitespace-nowrap">
+                        <div className="h-4 w-24 rounded animate-shimmer" />
+                      </td>
 
-                  <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
-                    <button
-                      onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
-                      disabled={disableAll || toggleMutation.isPending}
-                      className={`min-w-[110px] px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${blog.isPublished
-                          ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
-                          : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
-                        } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
-                    >
-                      {toggleMutation.isPending
-                        ? "Wait..."
-                        : blog.isPublished
-                          ? "Hide"
-                          : "Make Live"}
-                    </button>
-                  </td>
+                      {/* STATE column w-[14%] */}
+                      <td className="px-4 lg:px-6 py-5 w-[14%] whitespace-nowrap">
+                        <div className="h-6 w-24 rounded-full animate-shimmer" />
+                      </td>
 
-                  <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
-                    <button
-                      onClick={() => handleRemove(blog._id)}
-                      disabled={disableAll || deleteMutation.isPending}
-                      className="w-10 h-10 inline-flex items-center justify-center rounded-xl bg-red-50/50 text-red-500 hover:bg-red-500 hover:text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
-                      title="Route to trash"
-                    >
-                      {deleteMutation.isPending ? (
-                        "..."
-                      ) : (
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                      {/* VISIBILITY column w-[14%] */}
+                      <td className="px-4 lg:px-6 py-5 w-[14%] whitespace-nowrap">
+                        <div className="h-9 w-[110px] rounded-xl animate-shimmer" />
+                      </td>
+
+                      {/* TRASH column w-[8%] */}
+                      <td className="px-4 lg:px-6 py-5 w-[8%] text-center whitespace-nowrap">
+                        <div className="h-10 w-10 rounded-xl animate-shimmer mx-auto" />
+                      </td>
+
+                      {/* MODERATOR column w-[10%] */}
+                      <td className="px-4 lg:px-6 py-5 w-[10%]">
+                        <div className="flex items-center gap-2">
+                          <div className="h-8 w-8 rounded-full animate-shimmer shrink-0" />
+                          <div className="h-4 w-10 rounded animate-shimmer" />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )
+
+
+                  : blogs.map((blog, index) => (
+                    <tr key={blog._id} className="group hover:bg-gray-50/50 transition-colors align-middle">
+                      <td className="px-4 lg:px-6 py-5 text-sm font-semibold text-gray-400 whitespace-nowrap">
+                        {(index + 1).toString().padStart(2, "0")}
+                      </td>
+
+                      <td className="px-4 lg:px-6 py-5 min-w-0">
+                        <div className="min-w-0">
+                          <p className="text-sm lg:text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors break-words leading-6">
+                            {blog.title}
+                          </p>
+                          <p className="text-[11px] font-medium text-gray-500 mt-2 uppercase tracking-wide bg-gray-100 inline-block px-2 py-0.5 rounded-md">
+                            ID: {blog._id.slice(-6)}
+                          </p>
+                        </div>
+                      </td>
+
+                      <td className="px-4 lg:px-6 py-5 text-sm text-gray-600 font-medium whitespace-nowrap">
+                        {blog.createdAt
+                          ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })
+                          : "—"}
+                      </td>
+
+                      <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wide ${blog.isPublished
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+                            : "bg-amber-50 text-amber-700 border border-amber-100"
+                            }`}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      )}
-                    </button>
-                  </td>
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${blog.isPublished ? "bg-emerald-500" : "bg-amber-500"
+                              }`}
+                          ></span>
+                          {blog.isPublished ? "PUBLISHED" : "DRAFT"}
+                        </span>
+                      </td>
 
-                  <td className="px-4 lg:px-6 py-5">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-xs shadow-sm shadow-indigo-100 shrink-0">
-                        {blog.moderatedBy?.fullName
-                          ? blog.moderatedBy.fullName.charAt(0)
-                          : "S"}
-                      </div>
-                      <span className="text-sm font-semibold text-gray-700 break-words">
-                        {blog.moderatedBy?.fullName || "System"}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                      <td className="px-4 lg:px-6 py-5 whitespace-nowrap">
+                        <button
+                          onClick={() => handleTogglePublish(blog._id, blog.isPublished)}
+                          disabled={disableAll || toggleMutation.isPending}
+                          className={`min-w-[110px] px-4 py-2 rounded-xl text-sm font-bold tracking-wide transition-all ${blog.isPublished
+                            ? "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm"
+                            : "bg-gray-900 text-white hover:bg-black shadow-[0_4px_10px_rgb(0,0,0,0.1)] hover:-translate-y-0.5"
+                            } disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none`}
+                        >
+                          {toggleMutation.isPending
+                            ? "Wait..."
+                            : blog.isPublished
+                              ? "Hide"
+                              : "Make Live"}
+                        </button>
+                      </td>
+
+                      <td className="px-4 lg:px-6 py-5 text-center whitespace-nowrap">
+                        <button
+                          onClick={() => handleRemove(blog._id)}
+                          disabled={disableAll || deleteMutation.isPending}
+                          className="w-10 h-10 inline-flex items-center justify-center rounded-xl bg-red-50/50 text-red-500 hover:bg-red-500 hover:text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                          title="Route to trash"
+                        >
+                          {deleteMutation.isPending ? (
+                            "..."
+                          ) : (
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                          )}
+                        </button>
+                      </td>
+
+                      <td className="px-4 lg:px-6 py-5">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-xs shadow-sm shadow-indigo-100 shrink-0">
+                            {blog.moderatedBy?.fullName
+                              ? blog.moderatedBy.fullName.charAt(0)
+                              : "S"}
+                          </div>
+                          <span className="text-sm font-semibold text-gray-700 break-words">
+                            {blog.moderatedBy?.fullName || "System"}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
 

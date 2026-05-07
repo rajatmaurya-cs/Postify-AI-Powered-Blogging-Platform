@@ -39,6 +39,75 @@ const BlogList = () => {
     return { filteredBlogs: filtered, publishedBlogs: published };
   }, [blogs, search]);
 
+
+  if(isLoading) return (
+    <div className="skeleton-fade mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 md:grid-cols-3">
+      
+      {/* Card 1 - LIFESTYLE */}
+      <div className="overflow-hidden rounded-3xl bg-white">
+        <div className="animate-shimmer relative aspect-[16/10] w-full">
+          <div className="absolute left-4 top-4 h-7 w-24 rounded-full bg-gray-200" />
+        </div>
+        <div className="p-6">
+          <div className="animate-shimmer mb-4 h-6 w-4/5 rounded-md" />
+          <div className="mb-4 h-px w-full bg-gray-100" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="animate-shimmer h-8 w-8 rounded-full" />
+              <div className="animate-shimmer h-4 w-24 rounded-md" />
+            </div>
+            <div className="animate-shimmer h-8 w-8 rounded-full" />
+          </div>
+        </div>
+      </div>
+
+      {/* Card 2 - STARTUP */}
+      <div className="overflow-hidden rounded-3xl bg-white">
+        <div className="animate-shimmer relative aspect-[16/10] w-full">
+          <div className="absolute left-4 top-4 h-7 w-20 rounded-full bg-gray-200" />
+        </div>
+        <div className="p-6">
+          <div className="animate-shimmer mb-4 h-6 w-3/4 rounded-md" />
+          <div className="mb-4 h-px w-full bg-gray-100" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="animate-shimmer h-8 w-8 rounded-full" />
+              <div className="animate-shimmer h-4 w-24 rounded-md" />
+            </div>
+            <div className="animate-shimmer h-8 w-8 rounded-full" />
+          </div>
+        </div>
+      </div>
+
+      
+      <div className="overflow-hidden rounded-3xl bg-white">
+        <div className="animate-shimmer relative aspect-[16/10] w-full">
+          <div className="absolute left-4 top-4 h-7 w-28 rounded-full bg-gray-200" />
+        </div>
+        <div className="p-6">
+          <div className="mb-4 space-y-2">
+            <div className="animate-shimmer h-6 w-11/12 rounded-md" />
+            <div className="animate-shimmer h-6 w-2/3 rounded-md" />
+          </div>
+          <div className="mb-4 h-px w-full bg-gray-100" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="animate-shimmer h-8 w-8 rounded-full" />
+              <div className="animate-shimmer h-4 w-24 rounded-md" />
+            </div>
+            <div className="animate-shimmer h-8 w-8 rounded-full" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+     
+          
+  )
+
+
+
+
   return (
     <section className="relative w-full bg-[#fafbfc] min-h-screen pt-24 pb-32 overflow-hidden font-sans">
       <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-white to-transparent pointer-events-none z-0"></div>
@@ -108,12 +177,9 @@ const BlogList = () => {
             </div>
           )}
 
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center py-32 space-y-4">
-              <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin"></div>
-              <p className="text-gray-400 font-normal tracking-normal animate-pulse">Curating articles...</p>
-            </div>
-          )}
+         
+
+
 
           {!isLoading && !isError && publishedBlogs.length > 0 ? (
             <div className="space-y-16">
